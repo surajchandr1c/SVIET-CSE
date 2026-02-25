@@ -7,7 +7,7 @@ export async function GET() {
     await connectDB();
     const faculty = await Faculty.find();
     return NextResponse.json(faculty);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch faculty" },
       { status: 500 }
