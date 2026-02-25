@@ -1,21 +1,21 @@
 import jwt from "jsonwebtoken";
 
-/**
- * Make sure JWT_SECRET exists in .env.local
- */
-const JWT_SECRET = process.env.JWT_SECRET;
-
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET is not defined in environment variables");
-}
+const getJwtSecret = (): string => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET is not defined");
+  }
+  return secret;
+};
 
 /**
  * Generate JWT Token
  */
 export const generateToken = (email: string): string => {
+  const jwtSecret = getJwtSecret();
   return jwt.sign(
     { email },          // payload
-    JWT_SECRET,         // secret key
+    jwtSecret,          // secret key
     { expiresIn: "1h" } // token expiry
   );
 };
@@ -25,7 +25,8 @@ export const generateToken = (email: string): string => {
  */
 export const verifyToken = (token: string) => {
   try {
-    return jwt.verify(token, JWT_SECRET);
+    const jwtSecret = getJwtSecret();
+    return jwt.verify(token, jwtSecret);
   } catch {
     return null;
   }
