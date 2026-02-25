@@ -1,0 +1,291 @@
+[
+  {
+    "day": "Monday",
+    "subjects": [
+      {
+        "code": "btcs401-18",
+        "name": "Discrete Mathematics",
+        "faculty": "Sushma Rani",
+        "group": "CSE-D",
+        "time": "P1 (09:10 AM - 10:05 AM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btcs402-18",
+        "name": "Operating Systems",
+        "faculty": "Rojy Rani",
+        "group": "CSE-D",
+        "time": "P2 (10:06 AM - 11:00 AM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btcs405-18",
+        "name": "Design & Analysis of Algorithms Lab",
+        "faculty": "Chetan Jain",
+        "group": "CSE-D",
+        "time": "P3 (11:01 AM - 11:55 AM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "btcs405-18",
+        "name": "Design & Analysis of Algorithms Lab",
+        "faculty": "Chetan Jain",
+        "group": "CSE-D",
+        "time": "P4 (11:56 AM - 12:50 PM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "btes402-18",
+        "name": "Computer Organization & Architecture Lab",
+        "faculty": "Kulbir Kaur",
+        "group": "CSE-D",
+        "time": "P6 (13:46 PM - 14:40 PM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "btes401-18",
+        "name": "Computer Organization & Architecture",
+        "faculty": "Kulbir Kaur",
+        "group": "CSE-D",
+        "time": "P7 (14:41 PM - 15:35 PM)",
+        "hall": "Block G - 002"
+      }
+    ]
+  },
+  {
+    "day": "Tuesday",
+    "subjects": [
+      {
+        "code": "Tra",
+        "name": "Training",
+        "faculty": "Cse Two",
+        "group": "CSE-D",
+        "time": "P1 (09:10 AM - 10:05 AM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "Tra",
+        "name": "Training",
+        "faculty": "Cse Two",
+        "group": "CSE-D",
+        "time": "P2 (10:06 AM - 11:00 AM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "btcs401-18",
+        "name": "Discrete Mathematics",
+        "faculty": "Sushma Rani",
+        "group": "CSE-D",
+        "time": "P3 (11:01 AM - 11:55 AM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btcs402-18",
+        "name": "Operating Systems",
+        "faculty": "Rojy Rani",
+        "group": "CSE-D",
+        "time": "P4 (11:56 AM - 12:50 PM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "SO-01",
+        "name": "Soft Skills",
+        "faculty": "Navneet Kaur",
+        "group": "CSE-D",
+        "time": "P6 (13:46 PM - 14:40 PM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btcs404-18",
+        "name": "Operating Systems Lab",
+        "faculty": "Rojy Rani",
+        "group": "CSE-D",
+        "time": "P7 (14:41 PM - 15:35 PM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "btcs404-18",
+        "name": "Operating Systems Lab",
+        "faculty": "Rojy Rani",
+        "group": "CSE-D",
+        "time": "P8 (15:36 PM - 16:30 PM)",
+        "hall": "Block G - 109"
+      }
+    ]
+  },
+  {
+    "day": "Wednesday",
+    "subjects": [
+      {
+        "code": "btcs405-18",
+        "name": "Design & Analysis of Algorithms Lab",
+        "faculty": "Chetan Jain",
+        "group": "CSE-D",
+        "time": "P1 (09:10 AM - 10:05 AM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "btcs405-18",
+        "name": "Design & Analysis of Algorithms Lab",
+        "faculty": "Chetan Jain",
+        "group": "CSE-D",
+        "time": "P2 (10:06 AM - 11:00 AM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "btcs401-18",
+        "name": "Discrete Mathematics",
+        "faculty": "Sushma Rani",
+        "group": "CSE-D",
+        "time": "P3 (11:01 AM - 11:55 AM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "VA",
+        "name": "Verbal Ability",
+        "faculty": "Nidhi",
+        "group": "CSE-D",
+        "time": "P4 (11:56 AM - 12:50 PM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btes402-18",
+        "name": "Computer Organization & Architecture Lab",
+        "faculty": "Kulbir Kaur",
+        "group": "CSE-D",
+        "time": "P6 (13:46 PM - 14:40 PM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "btcs403-18",
+        "name": "Design & Analysis of Algorithms",
+        "faculty": "Chetan Jain",
+        "group": "CSE-D",
+        "time": "P7 (14:41 PM - 15:35 PM)",
+        "hall": "Block G - 002"
+      }
+    ]
+  },
+  {
+    "day": "Thursday",
+    "subjects": [
+      {
+        "code": "Tra",
+        "name": "Training",
+        "faculty": "Cse Two",
+        "group": "CSE-D",
+        "time": "P1 (09:10 AM - 10:05 AM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "Tra",
+        "name": "Training",
+        "faculty": "Cse Two",
+        "group": "CSE-D",
+        "time": "P2 (10:06 AM - 11:00 AM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btcs401-18",
+        "name": "Discrete Mathematics",
+        "faculty": "Sushma Rani",
+        "group": "CSE-D",
+        "time": "P3 (11:01 AM - 11:55 AM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btes401-18",
+        "name": "Computer Organization & Architecture",
+        "faculty": "Kulbir Kaur",
+        "group": "CSE-D",
+        "time": "P4 (11:56 AM - 12:50 PM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "Tra",
+        "name": "Training",
+        "faculty": "Cse One",
+        "group": "CSE-D",
+        "time": "P6 (13:46 PM - 14:40 PM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "Tra",
+        "name": "Training",
+        "faculty": "Cse One",
+        "group": "CSE-D",
+        "time": "P7 (14:41 PM - 15:35 PM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btcs403-18",
+        "name": "Design & Analysis of Algorithms",
+        "faculty": "Chetan Jain",
+        "group": "CSE-D",
+        "time": "P8 (15:36 PM - 16:30 PM)",
+        "hall": "Block G - 002"
+      }
+    ]
+  },
+  {
+    "day": "Friday",
+    "subjects": [
+      {
+        "code": "btcs402-18",
+        "name": "Operating Systems",
+        "faculty": "Rojy Rani",
+        "group": "CSE-D",
+        "time": "P1 (09:10 AM - 10:05 AM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "SO-01",
+        "name": "Soft Skills",
+        "faculty": "Navneet Kaur",
+        "group": "CSE-D",
+        "time": "P2 (10:06 AM - 11:00 AM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btes401-18",
+        "name": "Computer Organization & Architecture",
+        "faculty": "Kulbir Kaur",
+        "group": "CSE-D",
+        "time": "P3 (11:01 AM - 11:55 AM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btcs403-18",
+        "name": "Design & Analysis of Algorithms",
+        "faculty": "Chetan Jain",
+        "group": "CSE-D",
+        "time": "P4 (11:56 AM - 12:50 PM)",
+        "hall": "Block G - 002"
+      },
+      {
+        "code": "btcs404-18",
+        "name": "Operating Systems Lab",
+        "faculty": "Rojy Rani",
+        "group": "CSE-D",
+        "time": "P6 (13:46 PM - 14:40 PM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "btcs404-18",
+        "name": "Operating Systems Lab",
+        "faculty": "Rojy Rani",
+        "group": "CSE-D",
+        "time": "P7 (14:41 PM - 15:35 PM)",
+        "hall": "Block G - 109"
+      },
+      {
+        "code": "btcs401-18",
+        "name": "Discrete Mathematics",
+        "faculty": "Sushma Rani",
+        "group": "CSE-D",
+        "time": "P8 (15:36 PM - 16:30 PM)",
+        "hall": "Block G - 002"
+      }
+    ]
+  }
+]

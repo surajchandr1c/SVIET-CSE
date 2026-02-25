@@ -1,0 +1,331 @@
+@import "tailwindcss";
+
+:root {
+  --color-brand: #0b3c5d;
+  --color-brand-hover: #0f4f79;
+  --color-page: #f8fafc;
+  --color-surface: #ffffff;
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+body {
+  min-height: 100vh;
+  background-image: linear-gradient(to bottom, #071a2e, #0b1f3a);
+  color: #e2e8f0;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+/* App-wide dark theme overrides for legacy light utility classes */
+.theme-main .bg-white,
+.theme-main .bg-gray-50,
+.theme-main .bg-gray-100,
+.theme-main .bg-gray-200 {
+  background-color: rgba(11, 28, 71, 0.75) !important;
+}
+
+
+.theme-main .text-gray-900,
+.theme-main .text-gray-800,
+.theme-main .text-gray-700,
+.theme-main .text-gray-600,
+.theme-main .text-gray-500,
+.theme-main .text-gray-400,
+.theme-main .text-slate-900,
+.theme-main .text-slate-800,
+.theme-main .text-slate-700,
+.theme-main .text-slate-600,
+.theme-main .text-slate-500,
+.theme-main .text-black,
+.theme-main .text-blue-900,
+.theme-main .text-blue-700,
+.theme-main .text-blue-600,
+.theme-main .text-sky-900,
+.theme-main .text-\[\#0b3c5d\],
+.theme-main .text-\[\#2c3e50\] {
+  color: #dbeafe !important;
+}
+
+.theme-main .border-gray-100,
+.theme-main .border-gray-200,
+.theme-main .border-gray-300,
+.theme-main .border-slate-200,
+.theme-main .border-slate-300 {
+  border-color: rgba(34, 211, 238, 0.2) !important;
+}
+
+.theme-main .hover\:bg-gray-50:hover,
+.theme-main .hover\:bg-gray-100:hover,
+.theme-main .hover\:bg-white:hover {
+  background-color: rgba(34, 211, 238, 0.08) !important;
+}
+
+/* Frontend buttons use the same teal tone as navbar/footer */
+.frontend-shell button[class*="bg-"] {
+  background-color: #175f84 !important;
+  color: #f8fafc !important;
+}
+
+.frontend-shell button[class*="bg-"]:hover {
+  background-color: #1a6a95 !important;
+}
+
+/* Admin panel theme + modern shell */
+.admin-shell {
+  --admin-bg: #edf2ff;
+  --admin-bg-2: #e6eefc;
+  --admin-glow-1: rgba(75, 138, 210, 0.2);
+  --admin-glow-2: rgba(72, 201, 240, 0.15);
+  --admin-text: #132237;
+  --admin-text-muted: #4d647f;
+  --admin-surface: rgba(255, 255, 255, 0.88);
+  --admin-muted: rgba(238, 245, 255, 0.9);
+  --admin-border: rgba(23, 95, 132, 0.2);
+  --admin-border-strong: rgba(23, 95, 132, 0.32);
+  --admin-input-bg: rgba(255, 255, 255, 0.95);
+  --admin-placeholder: #7390b1;
+  --admin-accent: #175f84;
+  --admin-accent-strong: #1b6f98;
+  --admin-shadow: 0 18px 36px rgba(11, 23, 44, 0.12);
+  color: var(--admin-text);
+  background:
+    radial-gradient(circle at 12% 12%, var(--admin-glow-1), transparent 42%),
+    radial-gradient(circle at 88% 0%, var(--admin-glow-2), transparent 34%),
+    linear-gradient(155deg, var(--admin-bg), var(--admin-bg-2));
+}
+
+.admin-shell.admin-dark {
+  --admin-bg: #070f22;
+  --admin-bg-2: #0c1732;
+  --admin-glow-1: rgba(23, 95, 132, 0.25);
+  --admin-glow-2: rgba(60, 180, 220, 0.22);
+  --admin-text: #e6efff;
+  --admin-text-muted: #9eb2d2;
+  --admin-surface: rgba(18, 30, 58, 0.75);
+  --admin-muted: rgba(15, 24, 48, 0.68);
+  --admin-border: rgba(108, 154, 211, 0.26);
+  --admin-border-strong: rgba(125, 177, 222, 0.4);
+  --admin-input-bg: rgba(11, 20, 42, 0.9);
+  --admin-placeholder: #7f9cc2;
+  --admin-accent: #2a88ba;
+  --admin-accent-strong: #35a0d8;
+  --admin-shadow: 0 22px 45px rgba(3, 8, 20, 0.44);
+}
+
+.admin-shell .admin-content {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-shell .admin-sidebar {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.25rem;
+  border: 1px solid var(--admin-border-strong);
+  background: linear-gradient(165deg, color-mix(in srgb, var(--admin-surface) 92%, transparent), color-mix(in srgb, var(--admin-muted) 88%, transparent));
+  box-shadow: var(--admin-shadow);
+  backdrop-filter: blur(14px);
+}
+
+.admin-shell .admin-mobile-bar {
+  border-bottom: 1px solid var(--admin-border);
+  background: color-mix(in srgb, var(--admin-surface) 88%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.admin-shell .admin-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.1rem;
+  width: 2.1rem;
+  border-radius: 0.65rem;
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text);
+  background: color-mix(in srgb, var(--admin-surface) 75%, transparent);
+  transition: all 0.2s ease;
+}
+
+.admin-shell .admin-icon-button:hover {
+  background: var(--admin-muted);
+  border-color: var(--admin-border-strong);
+}
+
+.admin-shell .admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-radius: 0.85rem;
+  padding: 0.64rem 0.78rem;
+  color: var(--admin-text-muted);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.admin-shell .admin-nav-item:hover {
+  color: var(--admin-text);
+  border-color: var(--admin-border);
+  background: var(--admin-muted);
+}
+
+.admin-shell .admin-nav-item.active {
+  color: var(--admin-text);
+  border-color: var(--admin-border-strong);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--admin-accent) 30%, transparent), color-mix(in srgb, var(--admin-accent-strong) 30%, transparent));
+}
+
+.admin-shell .admin-theme-toggle,
+.admin-shell .admin-logout-button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: 0.85rem;
+  padding: 0.62rem 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.admin-shell .admin-theme-toggle {
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text);
+  background: var(--admin-muted);
+}
+
+.admin-shell .admin-theme-toggle:hover {
+  border-color: var(--admin-border-strong);
+  transform: translateY(-1px);
+}
+
+.admin-shell .admin-logout-button {
+  border: 1px solid color-mix(in srgb, #ef4444 40%, var(--admin-border));
+  color: #fff4f4;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.admin-shell .admin-logout-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(185, 28, 28, 0.3);
+}
+
+.admin-shell .admin-card {
+  border-radius: 1.1rem;
+  border: 1px solid var(--admin-border);
+  background: var(--admin-surface);
+  box-shadow: var(--admin-shadow);
+  backdrop-filter: blur(10px);
+}
+
+.admin-shell .admin-kpi {
+  border-radius: 1rem;
+  border: 1px solid var(--admin-border);
+  background: color-mix(in srgb, var(--admin-surface) 88%, transparent);
+}
+
+.admin-shell .bg-white {
+  background-color: var(--admin-surface) !important;
+}
+
+.admin-shell .bg-gray-50,
+.admin-shell .bg-gray-100,
+.admin-shell .bg-gray-200 {
+  background-color: var(--admin-muted) !important;
+}
+
+.admin-shell .text-gray-900,
+.admin-shell .text-gray-800,
+.admin-shell .text-gray-700,
+.admin-shell .text-slate-800,
+.admin-shell .text-slate-700,
+.admin-shell .text-\[\#0b3c5d\] {
+  color: var(--admin-text) !important;
+}
+
+.admin-shell .text-gray-600,
+.admin-shell .text-gray-500,
+.admin-shell .text-slate-600,
+.admin-shell .text-slate-500 {
+  color: var(--admin-text-muted) !important;
+}
+
+.admin-shell .text-blue-600,
+.admin-shell .text-blue-700,
+.admin-shell .text-blue-900 {
+  color: var(--admin-accent-strong) !important;
+}
+
+.admin-shell .border,
+.admin-shell .border-gray-100,
+.admin-shell .border-gray-200,
+.admin-shell .border-gray-300,
+.admin-shell .border-slate-200,
+.admin-shell .border-slate-300 {
+  border-color: var(--admin-border) !important;
+}
+
+.admin-shell .shadow,
+.admin-shell .shadow-sm,
+.admin-shell .shadow-lg,
+.admin-shell .shadow-xl {
+  box-shadow: var(--admin-shadow) !important;
+}
+
+.admin-shell input,
+.admin-shell textarea,
+.admin-shell select {
+  background-color: var(--admin-input-bg) !important;
+  color: var(--admin-text) !important;
+  border-color: var(--admin-border) !important;
+}
+
+.admin-shell input::placeholder,
+.admin-shell textarea::placeholder {
+  color: var(--admin-placeholder) !important;
+}
+
+.admin-shell .bg-blue-600,
+.admin-shell .bg-\[\#0b3c5d\] {
+  background: linear-gradient(135deg, var(--admin-accent), var(--admin-accent-strong)) !important;
+}
+
+.admin-shell .hover\:bg-\[\#0f4f79\]:hover,
+.admin-shell .hover\:bg-blue-600:hover,
+.admin-shell .hover\:bg-sky-900:hover {
+  filter: brightness(1.08);
+}
+
+.admin-shell .focus\:ring-\[\#0b3c5d\]\/30:focus,
+.admin-shell .focus\:border-\[\#0b3c5d\]:focus {
+  border-color: var(--admin-accent) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--admin-accent) 28%, transparent) !important;
+}
