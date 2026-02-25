@@ -228,13 +228,13 @@ export default function Home() {
           </div>
 
           <div className="relative mx-auto h-[420px] w-full max-w-[460px]">
-            <div className="group absolute right-2 top-3 h-[290px] w-[230px] overflow-hidden rounded-3xl border-4 border-white shadow-xl transition duration-500 hover:-translate-y-2 hover:rotate-1 sm:w-[250px]">
+            <div className="group absolute right-2 top-3 z-0 h-[290px] w-[230px] overflow-hidden rounded-3xl border-4 border-white shadow-xl transition duration-500 hover:z-30 hover:-translate-y-2 hover:rotate-1 sm:w-[250px]">
               <Image src="/home/IMG_0309.JPG.jpeg" alt="Technical activity" fill className="object-cover transition duration-500 group-hover:scale-110" />
             </div>
-            <div className="group absolute right-10 top-12 h-[320px] w-[250px] overflow-hidden rounded-3xl border-4 border-white shadow-2xl transition duration-500 hover:-translate-y-2 hover:rotate-2 sm:w-[280px]">
+            <div className="group absolute right-10 top-12 z-10 h-[320px] w-[250px] overflow-hidden rounded-3xl border-4 border-white shadow-2xl transition duration-500 hover:z-30 hover:-translate-y-2 hover:rotate-2 sm:w-[280px]">
               <Image src="/home/IMG_0299.JPG.jpeg" alt="Students in lab" fill className="object-cover transition duration-500 group-hover:scale-110" />
             </div>
-            <div className="group absolute left-2 top-20 z-10 h-[330px] w-[255px] overflow-hidden rounded-3xl border-4 border-white shadow-2xl transition duration-500 hover:-translate-y-3 hover:-rotate-1 sm:w-[290px]">
+            <div className="group absolute left-2 top-20 z-20 h-[330px] w-[255px] overflow-hidden rounded-3xl border-4 border-white shadow-2xl transition duration-500 hover:z-30 hover:-translate-y-3 hover:-rotate-1 sm:w-[290px]">
               <Image src="/home/IMG_0306.JPG.jpeg" alt="Student presentation" fill className="object-cover transition duration-500 group-hover:scale-110" />
             </div>
           </div>
