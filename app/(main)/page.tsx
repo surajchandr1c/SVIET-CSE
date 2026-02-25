@@ -207,6 +207,39 @@ export default function Home() {
           </a>
         </div>
       </section>
+
+      <section className="mx-auto mb-10 max-w-7xl rounded-[34px] border border-[#dbe8e5] bg-gradient-to-br from-[#eaf4f2] to-[#f3f7f6] px-6 py-10 md:px-10 md:py-14 lg:px-14">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+          <div>
+            <p className="mb-5 text-xs tracking-[0.42em] text-[#1e56d8] md:text-sm">STUDENT VISIBILITY & TECHNICAL GROWTH</p>
+            <h2 className="max-w-xl text-[34px] font-extrabold leading-[1.12] text-[#191d25] md:text-[46px]">
+              Showcase <span className="text-[#1e56d8]">Your Skills</span> To The Industry
+            </h2>
+            <p className="mt-6 max-w-xl text-[17px] leading-8 text-[#485c73]">
+              Highlight student projects, technical achievements and event participation to attract recruiters,
+              mentors and collaborators on one professional platform.
+            </p>
+            <Link
+              href="/techxplore"
+              className="mt-8 inline-flex rounded-full bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-9 py-4 text-lg font-semibold text-white shadow-[0_10px_24px_rgba(16,74,198,0.28)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(8,184,168,0.34)]"
+            >
+              Explore TechXplore
+            </Link>
+          </div>
+
+          <div className="relative mx-auto h-[420px] w-full max-w-[460px]">
+            <div className="group absolute right-2 top-3 h-[290px] w-[230px] overflow-hidden rounded-3xl border-4 border-white shadow-xl transition duration-500 hover:-translate-y-2 hover:rotate-1 sm:w-[250px]">
+              <Image src="/home/IMG_0309.JPG.jpeg" alt="Technical activity" fill className="object-cover transition duration-500 group-hover:scale-110" />
+            </div>
+            <div className="group absolute right-10 top-12 h-[320px] w-[250px] overflow-hidden rounded-3xl border-4 border-white shadow-2xl transition duration-500 hover:-translate-y-2 hover:rotate-2 sm:w-[280px]">
+              <Image src="/home/IMG_0299.JPG.jpeg" alt="Students in lab" fill className="object-cover transition duration-500 group-hover:scale-110" />
+            </div>
+            <div className="group absolute left-2 top-20 z-10 h-[330px] w-[255px] overflow-hidden rounded-3xl border-4 border-white shadow-2xl transition duration-500 hover:-translate-y-3 hover:-rotate-1 sm:w-[290px]">
+              <Image src="/home/IMG_0306.JPG.jpeg" alt="Student presentation" fill className="object-cover transition duration-500 group-hover:scale-110" />
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
