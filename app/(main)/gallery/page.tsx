@@ -39,7 +39,7 @@ export default function Gallery() {
   return (
     <div className="min-h-screen px-6 pb-10 pt-8">
       <h1 className="mb-10 text-center text-3xl font-bold text-slate-200 md:text-5xl lg:text-4xl">
-        Events Gallery
+        Gallery
       </h1>
 
       {loading ? (

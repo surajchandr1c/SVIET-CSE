@@ -166,8 +166,10 @@ export default function Home() {
           </h1>
 
           <p className="mb-4 text-[14px] text-gray-700 md:text-[15px] lg:text-[14px]">
-            The department focuses on strong fundamentals of programming,
-            software development and emerging technologies.
+            Department of Computer Science and Engineering is dedicated to providing quality education, research, and innovation in the field   of computing and technology. It focuses on equipping students with a strong foundation in computer. The science principles, programming, software development, data management, networking, and emerging technologies such as artificial intelligence, machine learning, and cloud computing.
+<br />
+<br />
+In addition to academic activities, the department organizes workshops, seminars, hackathons, and industry collaborations to foster innovation and real-world problem-solving skills. With a vision to create competent professionals and researchers, the department strives to prepare students for successful careers in software development, data science, cyber security, and other advanced technology domains.
           </p>
 
           <p className="text-[14px] text-gray-700 md:text-[15px] lg:text-[14px]">
@@ -213,7 +215,7 @@ export default function Home() {
           <div>
             <p className="mb-5 text-xs tracking-[0.42em] text-[#1e56d8] md:text-sm">STUDENT VISIBILITY & TECHNICAL GROWTH</p>
             <h2 className="max-w-xl text-[34px] font-extrabold leading-[1.12] text-[#191d25] md:text-[46px]">
-              Showcase <span className="text-[#1e56d8]">Your Skills</span> To The Industry
+              Showcase <span className="text-[#1e56d8]">Your Skills</span> to the Industry
             </h2>
             <p className="mt-6 max-w-xl text-[17px] leading-8 text-[#485c73]">
               Highlight student projects, technical achievements and event participation to attract recruiters,

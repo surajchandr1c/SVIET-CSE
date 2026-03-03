@@ -11,6 +11,11 @@ type TechxploreStudent = {
   image: string;
   admissionNo: string;
   batch: string;
+  about: string;
+  instagram: string;
+  whatsapp: string;
+  linkedin: string;
+  github: string;
 };
 
 const initialForm: TechxploreStudent = {
@@ -19,6 +24,11 @@ const initialForm: TechxploreStudent = {
   image: "",
   admissionNo: "",
   batch: "",
+  about: "",
+  instagram: "",
+  whatsapp: "",
+  linkedin: "",
+  github: "",
 };
 
 export default function AdminTechxplorePage() {
@@ -39,7 +49,7 @@ export default function AdminTechxplorePage() {
     fetchStudents();
   }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -63,7 +73,15 @@ export default function AdminTechxplorePage() {
         method: isEditMode ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...form,
+          name: form.name.trim(),
+          position: form.position.trim(),
+          admissionNo: form.admissionNo.trim(),
+          batch: form.batch.trim(),
+          about: form.about.trim(),
+          instagram: form.instagram.trim(),
+          whatsapp: form.whatsapp.trim(),
+          linkedin: form.linkedin.trim(),
+          github: form.github.trim(),
           image: normalizeImageUrl(form.image),
         }),
       });
@@ -98,6 +116,11 @@ export default function AdminTechxplorePage() {
       image: student.image,
       admissionNo: student.admissionNo,
       batch: student.batch,
+      about: student.about ?? "",
+      instagram: student.instagram ?? "",
+      whatsapp: student.whatsapp ?? "",
+      linkedin: student.linkedin ?? "",
+      github: student.github ?? "",
     });
 
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -189,6 +212,53 @@ export default function AdminTechxplorePage() {
             required
           />
 
+          <textarea
+            name="about"
+            value={form.about}
+            onChange={handleChange}
+            placeholder="About"
+            className="min-h-28 w-full rounded-lg border px-4 py-2"
+            required
+          />
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <input
+              type="url"
+              name="instagram"
+              value={form.instagram}
+              onChange={handleChange}
+              placeholder="Instagram link (optional)"
+              className="w-full rounded-lg border px-4 py-2"
+            />
+            <input
+              type="url"
+              name="whatsapp"
+              value={form.whatsapp}
+              onChange={handleChange}
+              placeholder="WhatsApp link (optional)"
+              className="w-full rounded-lg border px-4 py-2"
+            />
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <input
+              type="url"
+              name="linkedin"
+              value={form.linkedin}
+              onChange={handleChange}
+              placeholder="LinkedIn link (optional)"
+              className="w-full rounded-lg border px-4 py-2"
+            />
+            <input
+              type="url"
+              name="github"
+              value={form.github}
+              onChange={handleChange}
+              placeholder="GitHub link (optional)"
+              className="w-full rounded-lg border px-4 py-2"
+            />
+          </div>
+
           {form.image && (
             <div className="mt-4">
               <p className="mb-2 text-sm text-gray-500">Preview:</p>
@@ -249,6 +319,7 @@ export default function AdminTechxplorePage() {
                 <p className="text-xs text-gray-400">
                   {student.admissionNo} | {student.batch}
                 </p>
+                <p className="mt-1 line-clamp-2 text-xs text-gray-500">{student.about}</p>
               </div>
 
               <div className="flex gap-2">

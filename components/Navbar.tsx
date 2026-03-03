@@ -11,6 +11,7 @@ export default function Navbar() {
 
   const navItems = [
     { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
     { name: "Faculty", href: "/faculty" },
     { name: "Notice Board", href: "/notice" },
     { name: "Semesters", href: "/semester" },
@@ -18,7 +19,6 @@ export default function Navbar() {
     { name: "Achivement", href: "/Achivement" },
     { name: "Gallery", href: "/gallery" },
     { name: "Contact", href: "/contact" },
-    { name: "About", href: "/about" },
   ];
 
   const handleClose = () => {
@@ -38,7 +38,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="rounded-md p-1 md:hidden"
+          className="rounded-md p-1 lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((prev) => !prev)}
@@ -46,7 +46,7 @@ export default function Navbar() {
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        <ul className="hidden items-center gap-5 md:flex">
+        <ul className="hidden items-center gap-5 lg:flex">
           {navItems.map((item) => (
             <li key={item.href}>
               <Link
@@ -64,7 +64,7 @@ export default function Navbar() {
         </ul>
       </div>
 
-      <div className="relative mx-auto h-0 w-full max-w-[1380px] md:hidden">
+      <div className="relative mx-auto h-0 w-full max-w-[1380px] lg:hidden">
         <ul
           className={`absolute left-0 right-0 mt-2 flex origin-top flex-col gap-1.5 rounded-2xl border border-cyan-300/40 bg-gradient-to-r from-[#0f3f5f] to-[#124a6f] p-3.5 text-white shadow-[0_16px_36px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out ${
             open

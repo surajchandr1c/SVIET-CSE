@@ -6,6 +6,11 @@ export interface ITechxploreStudent extends Document {
   image: string;
   admissionNo: string;
   batch: string;
+  about: string;
+  instagram?: string;
+  whatsapp?: string;
+  linkedin?: string;
+  github?: string;
   createdAt: Date;
 }
 
@@ -16,6 +21,11 @@ const TechxploreStudentSchema: Schema = new Schema(
     image: { type: String, required: true, trim: true },
     admissionNo: { type: String, required: true, trim: true },
     batch: { type: String, required: true, trim: true },
+    about: { type: String, required: true, trim: true },
+    instagram: { type: String, trim: true, default: "" },
+    whatsapp: { type: String, trim: true, default: "" },
+    linkedin: { type: String, trim: true, default: "" },
+    github: { type: String, trim: true, default: "" },
   },
   { timestamps: true }
 );

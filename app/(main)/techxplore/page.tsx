@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, Instagram, MessageCircle, Linkedin, Github } from "lucide-react";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import SmartImage from "@/components/SmartImage";
 
@@ -13,6 +13,11 @@ type TechxploreStudent = {
   image: string;
   admissionNo: string;
   batch: string;
+  about: string;
+  instagram?: string;
+  whatsapp?: string;
+  linkedin?: string;
+  github?: string;
 };
 
 export default function TechxplorePage() {
@@ -102,6 +107,61 @@ export default function TechxplorePage() {
                   <p>
                     <strong>Batch:</strong> {selected.batch}
                   </p>
+                  <div className="pt-2">
+                    <p className="mb-1">
+                      <strong>About:</strong>
+                    </p>
+                    <p className="leading-6 text-gray-600">
+                      {selected.about || "No details available."}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 pt-3">
+                    {selected.instagram && (
+                      <a
+                        href={selected.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full border border-pink-300 bg-pink-50 px-3 py-1 text-pink-700 transition hover:bg-pink-100"
+                      >
+                        <Instagram size={16} />
+                        Instagram
+                      </a>
+                    )}
+                    {selected.whatsapp && (
+                      <a
+                        href={selected.whatsapp}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-3 py-1 text-green-700 transition hover:bg-green-100"
+                      >
+                        <MessageCircle size={16} />
+                        WhatsApp
+                      </a>
+                    )}
+                    {selected.linkedin && (
+                      <a
+                        href={selected.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full border border-blue-300 bg-blue-50 px-3 py-1 text-blue-700 transition hover:bg-blue-100"
+                      >
+                        <Linkedin size={16} />
+                        LinkedIn
+                      </a>
+                    )}
+                    {selected.github && (
+                      <a
+                        href={selected.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full border border-gray-300 bg-gray-100 px-3 py-1 text-gray-700 transition hover:bg-gray-200"
+                      >
+                        <Github size={16} />
+                        GitHub
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </motion.div>
