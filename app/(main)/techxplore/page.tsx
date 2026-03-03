@@ -144,7 +144,7 @@ export default function TechxplorePage() {
                         href={selected.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-full border border-blue-300 bg-blue-50 px-3 py-1 text-blue-700 transition hover:bg-blue-100"
+                        className="inline-flex items-center gap-1 rounded-full border border-white bg-white px-3 py-1 text-black transition hover:bg-blue-100"
                       >
                         <Linkedin size={16} />
                         LinkedIn
