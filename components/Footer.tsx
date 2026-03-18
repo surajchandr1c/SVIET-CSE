@@ -37,7 +37,7 @@ export default function Footer() {
         <div className="grid gap-6 md:grid-cols-4">
           <div>
             <img
-              src="/Logo.jpeg"
+              src="/logo.jpeg"
               alt="logo"
               className="mb-4 h-10 w-auto object-contain lg:h-10"
             />

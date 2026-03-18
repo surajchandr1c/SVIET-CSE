@@ -33,7 +33,7 @@ export default function Navbar() {
             <div className="flex items-center gap-2.5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl ">
                 <img
-                  src="/Logo.jpeg"
+                  src="/logo.jpeg"
                   alt="SVIET logo"
                   className="h-15 w-15 object-contain"
                 />
