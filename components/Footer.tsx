@@ -32,26 +32,26 @@ const sixthSemLinks = [
 
 export default function Footer() {
   return (
-    <footer className="px-4 pb-6 pt-12 text-slate-100">
-      <div className="mx-auto max-w-[1380px] rounded-3xl border border-cyan-300/45 bg-gradient-to-r from-[#124a6d] to-[#175f84] px-5 py-6 lg:px-6 lg:py-7 shadow-[0_18px_45px_rgba(0,0,0,0.35)]">
+    <footer className="px-4 pb-8 pt-12 text-[#111827]">
+      <div className="mx-auto max-w-[1380px] rounded-3xl border border-[#E5E7EB] bg-white px-5 py-6 shadow-[0_14px_32px_rgba(17,24,39,0.10)] lg:px-6 lg:py-7">
         <div className="grid gap-6 md:grid-cols-4">
           <div>
             <img
-              src="/Logo.webp"
+              src="/Logo.jpeg"
               alt="logo"
               className="mb-4 h-10 w-auto object-contain lg:h-10"
             />
-            <p className="max-w-xs text-[16px] leading-7 text-slate-100/95 md:text-[17px] lg:text-base">
+            <p className="max-w-xs text-[16px] leading-7 text-[#6B7280] md:text-[17px] lg:text-base">
               Department of Computer Science and Engineers 
             </p>
           </div>
 
           <div>
-            <h3 className="mb-3 text-[19px] font-semibold md:text-[21px] lg:text-[1.45rem]">Navigation</h3>
+            <h3 className="mb-3 text-[19px] font-semibold text-black md:text-[21px] lg:text-[1.45rem]">Navigation</h3>
             <ul className="space-y-2">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-[16px] hover:text-cyan-200 md:text-[17px] lg:text-base">
+                  <Link href={link.href} className="text-[16px] text-[#2563EB] hover:text-[#1E40AF] md:text-[17px] lg:text-base">
                     {link.label}
                   </Link>
                 </li>
@@ -60,11 +60,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-3 text-[19px] font-semibold md:text-[21px] lg:text-[1.45rem]">4th Semester</h3>
+            <h3 className="mb-3 text-[19px] font-semibold text-black md:text-[21px] lg:text-[1.45rem]">4th Semester</h3>
             <ul className="space-y-2">
               {fourthSemLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-[16px] hover:text-cyan-200 md:text-[17px] lg:text-base">
+                  <Link href={link.href} className="text-[16px] text-[#2563EB] hover:text-[#1E40AF] md:text-[17px] lg:text-base">
                     {link.label}
                   </Link>
                 </li>
@@ -73,11 +73,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-3 text-[19px] font-semibold md:text-[21px] lg:text-[1.45rem]">6th Semester</h3>
+            <h3 className="mb-3 text-[19px] font-semibold text-black md:text-[21px] lg:text-[1.45rem]">6th Semester</h3>
             <ul className="space-y-2">
               {sixthSemLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-[16px] hover:text-cyan-200 md:text-[17px] lg:text-base">
+                  <Link href={link.href} className="text-[16px] text-[#2563EB] hover:text-[#1E40AF] md:text-[17px] lg:text-base">
                     {link.label}
                   </Link>
                 </li>
@@ -86,7 +86,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-6 border-t border-cyan-300/25 pt-4 text-center text-[16px] text-slate-100/95 md:text-[17px] lg:text-base">
+        <div className="mt-6 border-t border-[#E5E7EB] pt-4 text-center text-[16px] text-[#6B7280] md:text-[17px] lg:text-base">
           &copy; {new Date().getFullYear()} CSE Department
         </div>
       </div>

@@ -1,14 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  --color-brand: #0b3c5d;
-  --color-brand-hover: #0f4f79;
-  --color-page: #f8fafc;
-  --color-surface: #ffffff;
+  --ui-bg: #ffffff;
+  --ui-card-bg: #f3f4f6;
+  --ui-card-border: #e5e7eb;
+
+  --ui-text: #111827;
+  --ui-text-secondary: #6b7280;
+  --ui-heading: #000000;
+
+  --ui-button-bg: #2563eb;
+  --ui-button-text: #ffffff;
+  --ui-button-hover: #1d4ed8;
+
+  --ui-link: #2563eb;
+  --ui-link-hover: #1e40af;
+
+  --ui-icon: #6b7280;
+  --ui-icon-hover: #2563eb;
+
+  --ui-navbar-bg: #ffffff;
+  --ui-navbar-text: #111827;
+  --ui-navbar-active: #2563eb;
+
+  --ui-form-bg: #ffffff;
+  --ui-form-border: #d1d5db;
+  --ui-form-focus: #2563eb;
+  --ui-placeholder: #9ca3af;
+
+  /* legacy tokens */
+  --color-brand: var(--ui-button-bg);
+  --color-brand-hover: var(--ui-button-hover);
+  --color-page: var(--ui-bg);
+  --color-surface: var(--ui-form-bg);
 }
 
 html {
   font-size: 14px;
+  font-family: Cambria, "Times New Roman", Times, serif;
 }
 
 @media (max-width: 1024px) {
@@ -25,8 +54,24 @@ html {
 
 body {
   min-height: 100vh;
-  background-image: linear-gradient(to bottom, #071a2e, #0b1f3a);
-  color: #e2e8f0;
+  font-family: Cambria, "Times New Roman", Times, serif;
+  background: var(--ui-bg);
+  color: var(--ui-text);
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+button {
+  color: var(--ui-button-text) !important;
+}
+
+.theme-main button a {
+  color: inherit !important;
 }
 
 
@@ -45,58 +90,156 @@ body {
   animation: fadeIn 0.6s ease forwards;
 }
 
-/* App-wide dark theme overrides for legacy light utility classes */
-.theme-main .bg-white,
-.theme-main .bg-gray-50,
-.theme-main .bg-gray-100,
-.theme-main .bg-gray-200 {
-  background-color: rgba(11, 28, 71, 0.75) !important;
+/* Light theme overrides for existing Tailwind classes */
+.theme-main a {
+  color: var(--ui-link);
 }
 
+.theme-main a:hover {
+  color: var(--ui-link-hover);
+}
 
+.theme-main a.text-white,
+.theme-main a.text-white:hover {
+  color: #ffffff !important;
+}
+
+.theme-main .text-slate-100,
+.theme-main .text-slate-200,
+.theme-main .text-slate-300,
+.theme-main .text-slate-400,
+.theme-main .text-slate-500,
+.theme-main .text-slate-600,
+.theme-main .text-slate-700,
+.theme-main .text-slate-800,
+.theme-main .text-slate-900,
 .theme-main .text-gray-900,
 .theme-main .text-gray-800,
 .theme-main .text-gray-700,
 .theme-main .text-gray-600,
 .theme-main .text-gray-500,
 .theme-main .text-gray-400,
-.theme-main .text-slate-900,
-.theme-main .text-slate-800,
-.theme-main .text-slate-700,
-.theme-main .text-slate-600,
-.theme-main .text-slate-500,
 .theme-main .text-black,
 .theme-main .text-blue-900,
 .theme-main .text-blue-700,
 .theme-main .text-blue-600,
-.theme-main .text-sky-900,
-.theme-main .text-\[\#0b3c5d\],
-.theme-main .text-\[\#2c3e50\] {
-  color: #dbeafe !important;
+.theme-main .text-sky-900 {
+  color: var(--ui-text) !important;
 }
 
+.theme-main .text-slate-300,
+.theme-main .text-gray-600,
+.theme-main .text-gray-500,
+.theme-main .text-slate-600,
+.theme-main .text-slate-500 {
+  color: var(--ui-text-secondary) !important;
+}
+
+.theme-main .text-cyan-300,
+.theme-main .text-cyan-200,
+.theme-main .text-blue-600 {
+  color: var(--ui-link) !important;
+}
+
+.theme-main .bg-gray-50,
+.theme-main .bg-gray-100,
+.theme-main .bg-gray-200,
+.theme-main .bg-\[\#0b1c47\]\/75,
+.theme-main .bg-\[\#071433\],
+.theme-main .bg-\[\#0b1c47\]\/75,
+.theme-main .bg-\[\#0b1c47\]\/85 {
+  background-color: var(--ui-card-bg) !important;
+}
+
+.theme-main .border,
 .theme-main .border-gray-100,
 .theme-main .border-gray-200,
 .theme-main .border-gray-300,
 .theme-main .border-slate-200,
-.theme-main .border-slate-300 {
-  border-color: rgba(34, 211, 238, 0.2) !important;
+.theme-main .border-slate-300,
+.theme-main .border-cyan-300\/45,
+.theme-main .border-cyan-300\/40,
+.theme-main .border-cyan-400\/20,
+.theme-main .border-cyan-300\/25,
+.theme-main .border-cyan-300\/15 {
+  border-color: var(--ui-card-border) !important;
 }
 
 .theme-main .hover\:bg-gray-50:hover,
 .theme-main .hover\:bg-gray-100:hover,
 .theme-main .hover\:bg-white:hover {
-  background-color: rgba(34, 211, 238, 0.08) !important;
+  background-color: rgba(37, 99, 235, 0.06) !important;
 }
 
-/* Frontend buttons use the same teal tone as navbar/footer */
-.frontend-shell button[class*="bg-"] {
-  background-color: #175f84 !important;
-  color: #f8fafc !important;
+.theme-main .bg-blue-600,
+.theme-main .bg-sky-600,
+.theme-main .bg-\[\#155a80\],
+.theme-main .bg-\[\#175f84\],
+.theme-main .bg-\[\#0b3c5d\],
+.theme-main .bg-sky-900 {
+  background-color: var(--ui-button-bg) !important;
+  color: var(--ui-button-text) !important;
 }
 
-.frontend-shell button[class*="bg-"]:hover {
-  background-color: #1a6a95 !important;
+.theme-main .hover\:bg-blue-600:hover,
+.theme-main .hover\:bg-sky-700:hover,
+.theme-main .hover\:bg-sky-900:hover,
+.theme-main .hover\:bg-\[\#1a6a95\]:hover,
+.theme-main .hover\:bg-\[\#0f4f79\]:hover {
+  background-color: var(--ui-button-hover) !important;
+}
+
+.theme-main svg {
+  color: var(--ui-icon);
+  transition: color 0.3s ease;
+}
+
+.theme-main a:hover svg,
+.theme-main button:hover svg {
+  color: var(--ui-icon-hover);
+}
+
+.frontend-shell button,
+.frontend-shell a {
+  transition: all 0.3s ease;
+}
+
+/* Buttons hover (scale + shadow) */
+.frontend-shell button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* Card hover (lift + shadow) */
+.theme-main [class*="shadow"] {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.theme-main [class*="shadow"]:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* Forms */
+.theme-main input,
+.theme-main textarea,
+.theme-main select {
+  background-color: var(--ui-form-bg) !important;
+  border-color: var(--ui-form-border) !important;
+  color: var(--ui-text) !important;
+}
+
+.theme-main input::placeholder,
+.theme-main textarea::placeholder {
+  color: var(--ui-placeholder) !important;
+}
+
+.theme-main input:focus,
+.theme-main textarea:focus,
+.theme-main select:focus {
+  outline: none !important;
+  border-color: var(--ui-form-focus) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18) !important;
 }
 
 /* Admin panel theme + modern shell */
@@ -328,4 +471,49 @@ body {
 .admin-shell .focus\:border-\[\#0b3c5d\]:focus {
   border-color: var(--admin-accent) !important;
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--admin-accent) 28%, transparent) !important;
+}
+/* Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  will-change: transform, opacity;
+}
+
+.reveal.reveal-visible {
+  animation: fadeUp 0.8s ease-out forwards;
+}
+
+.img-reveal {
+  opacity: 0;
+  transition: opacity 1s ease-in;
+  will-change: opacity;
+}
+
+.img-reveal.img-reveal-visible {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal.reveal-visible {
+    animation: none;
+  }
+  .img-reveal {
+    opacity: 1;
+    transition: none;
+  }
 }

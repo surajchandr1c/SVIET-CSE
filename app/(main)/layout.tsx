@@ -16,7 +16,7 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <div className="frontend-shell theme-main min-h-screen bg-gradient-to-b from-[#071A2E] to-[#0B1F3A] text-slate-100">
+    <div className="frontend-shell theme-main min-h-screen bg-white text-[#111827]">
       <Navbar />
 
       <main className="min-h-screen">{children}</main>

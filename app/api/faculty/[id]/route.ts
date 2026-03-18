@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import Faculty from "@/models/Faculty";
 
@@ -24,6 +25,7 @@ export async function PUT(
       );
     }
 
+    revalidateTag("faculty:list", "default");
     return NextResponse.json(updatedFaculty, { status: 200 });
   } catch (error) {
     console.error("Update Error:", error);
@@ -54,6 +56,7 @@ export async function DELETE(
       );
     }
 
+    revalidateTag("faculty:list", "default");
     return NextResponse.json(
       { message: "Faculty deleted successfully" },
       { status: 200 }

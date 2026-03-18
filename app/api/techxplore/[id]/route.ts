@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import TechxploreStudent from "@/models/TechxploreStudent";
 
@@ -24,6 +25,7 @@ export async function PUT(
       );
     }
 
+    revalidateTag("techxplore:list", "default");
     return NextResponse.json(updatedStudent, { status: 200 });
   } catch (error) {
     console.error("TechXplore update error:", error);
@@ -51,6 +53,7 @@ export async function DELETE(
       );
     }
 
+    revalidateTag("techxplore:list", "default");
     return NextResponse.json(
       { message: "TechXplore student deleted successfully" },
       { status: 200 }

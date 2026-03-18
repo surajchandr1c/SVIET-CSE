@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import TechxploreStudent from "@/models/TechxploreStudent";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
@@ -21,6 +24,7 @@ export async function POST(req: Request) {
     await connectDB();
     const body = await req.json();
     const newStudent = await TechxploreStudent.create(body);
+    revalidateTag("techxplore:list", "default");
     return NextResponse.json(newStudent, { status: 201 });
   } catch (error) {
     console.error("TechXplore create error:", error);

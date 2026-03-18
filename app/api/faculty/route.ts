@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import Faculty from "@/models/Faculty";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
@@ -23,6 +26,7 @@ export async function POST(req: Request) {
 
     const newFaculty = await Faculty.create(body);
 
+    revalidateTag("faculty:list", "default");
     return NextResponse.json(newFaculty, { status: 201 });
   } catch (error) {
     console.log(error);

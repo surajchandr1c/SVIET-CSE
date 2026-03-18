@@ -179,34 +179,61 @@ In addition to academic activities, the department organizes workshops, seminars
         </div>
       </section>
 
-      <section className="bg-transparent py-12">
-        <h2 className="mb-8 text-center text-[28px] font-bold tracking-widest text-[#2c3e50] md:text-[30px] lg:text-[2.15rem]">
-          SUBJECTS
-        </h2>
+      <section className="relative py-14 sm:py-16">
+        <div className="absolute inset-0 -z-10 " />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(1200px_420px_at_12%_10%,rgba(8,184,168,0.18),transparent_60%),radial-gradient(900px_520px_at_90%_20%,rgba(31,86,228,0.14),transparent_55%)]" />
 
-        <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-2 lg:grid-cols-4">
-          {subjects.map((sub, index) => (
-            <div
-              key={index}
-              className="rounded-lg border-l-4 border-blue-600 bg-white p-6 shadow transition hover:-translate-y-2 hover:shadow-lg"
-            >
-              <h3 className="mb-2 text-[16px] font-semibold text-[#2c3e50] md:text-[18px] lg:text-[1.2rem]">
-                {sub.title}
-              </h3>
-
-              <p className="mb-4 text-[13px] text-gray-600 md:text-[14px] lg:text-[0.95rem]">{sub.desc}</p>
-
-              <a href={sub.link} className="text-[14px] font-semibold text-blue-600 hover:underline md:text-[15px] lg:text-[14px]">
-                View Syllabus {"->"}
-              </a>
+        <div className="mx-auto w-full max-w-[1380px] px-6">
+          <div className="mb-10 flex flex-col gap-3 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[12px] font-semibold tracking-[0.5em] text-[#8aa4c6]">
+                CURRICULUM
+              </p>
+              <h2 className="mt-3 text-[40px] font-extrabold leading-[1.05] text-black sm:text-[52px]">
+                Subjects
+              </h2>
             </div>
-          ))}
-        </div>
 
-        <div className="mt-8 text-center">
-          <a href="/semester" className="text-[16px] font-semibold hover:underline md:text-[18px] lg:text-[1.2rem]">
-            View more...
-          </a>
+            <Link
+              href="/semester"
+              className="inline-flex items-center gap-2 text-[15px] font-semibold text-[#08b8a8] transition hover:text-[#22d3ee]"
+            >
+              View all resources <span aria-hidden>&rarr;</span>
+            </Link>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {subjects.map((sub, index) => (
+              <div
+                key={index}
+                className="group relative overflow-hidden rounded-2xl bg-white/[0.06] p-7 backdrop-blur-md ring-1 ring-white/10 transition duration-300 hover:-translate-y-2 hover:bg-white/[0.085] hover:ring-white/20"
+                style={{ boxShadow: "0 16px 42px rgba(0,0,0,0.45)" }}
+              >
+                <div className="h-1 w-14 rounded-full bg-gradient-to-r from-[#08b8a8] to-[#1f56e4]" />
+
+                <h3 className="mt-6 text-[20px] font-bold leading-snug text-black md:text-[22px]">
+                  {sub.title}
+                </h3>
+
+                <p className="mt-4 text-[15px] leading-7 text-gray-700">
+                  {sub.desc}
+                </p>
+
+                <a
+                  href={sub.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 inline-flex items-center gap-2 text-[15px] font-semibold text-[#08b8a8] transition hover:text-[#22d3ee]"
+                >
+                  View syllabus <span aria-hidden>&rarr;</span>
+                </a>
+
+                <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100">
+                  <div className="absolute -left-20 -top-24 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(8,184,168,0.18),transparent_60%)]" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

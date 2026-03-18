@@ -1,4 +1,5 @@
 import "./globals.css";
+import ScrollReveal from "@/components/ScrollReveal";
 
 
 export default function RootLayout({
@@ -10,8 +11,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         suppressHydrationWarning={true}
-        className="theme-main min-h-screen bg-gradient-to-b from-[#071A2E] to-[#0B1F3A] text-slate-100"
+        className="theme-main min-h-screen bg-white text-[#111827]"
       >
+        <ScrollReveal />
         {children}
       </body>
     </html>
