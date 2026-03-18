@@ -27,7 +27,7 @@ export default function SixthSemesterPage() {
               key={item.name}
               className="flex items-center justify-center rounded-2xl border border-cyan-400/20 bg-[#0b1c47]/75 p-8 text-center shadow-[0_18px_45px_rgba(0,0,0,0.35)] transition duration-300 hover:-translate-y-1 lg:p-6"
             >
-              <Link href={item.link} className="block w-full text-center text-2xl font-bold text-cyan-300 md:text-[1.5rem] lg:text-[1.35rem]">
+              <Link href={item.link} className="block w-full text-center text-2xl font-bold text-black md:text-[1.5rem] lg:text-[1.35rem]">
                 {item.name}
               </Link>
             </div>
