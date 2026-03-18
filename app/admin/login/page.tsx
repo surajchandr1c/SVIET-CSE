@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
 
       <div className="relative z-10 w-full max-w-md rounded-2xl border border-cyan-300/25 bg-[#0f1f3f]/85 p-8 shadow-[0_20px_40px_rgba(0,0,0,0.35)] backdrop-blur-md">
         <p className="mb-2 text-xs uppercase tracking-[0.22em] text-cyan-200">Secure Access</p>
-        <h2 className="mb-6 text-3xl font-bold text-slate-100">Admin Login</h2>
+        <h2 className="mb-6 text-3xl font-bold text-white">Admin Login</h2>
 
         {error && (
           <div className="mb-4 rounded-lg border border-red-300/30 bg-red-500/15 p-3 text-sm text-red-100">

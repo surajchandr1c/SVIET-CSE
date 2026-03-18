@@ -161,7 +161,7 @@ export default function Home() {
 
       <section className="mx-auto flex max-w-6xl items-center gap-8 px-5 py-5">
         <div>
-          <h1 className="mb-4 text-[26px] font-bold text-[#0b3c5d] md:text-[33px] lg:text-[2.4rem]">
+          <h1 className="mb-4 text-[26px] font-bold text-black md:text-[33px] lg:text-[2.4rem]">
             B.Tech Computer Science & Engineering
           </h1>
 

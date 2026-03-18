@@ -95,7 +95,7 @@ export default function FacultyClient({
 
                 <p className="mb-4 text-gray-700">{selected.about}</p>
 
-                <div className="space-y-2 text-sm text-gray-700">
+                <div className="space-y-2 text-lg text-gray-700">
                   <p>
                     <strong>Email:</strong> {selected.email}
                   </p>

@@ -84,7 +84,7 @@ export default function TechxploreClient({
                   key={normalizeImageUrl(selected.image)}
                   src={normalizeImageUrl(selected.image)}
                   alt={selected.name}
-                  className="h-80 object-contain md:h-[90%]"
+                  className="h-200 object-contain md:h-[90%]"
                 />
               </div>
 
@@ -105,7 +105,7 @@ export default function TechxploreClient({
                     <p className="mb-1">
                       <strong>About:</strong>
                     </p>
-                    <p className="leading-6 text-gray-600">
+                    <p className="leading-6 text-gray-500 ">
                       {selected.about || "No details available."}
                     </p>
                   </div>
@@ -116,7 +116,7 @@ export default function TechxploreClient({
                         href={selected.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-full border border-pink-300 bg-pink-50 px-3 py-1 text-pink-700 transition hover:bg-pink-100"
+                        className="inline-flex items-center gap-1 rounded-full border border-pink-300 bg-pink-50 px-3 py-1 text-black transition hover:bg-pink-100"
                       >
                         <Instagram size={16} />
                         Instagram
@@ -127,7 +127,7 @@ export default function TechxploreClient({
                         href={selected.whatsapp}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-3 py-1 text-green-700 transition hover:bg-green-100"
+                        className="inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-3 py-1 text-black transition hover:bg-green-100"
                       >
                         <MessageCircle size={16} />
                         WhatsApp
