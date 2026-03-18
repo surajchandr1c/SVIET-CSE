@@ -16,6 +16,9 @@ export default function Home() {
     "/events/interection/1.jpg",
     "/events/interection/11.jpg",
     "/events/interection/8.jpg",
+    "/home/WhatsApp Image 2026-03-12 at 12.39.21 PM (1).jpeg",
+    "/home/WhatsApp Image 2026-03-12 at 12.39.21 PM.jpeg",
+    "/home/WhatsApp Image 2026-03-12 at 12.39.22 PM (1).jpeg",
   ];
 
   const [current, setCurrent] = useState(0);
