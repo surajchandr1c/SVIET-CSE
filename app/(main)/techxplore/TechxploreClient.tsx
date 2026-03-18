@@ -84,7 +84,7 @@ export default function TechxploreClient({
                   key={normalizeImageUrl(selected.image)}
                   src={normalizeImageUrl(selected.image)}
                   alt={selected.name}
-                  className="h-200 object-contain md:h-[90%]"
+                  className="h-90 object-contain md:h-[90%]"
                 />
               </div>
 
