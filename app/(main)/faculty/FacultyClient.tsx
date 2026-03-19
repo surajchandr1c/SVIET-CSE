@@ -82,7 +82,7 @@ export default function FacultyClient({
                   key={normalizeImageUrl(selected.image)}
                   src={normalizeImageUrl(selected.image)}
                   alt={selected.name}
-                  className="h-80 md:h-[90%] object-contain"
+                  className="h-120 md:h-[90%] object-contain"
                 />
               </div>
 
