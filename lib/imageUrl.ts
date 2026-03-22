@@ -5,13 +5,8 @@ export const extractGoogleDriveFileId = (url: string): string | null => {
   const directMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
   if (directMatch?.[1]) return directMatch[1];
 
-  try {
-    const parsed = new URL(trimmed);
-    const idParam = parsed.searchParams.get("id");
-    if (idParam) return idParam;
-  } catch {
-    return null;
-  }
+  const idParamMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (idParamMatch?.[1]) return idParamMatch[1];
 
   return null;
 };

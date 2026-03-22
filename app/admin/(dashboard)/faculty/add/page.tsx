@@ -3,6 +3,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import SmartImage from "@/components/SmartImage";
+import { compareFacultyByPositionThenCreatedAtDesc } from "@/lib/facultyOrder";
 
 type Faculty = {
   _id?: string;
@@ -13,9 +14,13 @@ type Faculty = {
   experience: string;
   specialization: string;
   about: string;
+  position?: number | null;
+  createdAt?: string | Date;
 };
 
-const initialForm: Faculty = {
+type FacultyForm = Omit<Faculty, "_id" | "position"> & { position: string };
+
+const initialForm: FacultyForm = {
   name: "",
   profession: "",
   image: "",
@@ -23,20 +28,36 @@ const initialForm: Faculty = {
   experience: "",
   specialization: "",
   about: "",
+  position: "",
 };
 
 export default function AdminFacultyPage() {
   const [loading, setLoading] = useState(false);
+  const [orderLoadingId, setOrderLoadingId] = useState<string | null>(null);
   const [facultyList, setFacultyList] = useState<Faculty[]>([]);
   const [editingFacultyId, setEditingFacultyId] = useState<string | null>(null);
+  const [orderDrafts, setOrderDrafts] = useState<Record<string, string>>({});
 
-  const [form, setForm] = useState<Faculty>(initialForm);
+  const [form, setForm] = useState<FacultyForm>(initialForm);
   const previewImage = normalizeImageUrl(form.image);
 
   const fetchFaculty = async () => {
     const res = await fetch("/api/faculty");
     const data = await res.json();
-    setFacultyList(data);
+    const sorted = Array.isArray(data)
+      ? [...data].sort(compareFacultyByPositionThenCreatedAtDesc)
+      : [];
+
+    setFacultyList(sorted);
+    setOrderDrafts(() => {
+      const next: Record<string, string> = {};
+      for (const item of sorted) {
+        if (!item?._id) continue;
+        next[item._id] =
+          typeof item.position === "number" ? String(item.position) : "";
+      }
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -71,6 +92,9 @@ export default function AdminFacultyPage() {
         ? `/api/faculty/${editingFacultyId}`
         : "/api/faculty";
 
+      const position =
+        form.position.trim().length === 0 ? null : Number(form.position);
+
       const res = await fetch(endpoint, {
         method: isEditMode ? "PUT" : "POST",
         headers: {
@@ -78,11 +102,15 @@ export default function AdminFacultyPage() {
         },
         body: JSON.stringify({
           ...form,
+          position,
           image: normalizeImageUrl(form.image),
         }),
       });
 
-      if (!res.ok) throw new Error("Failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error ?? "Failed");
+      }
 
       alert(
         isEditMode
@@ -91,8 +119,14 @@ export default function AdminFacultyPage() {
       );
       handleReset();
       fetchFaculty();
-    } catch {
-      alert(editingFacultyId ? "Error updating faculty" : "Error adding faculty");
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : editingFacultyId
+            ? "Error updating faculty"
+            : "Error adding faculty"
+      );
     } finally {
       setLoading(false);
     }
@@ -110,7 +144,15 @@ export default function AdminFacultyPage() {
       experience: faculty.experience,
       specialization: faculty.specialization,
       about: faculty.about,
+      position:
+        typeof faculty.position === "number" ? String(faculty.position) : "",
     });
+
+    setOrderDrafts((prev) => ({
+      ...prev,
+      [faculty._id!]:
+        typeof faculty.position === "number" ? String(faculty.position) : "",
+    }));
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -195,6 +237,21 @@ export default function AdminFacultyPage() {
           </div>
 
           <input
+            type="number"
+            name="position"
+            value={form.position}
+            onChange={handleChange}
+            placeholder="Order (optional)"
+            className="w-full border rounded-lg px-4 py-2"
+            min={1}
+            step={1}
+          />
+          <p className="text-xs text-gray-500">
+            Set a number like 1, 2, 3... Lower number shows first. Leave blank to
+            place the profile at the end.
+          </p>
+
+          <input
             type="text"
             name="specialization"
             value={form.specialization}
@@ -266,22 +323,93 @@ export default function AdminFacultyPage() {
         <h2 className="text-2xl font-bold mb-6">Faculty List</h2>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {facultyList.map((faculty, index) => (
-            <div
-              key={faculty._id ?? `${faculty.email}-${index}`}
-              className="border rounded-xl p-4 flex gap-4 items-center"
-            >
-              <SmartImage
-                key={normalizeImageUrl(faculty.image)}
-                src={normalizeImageUrl(faculty.image)}
-                alt={faculty.name}
-                className="w-20 h-20 object-cover rounded-full"
-              />
+          {facultyList.map((faculty, index) => {
+            const imageSrc = normalizeImageUrl(faculty.image);
+
+            return (
+              <div
+                key={faculty._id ?? `${faculty.email}-${index}`}
+                className="border rounded-xl p-4 flex gap-4 items-center"
+              >
+                <SmartImage
+                  src={imageSrc}
+                  alt={faculty.name}
+                  className="w-20 h-20 object-cover rounded-full"
+                />
 
               <div className="flex-1">
                 <h3 className="font-bold">{faculty.name}</h3>
                 <p className="text-sm text-gray-500">{faculty.profession}</p>
                 <p className="text-xs text-gray-400">{faculty.specialization}</p>
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                  <span className="font-medium text-gray-600">Order:</span>
+                  <input
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={
+                      faculty._id ? orderDrafts[faculty._id] ?? "" : ""
+                    }
+                    onChange={(e) => {
+                      if (!faculty._id) return;
+                      setOrderDrafts((prev) => ({
+                        ...prev,
+                        [faculty._id!]: e.target.value,
+                      }));
+                    }}
+                    placeholder="(last)"
+                    className="w-24 rounded-md border px-2 py-1"
+                    disabled={!faculty._id}
+                  />
+                  <button
+                    type="button"
+                    className="rounded-md border px-3 py-1 hover:bg-gray-50 disabled:opacity-50"
+                    disabled={
+                      !faculty._id ||
+                      orderLoadingId === faculty._id ||
+                      (orderDrafts[faculty._id] ?? "") ===
+                        (typeof faculty.position === "number"
+                          ? String(faculty.position)
+                          : "")
+                    }
+                    onClick={async () => {
+                      if (!faculty._id) return;
+                      setOrderLoadingId(faculty._id);
+                      try {
+                        const draft = (orderDrafts[faculty._id] ?? "").trim();
+                        const position = draft.length === 0 ? null : Number(draft);
+
+                        const res = await fetch(`/api/faculty/${faculty._id}`, {
+                          method: "PUT",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ position }),
+                        });
+
+                        if (!res.ok) {
+                          const data = await res.json().catch(() => null);
+                          throw new Error(data?.error ?? "Failed to update order");
+                        }
+
+                        await fetchFaculty();
+                      } catch (error) {
+                        alert(
+                          error instanceof Error
+                            ? error.message
+                            : "Failed to update order"
+                        );
+                      } finally {
+                        setOrderLoadingId(null);
+                      }
+                    }}
+                  >
+                    {orderLoadingId === faculty._id ? "Saving..." : "Save"}
+                  </button>
+                  <span className="text-gray-400">
+                    {typeof faculty.position === "number"
+                      ? `Current: ${faculty.position}`
+                      : "Current: last"}
+                  </span>
+                </div>
               </div>
 
               <div className="flex gap-2">
@@ -301,7 +429,8 @@ export default function AdminFacultyPage() {
                 </button>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {facultyList.length === 0 && (

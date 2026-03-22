@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useMemo, useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import SmartImage from "@/components/SmartImage";
+import { compareTechxploreByOrderThenCreatedAtAsc } from "@/lib/techxploreOrder";
 
 type TechxploreStudent = {
   _id?: string;
   name: string;
   position: string;
+  order?: number | null;
+  createdAt?: string | Date | null;
   image: string;
   admissionNo: string;
   batch: string;
@@ -18,9 +21,12 @@ type TechxploreStudent = {
   github: string;
 };
 
-const initialForm: TechxploreStudent = {
+type TechxploreForm = Omit<TechxploreStudent, "order"> & { order: string };
+
+const initialForm: TechxploreForm = {
   name: "",
   position: "",
+  order: "",
   image: "",
   admissionNo: "",
   batch: "",
@@ -33,23 +39,45 @@ const initialForm: TechxploreStudent = {
 
 export default function AdminTechxplorePage() {
   const [loading, setLoading] = useState(false);
+  const [orderLoadingId, setOrderLoadingId] = useState<string | null>(null);
   const [students, setStudents] = useState<TechxploreStudent[]>([]);
   const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
+  const [orderDrafts, setOrderDrafts] = useState<Record<string, string>>({});
 
-  const [form, setForm] = useState<TechxploreStudent>(initialForm);
+  const [form, setForm] = useState<TechxploreForm>(initialForm);
   const previewImage = normalizeImageUrl(form.image);
+
+  const orderedStudents = useMemo(() => {
+    const data = [...students];
+    data.sort(compareTechxploreByOrderThenCreatedAtAsc);
+    return data;
+  }, [students]);
 
   const fetchStudents = async () => {
     const res = await fetch("/api/techxplore");
     const data = await res.json();
-    setStudents(Array.isArray(data) ? data : []);
+    const sorted = Array.isArray(data)
+      ? [...data].sort(compareTechxploreByOrderThenCreatedAtAsc)
+      : [];
+
+    setStudents(sorted);
+    setOrderDrafts(() => {
+      const next: Record<string, string> = {};
+      for (const item of sorted) {
+        if (!item?._id) continue;
+        next[item._id] = typeof item.order === "number" ? String(item.order) : "";
+      }
+      return next;
+    });
   };
 
   useEffect(() => {
     fetchStudents();
   }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -69,12 +97,25 @@ export default function AdminTechxplorePage() {
         ? `/api/techxplore/${editingStudentId}`
         : "/api/techxplore";
 
+      const orderRaw = form.order.trim();
+      let order: number | null = null;
+      if (orderRaw.length > 0) {
+        const parsed = Number(orderRaw);
+        if (!Number.isFinite(parsed) || !Number.isInteger(parsed) || parsed < 1) {
+          throw new Error(
+            "Invalid order. Use a whole number (>= 1) or leave blank."
+          );
+        }
+        order = parsed;
+      }
+
       const res = await fetch(endpoint, {
         method: isEditMode ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name.trim(),
           position: form.position.trim(),
+          order,
           admissionNo: form.admissionNo.trim(),
           batch: form.batch.trim(),
           about: form.about.trim(),
@@ -86,7 +127,10 @@ export default function AdminTechxplorePage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error ?? "Failed");
+      }
 
       alert(
         isEditMode
@@ -95,11 +139,13 @@ export default function AdminTechxplorePage() {
       );
       handleReset();
       fetchStudents();
-    } catch {
+    } catch (error) {
       alert(
-        editingStudentId
-          ? "Error updating TechXplore student"
-          : "Error adding TechXplore student"
+        error instanceof Error
+          ? error.message
+          : editingStudentId
+            ? "Error updating TechXplore student"
+            : "Error adding TechXplore student"
       );
     } finally {
       setLoading(false);
@@ -113,6 +159,7 @@ export default function AdminTechxplorePage() {
     setForm({
       name: student.name,
       position: student.position,
+      order: student.order == null ? "" : String(student.order),
       image: student.image,
       admissionNo: student.admissionNo,
       batch: student.batch,
@@ -122,6 +169,11 @@ export default function AdminTechxplorePage() {
       linkedin: student.linkedin ?? "",
       github: student.github ?? "",
     });
+
+    setOrderDrafts((prev) => ({
+      ...prev,
+      [student._id!]: student.order == null ? "" : String(student.order),
+    }));
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -160,7 +212,7 @@ export default function AdminTechxplorePage() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-3">
             <input
               type="text"
               name="name"
@@ -178,6 +230,15 @@ export default function AdminTechxplorePage() {
               placeholder="Position"
               className="w-full rounded-lg border px-4 py-2"
               required
+            />
+            <input
+              type="number"
+              name="order"
+              value={form.order}
+              onChange={handleChange}
+              placeholder="Order (optional)"
+              className="w-full rounded-lg border px-4 py-2"
+              min={1}
             />
           </div>
 
@@ -263,7 +324,6 @@ export default function AdminTechxplorePage() {
             <div className="mt-4">
               <p className="mb-2 text-sm text-gray-500">Preview:</p>
               <SmartImage
-                key={previewImage}
                 src={previewImage}
                 alt="Preview"
                 className="h-32 w-32 rounded-lg border object-cover"
@@ -301,13 +361,12 @@ export default function AdminTechxplorePage() {
         <h2 className="mb-6 text-2xl font-bold">TechXplore Student List</h2>
 
         <div className="grid gap-6 md:grid-cols-2">
-          {students.map((student, index) => (
+          {orderedStudents.map((student, index) => (
             <div
               key={student._id ?? `${student.admissionNo}-${index}`}
-              className="flex items-center gap-4 rounded-xl border p-4"
+              className="border rounded-xl p-4 flex gap-4 items-center"
             >
               <SmartImage
-                key={normalizeImageUrl(student.image)}
                 src={normalizeImageUrl(student.image)}
                 alt={student.name}
                 className="h-20 w-20 rounded-full object-cover"
@@ -320,6 +379,86 @@ export default function AdminTechxplorePage() {
                   {student.admissionNo} | {student.batch}
                 </p>
                 <p className="mt-1 line-clamp-2 text-xs text-gray-500">{student.about}</p>
+
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                  <span className="font-medium text-gray-600">Order:</span>
+                  <input
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={student._id ? orderDrafts[student._id] ?? "" : ""}
+                    onChange={(e) => {
+                      if (!student._id) return;
+                      setOrderDrafts((prev) => ({
+                        ...prev,
+                        [student._id!]: e.target.value,
+                      }));
+                    }}
+                    placeholder="(last)"
+                    className="w-24 rounded-md border px-2 py-1"
+                    disabled={!student._id}
+                  />
+                  <button
+                    type="button"
+                    className="rounded-md border px-3 py-1 hover:bg-gray-50 disabled:opacity-50"
+                    disabled={
+                      !student._id ||
+                      orderLoadingId === student._id ||
+                      (orderDrafts[student._id] ?? "") ===
+                        (typeof student.order === "number"
+                          ? String(student.order)
+                          : "")
+                    }
+                    onClick={async () => {
+                      if (!student._id) return;
+                      setOrderLoadingId(student._id);
+                      try {
+                        const draft = (orderDrafts[student._id] ?? "").trim();
+                        if (draft.length > 0) {
+                          const parsed = Number(draft);
+                          if (
+                            !Number.isFinite(parsed) ||
+                            !Number.isInteger(parsed) ||
+                            parsed < 1
+                          ) {
+                            throw new Error(
+                              "Invalid order. Use a whole number (>= 1) or leave blank."
+                            );
+                          }
+                        }
+                        const order = draft.length === 0 ? null : Number(draft);
+
+                        const res = await fetch(`/api/techxplore/${student._id}`, {
+                          method: "PUT",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ order }),
+                        });
+
+                        if (!res.ok) {
+                          const data = await res.json().catch(() => null);
+                          throw new Error(data?.error ?? "Failed to update order");
+                        }
+
+                        await fetchStudents();
+                      } catch (error) {
+                        alert(
+                          error instanceof Error
+                            ? error.message
+                            : "Failed to update order"
+                        );
+                      } finally {
+                        setOrderLoadingId(null);
+                      }
+                    }}
+                  >
+                    {orderLoadingId === student._id ? "Saving..." : "Save"}
+                  </button>
+                  <span className="text-gray-400">
+                    {typeof student.order === "number"
+                      ? `Current: ${student.order}`
+                      : "Current: last"}
+                  </span>
+                </div>
               </div>
 
               <div className="flex gap-2">

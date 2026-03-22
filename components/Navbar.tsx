@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -64,7 +69,7 @@ export default function Navbar() {
               <Link
                 href={item.href}
                 className={`relative px-1 py-0.5 text-[17px] font-semibold transition-colors after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:w-full after:origin-left after:rounded-full after:bg-[#2563EB] after:transition-transform after:duration-300 after:ease-out md:text-[18px] lg:text-[15px] ${
-                  pathname === item.href
+                  mounted && pathname === item.href
                     ? "text-[#2563EB] after:scale-x-100"
                     : "text-black after:scale-x-0 hover:text-[#2563EB] hover:after:scale-x-100"
                 }`}
@@ -91,7 +96,7 @@ export default function Navbar() {
                 href={item.href}
                 onClick={handleClose}
                 className={`block rounded-md px-3 py-2.5 text-[17px] transition ${
-                  pathname === item.href
+                  mounted && pathname === item.href
                     ? "bg-[#EFF6FF] text-[#2563EB]"
                     : "text-black hover:bg-[#F3F4F6]"
                 }`}

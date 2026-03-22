@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import {
@@ -25,8 +25,13 @@ type AdminSidebarProps = {
 
 export default function AdminSidebar({ theme, onToggleTheme }: AdminSidebarProps) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleLogout = async () => {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -45,6 +50,7 @@ export default function AdminSidebar({ theme, onToggleTheme }: AdminSidebarProps
   ];
 
   const isActivePath = (href: string, exact?: boolean) => {
+    if (!mounted) return false;
     if (exact) {
       return pathname === href;
     }

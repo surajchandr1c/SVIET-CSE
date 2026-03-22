@@ -8,6 +8,7 @@ export interface IFaculty extends Document {
   experience: string;
   specialization: string;
   about: string;
+  position?: number | null;
   createdAt: Date;
 }
 
@@ -20,6 +21,7 @@ const FacultySchema: Schema = new Schema(
     experience: { type: String, required: true },
     specialization: { type: String, required: true },
     about: { type: String, required: true },
+    position: { type: Number, default: null },
   },
   { timestamps: true }
 );

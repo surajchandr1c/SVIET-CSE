@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import TechxploreStudent from "@/models/TechxploreStudent";
+import { normalizeTechxploreOrder } from "@/lib/techxploreOrderValue";
 
 export async function PUT(
   request: Request,
@@ -13,7 +14,17 @@ export async function PUT(
     const { id } = await context.params;
     const body = await request.json();
 
-    const updatedStudent = await TechxploreStudent.findByIdAndUpdate(id, body, {
+    const updates = { ...(body as Record<string, unknown>) };
+    if (Object.prototype.hasOwnProperty.call(updates, "order")) {
+      const order = normalizeTechxploreOrder(updates.order);
+      if (order === undefined) {
+        delete updates.order;
+      } else {
+        updates.order = order;
+      }
+    }
+
+    const updatedStudent = await TechxploreStudent.findByIdAndUpdate(id, updates, {
       new: true,
       runValidators: true,
     });
@@ -28,6 +39,12 @@ export async function PUT(
     revalidateTag("techxplore:list", "default");
     return NextResponse.json(updatedStudent, { status: 200 });
   } catch (error) {
+    if (error instanceof Error && error.message === "Invalid order") {
+      return NextResponse.json(
+        { error: "Invalid order. Use a whole number (>= 1) or leave blank." },
+        { status: 400 }
+      );
+    }
     console.error("TechXplore update error:", error);
     return NextResponse.json(
       { error: "Failed to update TechXplore student" },

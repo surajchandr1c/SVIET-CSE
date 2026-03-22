@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import Faculty from "@/models/Faculty";
+import { normalizeFacultyPosition } from "@/lib/facultyPosition";
 
 export async function PUT(
   request: Request,
@@ -13,7 +14,17 @@ export async function PUT(
     const { id } = await context.params;
     const body = await request.json();
 
-    const updatedFaculty = await Faculty.findByIdAndUpdate(id, body, {
+    const updates = { ...(body as Record<string, unknown>) };
+    if (Object.prototype.hasOwnProperty.call(updates, "position")) {
+      const position = normalizeFacultyPosition(updates.position);
+      if (position === undefined) {
+        delete updates.position;
+      } else {
+        updates.position = position;
+      }
+    }
+
+    const updatedFaculty = await Faculty.findByIdAndUpdate(id, updates, {
       new: true,
       runValidators: true,
     });
@@ -28,6 +39,12 @@ export async function PUT(
     revalidateTag("faculty:list", "default");
     return NextResponse.json(updatedFaculty, { status: 200 });
   } catch (error) {
+    if (error instanceof Error && error.message === "Invalid position") {
+      return NextResponse.json(
+        { error: "Invalid position. Use a whole number (>= 1) or leave blank." },
+        { status: 400 }
+      );
+    }
     console.error("Update Error:", error);
 
     return NextResponse.json(

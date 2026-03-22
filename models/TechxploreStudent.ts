@@ -3,6 +3,7 @@ import mongoose, { Document, Schema, models } from "mongoose";
 export interface ITechxploreStudent extends Document {
   name: string;
   position: string;
+  order?: number | null;
   image: string;
   admissionNo: string;
   batch: string;
@@ -18,6 +19,20 @@ const TechxploreStudentSchema: Schema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     position: { type: String, required: true, trim: true },
+    order: {
+      type: Number,
+      default: null,
+      validate: {
+        validator: (value: unknown) =>
+          value === null ||
+          value === undefined ||
+          (typeof value === "number" &&
+            Number.isFinite(value) &&
+            Number.isInteger(value) &&
+            value >= 1),
+        message: "Order must be a whole number (>= 1) or empty.",
+      },
+    },
     image: { type: String, required: true, trim: true },
     admissionNo: { type: String, required: true, trim: true },
     batch: { type: String, required: true, trim: true },
@@ -30,5 +45,17 @@ const TechxploreStudentSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-export default models.TechxploreStudent ||
-  mongoose.model<ITechxploreStudent>("TechxploreStudent", TechxploreStudentSchema);
+const MODEL_NAME = "TechxploreStudent";
+
+if (process.env.NODE_ENV === "development") {
+  const existing = models[MODEL_NAME] as mongoose.Model<ITechxploreStudent> | undefined;
+  const hasOrderPath = Boolean(existing?.schema?.path("order"));
+  if (existing && !hasOrderPath) {
+    delete models[MODEL_NAME];
+  }
+}
+
+export default (
+  models[MODEL_NAME] ||
+  mongoose.model<ITechxploreStudent>(MODEL_NAME, TechxploreStudentSchema)
+);

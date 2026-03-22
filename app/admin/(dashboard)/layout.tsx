@@ -24,7 +24,11 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [theme, setTheme] = useState<AdminTheme>(getInitialTheme);
+  const [theme, setTheme] = useState<AdminTheme>("dark");
+
+  useEffect(() => {
+    setTheme(getInitialTheme());
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(ADMIN_THEME_KEY, theme);
