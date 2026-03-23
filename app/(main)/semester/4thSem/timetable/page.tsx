@@ -59,6 +59,302 @@ function formatTime(raw: string) {
     .replace(/\s*-\s*/g, "–");
 }
 
+function SectionAUniversityTimetable() {
+  const dayRows: Array<{
+    day: string;
+    render: () => ReactNode;
+  }> = [
+    {
+      day: "Monday",
+      render: () => (
+        <>
+          <td colSpan={2} className="px-3 py-3 border border-slate-200 bg-blue-50 group-hover:brightness-95 transition">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold uppercase text-slate-900">DAA LAB</div>
+              <div className="text-xs font-bold text-slate-600">G-109</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Discrete Mathematics</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Operating Systems</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 bg-orange-50 text-orange-800 font-extrabold tracking-wide group-hover:brightness-95 transition">
+            BREAK
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Soft Skills</div>
+            </div>
+          </td>
+          <td colSpan={2} className="px-3 py-3 border border-slate-200 bg-blue-50 group-hover:brightness-95 transition">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold uppercase text-slate-900">OS LAB</div>
+              <div className="text-xs font-bold text-slate-600">G-109</div>
+            </div>
+          </td>
+        </>
+      ),
+    },
+    {
+      day: "Tuesday",
+      render: () => (
+        <>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Discrete Mathematics</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Design &amp; Analysis of Algorithms</div>
+            </div>
+          </td>
+          <td colSpan={2} className="px-3 py-3 border border-slate-200 bg-blue-50 group-hover:brightness-95 transition">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold uppercase text-slate-900">COA LAB</div>
+              <div className="text-xs font-bold text-slate-600">G-109</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 bg-orange-50 text-orange-800 font-extrabold tracking-wide group-hover:brightness-95 transition">
+            BREAK
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Verbal Ability</div>
+            </div>
+          </td>
+          <td colSpan={2} className="px-3 py-3 border border-slate-200 bg-cyan-50 group-hover:brightness-95 transition">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold uppercase text-slate-900">Training</div>
+            </div>
+          </td>
+        </>
+      ),
+    },
+    {
+      day: "Wednesday",
+      render: () => (
+        <>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Operating Systems</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Soft Skills</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Computer Org. &amp; Architecture</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Discrete Mathematics</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 bg-orange-50 text-orange-800 font-extrabold tracking-wide group-hover:brightness-95 transition">
+            BREAK
+          </td>
+          <td colSpan={2} className="px-3 py-3 border border-slate-200 bg-cyan-50 group-hover:brightness-95 transition">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold uppercase text-slate-900">Training</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 bg-cyan-50 group-hover:brightness-95 transition">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold uppercase text-slate-900">Training</div>
+            </div>
+          </td>
+        </>
+      ),
+    },
+    {
+      day: "Thursday",
+      render: () => (
+        <>
+          <td colSpan={2} className="px-3 py-3 border border-slate-200 bg-blue-50 group-hover:brightness-95 transition">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold uppercase text-slate-900">OS LAB</div>
+              <div className="text-xs font-bold text-slate-600">G-109</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Computer Org. &amp; Architecture</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Design &amp; Analysis of Algorithms</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 bg-orange-50 text-orange-800 font-extrabold tracking-wide group-hover:brightness-95 transition">
+            BREAK
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Discrete Mathematics</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 bg-cyan-50 group-hover:brightness-95 transition">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold uppercase text-slate-900">Training</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">&nbsp;</div>
+            </div>
+          </td>
+        </>
+      ),
+    },
+    {
+      day: "Friday",
+      render: () => (
+        <>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Design &amp; Analysis of Algorithms</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Operating Systems</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Discrete Mathematics</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 group-hover:bg-slate-50 transition-colors">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold text-slate-900">Computer Org. &amp; Architecture</div>
+            </div>
+          </td>
+          <td className="px-3 py-3 border border-slate-200 bg-orange-50 text-orange-800 font-extrabold tracking-wide group-hover:brightness-95 transition">
+            BREAK
+          </td>
+          <td colSpan={3} className="px-3 py-3 border border-slate-200 bg-blue-50 group-hover:brightness-95 transition">
+            <div className="grid place-items-center gap-1">
+              <div className="font-extrabold uppercase text-slate-900">DAA LAB</div>
+              <div className="text-xs font-bold text-slate-600">G-109</div>
+            </div>
+          </td>
+        </>
+      ),
+    },
+  ];
+
+  const subjectFaculty = [
+    { sno: 1, subject: "Computer Organization & Architecture + COA Lab", faculty: "Ms. Kulbir Kaur" },
+    { sno: 2, subject: "Design & Analysis of Algorithms + DAA Lab", faculty: "Ms. Ruchi Sharma" },
+    { sno: 3, subject: "Discrete Mathematics", faculty: "Ms. Sushma Rani" },
+    { sno: 4, subject: "Operating Systems + OS Lab", faculty: "Ms. Heena" },
+    { sno: 5, subject: "Soft Skills", faculty: "Ms. Navneet" },
+    { sno: 6, subject: "Verbal Ability", faculty: "Ms. Keerti" },
+  ];
+
+  return (
+    <div className="mt-2">
+      <div className="-mx-6 sm:mx-0 px-6 sm:px-0 pb-2">
+        <div className="mx-auto w-full max-w-[1180px]">
+          <div className="rounded-xl border border-slate-200 bg-white shadow-lg overflow-x-auto overscroll-x-contain touch-pan-x">
+            <table className="min-w-[1100px] w-full whitespace-nowrap text-sm text-center">
+              <thead>
+                <tr className="bg-blue-600 text-white">
+                  <th rowSpan={2} className="px-3 py-3 border border-white/20">
+                    Day / Time
+                  </th>
+                  <th className="px-3 py-3 border border-white/20">9:10-10:05</th>
+                  <th className="px-3 py-3 border border-white/20">10:05-11:00</th>
+                  <th className="px-3 py-3 border border-white/20">11:00-11:55</th>
+                  <th className="px-3 py-3 border border-white/20">11:55-12:50</th>
+                  <th className="px-3 py-3 border border-white/20">12:50-1:45</th>
+                  <th className="px-3 py-3 border border-white/20">1:45-2:40</th>
+                  <th className="px-3 py-3 border border-white/20">2:40-3:35</th>
+                  <th className="px-3 py-3 border border-white/20">3:35-4:30</th>
+                </tr>
+                <tr className="bg-blue-700 text-white">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <th key={i} className="px-3 py-2 border border-white/20 font-extrabold">
+                      {i + 1}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {dayRows.map((row, index) => (
+                  <motion.tr
+                    key={row.day}
+                    className="group"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: index * 0.06 }}
+                  >
+                    <th className="px-3 py-3 border border-slate-200 bg-slate-50 font-extrabold text-[#0b3c5d] group-hover:bg-slate-100 transition-colors">
+                      {row.day}
+                    </th>
+                    {row.render()}
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-3 text-center text-xs sm:text-sm text-slate-600">
+            Tip: On mobile, swipe horizontally to view the full timetable.
+          </p>
+
+          <div className="mt-5 rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden">
+            <div className="px-4 py-3 bg-blue-600 text-white font-extrabold">
+              Subject - Faculty
+            </div>
+            <div className="overflow-x-auto overscroll-x-contain touch-pan-x">
+              <table className="min-w-[700px] w-full text-sm">
+                <thead className="bg-blue-700 text-white">
+                  <tr>
+                    <th className="px-4 py-3 text-center border border-white/20 w-[90px]">
+                      S.NO
+                    </th>
+                    <th className="px-4 py-3 text-left border border-white/20">
+                      SUBJECT NAME
+                    </th>
+                    <th className="px-4 py-3 text-left border border-white/20">
+                      FACULTY NAME
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {subjectFaculty.map((item) => (
+                    <tr key={item.sno} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-4 py-3 text-center border border-slate-200 font-extrabold text-[#0b3c5d]">
+                        {item.sno}
+                      </td>
+                      <td className="px-4 py-3 border border-slate-200">{item.subject}</td>
+                      <td className="px-4 py-3 border border-slate-200">{item.faculty}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SectionDUniversityTimetable() {
   const dayRows: Array<{
     day: string;
@@ -376,7 +672,7 @@ export default function TimetablePage() {
       <SectionTabsClient value={section} onChange={setSection} />
 
       <AnimatePresence mode="wait">
-        {section === "d" ? (
+        {section === "d" || section === "a" ? (
           <motion.div
             key={section}
             initial={{ opacity: 0, y: 8 }}
@@ -389,24 +685,25 @@ export default function TimetablePage() {
                 TIME TABLE JAN-JUNE, 2026
               </p>
               <p className="mt-1 font-semibold text-slate-600">
-                4th Semester (Section-D) (G-002)
+                {section === "a"
+                  ? "4th Semester (Section-A) (G-103)"
+                  : "4th Semester (Section-D) (G-002)"}
               </p>
             </div>
 
-            <SectionDUniversityTimetable />
+            {section === "a" ? (
+              <SectionAUniversityTimetable />
+            ) : (
+              <SectionDUniversityTimetable />
+            )}
           </motion.div>
         ) : (
         <div className="mx-auto mt-8 max-w-3xl rounded-2xl bg-white p-7 shadow-sm ring-1 ring-black/5 text-center">
           <p className="text-lg font-semibold text-[#0b3c5d]">
-            {section === "a"
-              ? "SEC - A"
-              : section === "b"
-                ? "SEC - B"
-                : "SEC - C"}{" "}
-            timetable will be updated soon.
+            {section === "b" ? "SEC - B" : "SEC - C"} timetable will be updated soon.
           </p>
           <p className="mt-2 text-gray-600">
-            Right now, the timetable is available for SEC - D.
+            Right now, the timetable is available for SEC - A and SEC - D.
           </p>
         </div>
         )}
