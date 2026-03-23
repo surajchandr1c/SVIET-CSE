@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { resolvePlaceholderHref } from "@/lib/resolvePlaceholderHref";
 
 type Paper = {
   _id?: string;
@@ -43,7 +44,7 @@ export default function FourthSemesterPage() {
           {papers.map((paper, index) => (
             <Link
               key={paper._id ?? `${paper.title}-${index}`}
-              href={paper.link}
+              href={resolvePlaceholderHref(paper.link)}
               target="_blank"
               className="bg-gray-100 rounded-2xl shadow-lg p-8 border-l-4 border-blue-600 hover:scale-105 transition duration-300 block"
             >

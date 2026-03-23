@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { resolvePlaceholderHref } from "@/lib/resolvePlaceholderHref";
 
 type Resource = {
   _id?: string;
@@ -36,7 +37,7 @@ export default function FourthSemesterPptPage() {
         <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6 p-5 mt-6">
           {resources.map((resource, index) => (
             <a
-              href={resource.link}
+              href={resolvePlaceholderHref(resource.link)}
               key={resource._id ?? `${resource.title}-${index}`}
               target="_blank"
               rel="noopener noreferrer"

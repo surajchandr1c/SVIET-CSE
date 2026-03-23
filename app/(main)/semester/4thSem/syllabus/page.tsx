@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { resolvePlaceholderHref } from "@/lib/resolvePlaceholderHref";
 
 type Subject = {
   _id?: string;
@@ -41,7 +42,7 @@ export default function FourthSemesterSubjects() {
               {subjects.map((subject, index) => (
                 <a
                   key={subject._id ?? `${subject.title}-${index}`}
-                  href={subject.link}
+                  href={resolvePlaceholderHref(subject.link)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block"

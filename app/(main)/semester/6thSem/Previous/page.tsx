@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { resolvePlaceholderHref } from "@/lib/resolvePlaceholderHref";
 
 type Paper = {
   _id?: string;
@@ -42,7 +43,7 @@ export default function SixthSemester() {
             {papers.map((paper, index) => (
               <a
                 key={paper._id ?? `${paper.title}-${index}`}
-                href={paper.link}
+                href={resolvePlaceholderHref(paper.link)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white p-10 text-center rounded-xl shadow-md hover:-translate-y-2 hover:shadow-lg transition duration-300"
