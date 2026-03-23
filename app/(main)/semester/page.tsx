@@ -170,12 +170,20 @@ export default function SemestersPage() {
                     className="absolute left-0 top-0 h-full w-1.5 rounded-l-2xl bg-blue-600 shadow-[2px_0_10px_rgba(37,99,235,0.25)]"
                   />
 
-                  <h3 className="text-xl font-extrabold text-slate-900 md:text-[1.35rem]">
-                    {item.name}
-                  </h3>
-                  <p className="mt-3 text-sm font-semibold tracking-wide text-slate-500">
-                    {item.description}
-                  </p>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-xl font-extrabold text-slate-900 md:text-[1.35rem]">
+                        {item.name}
+                      </h3>
+                      <p className="mt-3 text-sm font-semibold tracking-wide text-slate-500">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-blue-600/10 text-blue-700 ring-1 ring-blue-600/15 transition group-hover:bg-blue-600/15">
+                      <item.Icon className="h-6 w-6" />
+                    </div>
+                  </div>
                 </Link>
               ))}
             </div>
