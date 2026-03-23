@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { resolvePlaceholderHref } from "@/lib/resolvePlaceholderHref";
+import ResourceCardLink from "@/components/ResourceCardLink";
+import { FileText } from "lucide-react";
 
 type Paper = {
   _id?: string;
@@ -40,19 +41,15 @@ export default function FourthSemesterPage() {
       {papers.length === 0 ? (
         <p className="text-center text-gray-600">No question papers available.</p>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6 p-5 mt-6">
+        <div className="mt-6 grid auto-rows-fr grid-cols-1 gap-5 p-5 sm:grid-cols-2 lg:grid-cols-4">
           {papers.map((paper, index) => (
-            <Link
+            <ResourceCardLink
               key={paper._id ?? `${paper.title}-${index}`}
               href={resolvePlaceholderHref(paper.link)}
-              target="_blank"
-              className="bg-gray-100 rounded-2xl shadow-lg p-8 border-l-4 border-blue-600 hover:scale-105 transition duration-300 block"
-            >
-              <h3 className="text-lg font-semibold text-slate-700 mb-1">
-                {paper.title}
-              </h3>
-              <p className="text-gray-600">{paper.code}</p>
-            </Link>
+              title={paper.title}
+              subtitle={paper.code}
+              Icon={FileText}
+            />
           ))}
         </div>
       )}

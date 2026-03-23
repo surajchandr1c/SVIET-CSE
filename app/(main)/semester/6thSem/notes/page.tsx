@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { resolvePlaceholderHref } from "@/lib/resolvePlaceholderHref";
+import ResourceCardLink from "@/components/ResourceCardLink";
+import { NotebookPen } from "lucide-react";
 
 type Resource = {
   _id?: string;
@@ -38,22 +40,15 @@ export default function SixthSemesterNotesPage() {
         {resources.length === 0 ? (
           <p className="text-gray-500">No notes available.</p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {resources.map((resource, index) => (
-              <a
+              <ResourceCardLink
                 key={resource._id ?? `${resource.title}-${index}`}
                 href={resolvePlaceholderHref(resource.link)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white p-10 text-center rounded-xl shadow-md hover:-translate-y-2 hover:shadow-lg transition duration-300"
-              >
-                <span className="text-blue-900 font-semibold text-lg block">
-                  {resource.title}
-                </span>
-                <span className="text-sm text-gray-600 mt-1 block">
-                  {resource.code}
-                </span>
-              </a>
+                title={resource.title}
+                subtitle={resource.code}
+                Icon={NotebookPen}
+              />
             ))}
           </div>
         )}

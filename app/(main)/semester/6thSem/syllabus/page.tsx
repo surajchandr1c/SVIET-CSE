@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { resolvePlaceholderHref } from "@/lib/resolvePlaceholderHref";
+import ResourceCardLink from "@/components/ResourceCardLink";
+import { BookOpen } from "lucide-react";
 
 type Subject = {
   _id?: string;
@@ -37,24 +39,15 @@ export default function SixthSemester() {
         {subjects.length === 0 ? (
           <p className="text-center text-gray-500">No syllabus available.</p>
         ) : (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {subjects.map((subject, index) => (
-              <a
+              <ResourceCardLink
                 key={subject._id ?? `${subject.title}-${index}`}
                 href={resolvePlaceholderHref(subject.link)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group"
-              >
-                <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center border-l-4 border-blue-600">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                    {subject.title}
-                  </h3>
-                  <p className="text-sm font-medium text-slate-600 mb-1">
-                    {subject.code}
-                  </p>
-                </div>
-              </a>
+                title={subject.title}
+                subtitle={subject.code}
+                Icon={BookOpen}
+              />
             ))}
           </div>
         )}

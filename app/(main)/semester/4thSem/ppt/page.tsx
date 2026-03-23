@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { resolvePlaceholderHref } from "@/lib/resolvePlaceholderHref";
+import ResourceCardLink from "@/components/ResourceCardLink";
+import { Presentation } from "lucide-react";
 
 type Resource = {
   _id?: string;
@@ -34,18 +36,15 @@ export default function FourthSemesterPptPage() {
       {resources.length === 0 ? (
         <p className="text-center text-gray-600 mt-6">No PPT available.</p>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6 p-5 mt-6">
+        <div className="mt-6 grid auto-rows-fr grid-cols-1 gap-5 p-5 sm:grid-cols-2 lg:grid-cols-4">
           {resources.map((resource, index) => (
-            <a
-              href={resolvePlaceholderHref(resource.link)}
+            <ResourceCardLink
               key={resource._id ?? `${resource.title}-${index}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gray-100 rounded-2xl shadow-lg p-8 border-l-4 border-blue-600 hover:scale-105 transition duration-300"
-            >
-              <h2 className="text-lg font-semibold text-gray-800 mb-4">{resource.title}</h2>
-              <p className="text-gray-600 mb-2">{resource.code}</p>
-            </a>
+              href={resolvePlaceholderHref(resource.link)}
+              title={resource.title}
+              subtitle={resource.code}
+              Icon={Presentation}
+            />
           ))}
         </div>
       )}
