@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionTabsClient, { type SectionKey } from "./SectionTabsClient";
 
-function Placeholder({ section }: { section: "X" }) {
+function Placeholder({ section }: { section: "Z" }) {
   return (
     <div className="mx-auto mt-8 max-w-3xl rounded-2xl bg-white p-7 text-center shadow-sm ring-1 ring-black/5">
       <p className="text-lg font-semibold text-[#0b3c5d]">
@@ -32,7 +32,7 @@ function SectionYTimetableEmbed() {
 }
 
 export default function TimetablePage() {
-  const [section, setSection] = useState<SectionKey>("x");
+  const [section, setSection] = useState<SectionKey>("y");
 
   return (
     <div className="min-h-screen bg-transparent p-6">
@@ -53,7 +53,7 @@ export default function TimetablePage() {
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
         >
-          {section === "x" ? <Placeholder section="X" /> : <SectionYTimetableEmbed />}
+          {section === "y" ? <SectionYTimetableEmbed /> : <Placeholder section="Z" />}
         </motion.div>
       </AnimatePresence>
     </div>

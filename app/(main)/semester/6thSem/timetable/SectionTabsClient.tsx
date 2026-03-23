@@ -2,11 +2,11 @@
 
 import { useMemo } from "react";
 
-export type SectionKey = "x" | "y";
+export type SectionKey = "y" | "z";
 
 const tabs: { key: SectionKey; label: string }[] = [
-  { key: "x", label: "SEC - X" },
   { key: "y", label: "SEC - Y" },
+  { key: "z", label: "SEC - Z" },
 ];
 
 export default function SectionTabsClient({
