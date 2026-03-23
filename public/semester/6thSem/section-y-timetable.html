@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>6th Semester Time Table - Section Y</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --border: #e2e8f0;
+        --header: #2563eb;
+        --headerText: #ffffff;
+        --breakBg: #fff7ed;
+        --breakText: #9a3412;
+        --cellBg: #ffffff;
+        --rowHover: #f8fafc;
+        --shadow: 0 16px 50px rgba(2, 6, 23, 0.12);
+        --radius: 14px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          "Apple Color Emoji",
+          "Segoe UI Emoji";
+        line-height: 1.35;
+      }
+
+      .page {
+        padding: 28px 18px 44px;
+        max-width: 1180px;
+        margin: 0 auto;
+        animation: pageFade 380ms ease-out both;
+      }
+
+      @keyframes pageFade {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 18px;
+      }
+
+      .h-title {
+        font-size: clamp(18px, 2.3vw, 26px);
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        margin: 0;
+      }
+
+      .h-subtitle {
+        margin: 6px 0 0;
+        font-size: clamp(13px, 1.4vw, 16px);
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .h-meta {
+        margin: 8px 0 0;
+        font-size: clamp(13px, 1.4vw, 16px);
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      .card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-gutter: stable;
+      }
+
+      .scroll::after {
+        content: "";
+        display: block;
+        height: 8px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 980px;
+        background: var(--cellBg);
+      }
+
+      thead th {
+        background: var(--header);
+        color: var(--headerText);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        padding: 10px 10px;
+        text-align: center;
+        font-weight: 800;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      thead .period-row th {
+        background: #1d4ed8;
+        font-weight: 800;
+        font-size: 12px;
+        padding: 8px 10px;
+      }
+
+      tbody td,
+      tbody th {
+        border: 1px solid var(--border);
+        padding: 10px 10px;
+        text-align: center;
+        font-size: 13px;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+
+      tbody th.day {
+        font-weight: 900;
+        color: #0b3c5d;
+        background: #f1f5f9;
+      }
+
+      tbody tr {
+        animation: rowIn 420ms ease-out both;
+      }
+
+      tbody tr:nth-child(1) {
+        animation-delay: 60ms;
+      }
+      tbody tr:nth-child(2) {
+        animation-delay: 90ms;
+      }
+      tbody tr:nth-child(3) {
+        animation-delay: 120ms;
+      }
+      tbody tr:nth-child(4) {
+        animation-delay: 150ms;
+      }
+      tbody tr:nth-child(5) {
+        animation-delay: 180ms;
+      }
+
+      @keyframes rowIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      tbody tr:hover td,
+      tbody tr:hover th {
+        background: var(--rowHover);
+      }
+
+      .cell {
+        display: grid;
+        gap: 4px;
+        align-content: center;
+        justify-items: center;
+      }
+
+      .cell .subj {
+        font-weight: 900;
+        letter-spacing: 0.1px;
+      }
+
+      .cell .room {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      td.break {
+        background: var(--breakBg);
+        color: var(--breakText);
+        font-weight: 900;
+        letter-spacing: 0.3px;
+      }
+
+      td.lab .subj,
+      td.training .subj {
+        text-transform: uppercase;
+      }
+
+      td.lab {
+        background: #eff6ff;
+      }
+
+      td.training {
+        background: #ecfeff;
+      }
+
+      .section {
+        margin-top: 18px;
+      }
+
+      .section h2 {
+        margin: 0 0 10px;
+        font-size: 16px;
+        font-weight: 900;
+        color: #0b3c5d;
+      }
+
+      .note {
+        margin: 12px 0 0;
+        text-align: center;
+        color: var(--muted);
+        font-weight: 600;
+        font-size: 12px;
+      }
+
+      .mini table {
+        min-width: 680px;
+      }
+
+      .mini thead th {
+        font-size: 12px;
+      }
+
+      .mini tbody td {
+        text-align: left;
+      }
+
+      .mini tbody td:nth-child(1) {
+        width: 80px;
+        text-align: center;
+        font-weight: 900;
+        color: #0b3c5d;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <p class="h-subtitle">Swami Vivekanand Institute of Engg &amp; Tech, Banur</p>
+        <p class="h-meta">Department of Computer Science and Engineering</p>
+        <p class="h-title">TIME TABLE JAN-JUNE, 2026</p>
+        <p class="h-subtitle">6th Semester (Section-Y) (G-003)</p>
+      </header>
+
+      <section class="card scroll" aria-label="Section Y weekly timetable">
+        <table>
+          <thead>
+            <tr>
+              <th rowspan="2">Day / Time</th>
+              <th>9:10-10:05</th>
+              <th>10:05-11:00</th>
+              <th>11:00-11:55</th>
+              <th>11:55-12:50</th>
+              <th>12:50-1:45</th>
+              <th>1:45-2:40</th>
+              <th>2:40-3:35</th>
+              <th>3:35-4:30</th>
+            </tr>
+            <tr class="period-row">
+              <th>1</th>
+              <th>2</th>
+              <th>3</th>
+              <th>4</th>
+              <th>5</th>
+              <th>6</th>
+              <th>7</th>
+              <th>8</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- MONDAY -->
+            <tr>
+              <th class="day">Monday</th>
+              <td>
+                <div class="cell">
+                  <div class="subj">Cloud Computing</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Artificial Intelligence</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Compiler Design</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Wireless Communication</div>
+                </div>
+              </td>
+              <td class="break" rowspan="5">BREAK</td>
+              <td class="lab">
+                <div class="cell">
+                  <div class="subj">CC LAB</div>
+                  <div class="room">CSE/6Y11 209A</div>
+                  <div class="subj">SPM LAB</div>
+                  <div class="room">CSE/6Y12 209B</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">&nbsp;</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Software Project Management</div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- TUESDAY -->
+            <tr>
+              <th class="day">Tuesday</th>
+              <td>
+                <div class="cell">
+                  <div class="subj">Compiler Design</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Artificial Intelligence</div>
+                </div>
+              </td>
+              <td class="training" colspan="2">
+                <div class="cell">
+                  <div class="subj">Training</div>
+                  <div class="room">CSE/6Y 209B</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Cloud Computing</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Software Project Management</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Wireless Communication</div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- WEDNESDAY -->
+            <tr>
+              <th class="day">Wednesday</th>
+              <td>
+                <div class="cell">
+                  <div class="subj">Artificial Intelligence</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Compiler Design</div>
+                </div>
+              </td>
+              <td class="lab">
+                <div class="cell">
+                  <div class="subj">SPM LAB</div>
+                  <div class="room">CSE/6Y11 209B</div>
+                </div>
+              </td>
+              <td class="lab">
+                <div class="cell">
+                  <div class="subj">CC LAB</div>
+                  <div class="room">CSE/6Y12 209A</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Verbal Ability</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">&nbsp;</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">&nbsp;</div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- THURSDAY -->
+            <tr>
+              <th class="day">Thursday</th>
+              <td>
+                <div class="cell">
+                  <div class="subj">Software Project Management</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Cloud Computing</div>
+                </div>
+              </td>
+              <td class="training">
+                <div class="cell">
+                  <div class="subj">Training</div>
+                  <div class="room">G-003</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Soft Skills</div>
+                </div>
+              </td>
+              <td class="lab">
+                <div class="cell">
+                  <div class="subj">AI LAB</div>
+                  <div class="room">CSE/6Y11 209B</div>
+                  <div class="subj">CD LAB</div>
+                  <div class="room">CSE/6Y12 209A</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">&nbsp;</div>
+                </div>
+              </td>
+              <td class="training">
+                <div class="cell">
+                  <div class="subj">Training</div>
+                  <div class="room">G-003</div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- FRIDAY -->
+            <tr>
+              <th class="day">Friday</th>
+              <td>
+                <div class="cell">
+                  <div class="subj">Soft Skills</div>
+                </div>
+              </td>
+              <td>
+                <div class="cell">
+                  <div class="subj">Wireless Communication</div>
+                </div>
+              </td>
+              <td class="lab">
+                <div class="cell">
+                  <div class="subj">CD LAB</div>
+                  <div class="room">CSE/6Y11 209A</div>
+                </div>
+              </td>
+              <td class="lab">
+                <div class="cell">
+                  <div class="subj">AI LAB</div>
+                  <div class="room">CSE/6Y12 209B</div>
+                </div>
+              </td>
+              <td class="training" colspan="3">
+                <div class="cell">
+                  <div class="subj">Training</div>
+                  <div class="room">CSE/6Y 209A</div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <p class="note">Tip: On mobile, swipe horizontally to view the full timetable.</p>
+
+      <section class="section">
+        <h2>Subject - Faculty</h2>
+        <div class="card scroll mini" aria-label="Subject faculty mapping">
+          <table>
+            <thead>
+              <tr>
+                <th>S.NO</th>
+                <th>SUBJECT NAME</th>
+                <th>FACULTY NAME</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Cloud Computing + CC Lab</td>
+                <td>Ms. Rupinder Kaur</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Artificial Intelligence + AI Lab</td>
+                <td>Ms. Pooja Verma</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Compiler Design + CD Lab</td>
+                <td>Ms. Ruchi Sharma</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Software Project Management + SPM Lab</td>
+                <td>Mr. Akash Dixit</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Wireless Communication</td>
+                <td>Ms. Pooja Verma</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Soft Skills</td>
+                <td>Ms. Keerti</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Verbal Ability</td>
+                <td>Ms. Navneet</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Training</td>
+                <td>Mr. Aditya</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
