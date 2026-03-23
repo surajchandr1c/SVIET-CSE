@@ -1,5 +1,6 @@
 import "./globals.css";
 import ScrollReveal from "@/components/ScrollReveal";
+import { Analytics } from "@vercel/analytics/react";
 
 
 export default function RootLayout({
@@ -15,6 +16,7 @@ export default function RootLayout({
       >
         <ScrollReveal />
         {children}
+        <Analytics />
       </body>
     </html>
   );
