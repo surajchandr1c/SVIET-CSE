@@ -273,9 +273,9 @@ function SectionDUniversityTimetable() {
 
   return (
     <div className="mt-2">
-      <div className="-mx-6 sm:mx-0 w-full overflow-x-auto px-6 sm:px-0 pb-2 flex justify-start md:justify-center items-center overscroll-x-contain touch-pan-x">
-        <div className="w-full max-w-[1180px]">
-          <div className="rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden">
+      <div className="-mx-6 sm:mx-0 px-6 sm:px-0 pb-2">
+        <div className="mx-auto w-full max-w-[1180px]">
+          <div className="rounded-xl border border-slate-200 bg-white shadow-lg overflow-x-auto overscroll-x-contain touch-pan-x">
             <table className="min-w-[1100px] w-full whitespace-nowrap text-sm text-center">
               <thead>
                 <tr className="bg-blue-600 text-white">
