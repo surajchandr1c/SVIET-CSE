@@ -158,12 +158,12 @@ export default function SemestersPage() {
               <p className="mt-2 text-slate-600">Select a category below:</p>
             </div>
 
-            <div className="mt-7 grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5 lg:grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
+            <div className="mt-7 grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {items.map((item) => (
                 <Link
                   key={`${semester}-${item.name}`}
                   href={item.link}
-                  className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-[0_10px_24px_rgba(17,24,39,0.10)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(17,24,39,0.14)] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
+                  className="group relative h-full overflow-hidden rounded-2xl bg-white p-7 shadow-[0_10px_24px_rgba(17,24,39,0.10)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(17,24,39,0.14)] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
                 >
                   <span
                     aria-hidden
