@@ -136,11 +136,11 @@ export default function SemestersPage() {
   return (
     <div className="min-h-screen animate-fadeIn px-6 pb-10 pt-8">
       <main className="mx-auto max-w-[1680px]">
-        <h1 className="text-3xl font-bold text-slate-200 md:text-4xl lg:text-[2.2rem]">
+        <h1 className="text-3xl font-bold text-slate-900 md:text-4xl lg:text-[2.2rem]">
           B.Tech CSE - Semesters
         </h1>
 
-        <p className="mt-5 text-lg text-slate-300 md:text-xl lg:text-lg">
+        <p className="mt-3 text-lg text-slate-600 md:text-xl lg:text-lg">
           Select your semester:
         </p>
 
@@ -155,48 +155,27 @@ export default function SemestersPage() {
             transition={{ duration: 0.2 }}
           >
             <div className="mt-2 text-center">
-              <p className="mt-2 text-slate-300">Select a category below:</p>
+              <p className="mt-2 text-slate-600">Select a category below:</p>
             </div>
 
-            <div className="mt-7 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-5 lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
+            <div className="mt-7 grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5 lg:grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
               {items.map((item) => (
                 <Link
                   key={`${semester}-${item.name}`}
                   href={item.link}
-                  className="group relative overflow-hidden rounded-2xl border border-cyan-400/15 bg-[#0b1c47]/45 p-6 shadow-[0_18px_45px_rgba(0,0,0,0.35)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-300/35 hover:bg-[#0b1c47]/55 hover:shadow-[0_24px_65px_rgba(0,0,0,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60"
+                  className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-[0_10px_24px_rgba(17,24,39,0.10)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(17,24,39,0.14)] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
                 >
-                  <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <div className="absolute -right-14 -top-14 h-44 w-44 rounded-full bg-cyan-400/15 blur-2xl" />
-                    <div className="absolute -left-14 -bottom-14 h-44 w-44 rounded-full bg-yellow-400/10 blur-2xl" />
-                  </div>
+                  <span
+                    aria-hidden
+                    className="absolute left-0 top-0 h-full w-1.5 rounded-l-2xl bg-blue-600 shadow-[2px_0_10px_rgba(37,99,235,0.25)]"
+                  />
 
-                  <div className="relative flex items-start gap-4">
-                    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-yellow-400/90 text-slate-950 shadow-[0_10px_26px_rgba(250,204,21,0.22)] ring-1 ring-yellow-300/40">
-                      <item.Icon className="h-6 w-6" />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-3">
-                        <h3 className="truncate text-lg font-extrabold text-slate-100 md:text-xl">
-                          {item.name}
-                        </h3>
-                        <span className="text-xs font-bold text-cyan-200/90 opacity-70 transition-opacity group-hover:opacity-100">
-                          Open →
-                        </span>
-                      </div>
-                      <p className="mt-1 line-clamp-2 text-sm font-medium text-slate-300/90">
-                        {item.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="relative mt-5 h-px w-full bg-gradient-to-r from-transparent via-cyan-200/20 to-transparent" />
-                  <div className="relative mt-4 flex items-center justify-between text-xs text-slate-300/85">
-                    <span className="font-semibold">
-                      {semester === "4th" ? "4th Semester" : "6th Semester"}
-                    </span>
-                    <span className="font-semibold text-yellow-300/90">SVIET CSE</span>
-                  </div>
+                  <h3 className="text-xl font-extrabold text-slate-900 md:text-[1.35rem]">
+                    {item.name}
+                  </h3>
+                  <p className="mt-3 text-sm font-semibold tracking-wide text-slate-500">
+                    {item.description}
+                  </p>
                 </Link>
               ))}
             </div>
