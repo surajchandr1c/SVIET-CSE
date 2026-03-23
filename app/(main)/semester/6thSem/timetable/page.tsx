@@ -4,29 +4,19 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionTabsClient, { type SectionKey } from "./SectionTabsClient";
 
-function Placeholder({ section }: { section: "Z" }) {
-  return (
-    <div className="mx-auto mt-8 max-w-3xl rounded-2xl bg-white p-7 text-center shadow-sm ring-1 ring-black/5">
-      <p className="text-lg font-semibold text-[#0b3c5d]">
-        SEC - {section} timetable will be updated soon.
-      </p>
-      <p className="mt-2 text-gray-600">
-        If you have the latest timetable, share it and I’ll add it here.
-      </p>
-    </div>
-  );
-}
-
-function SectionYTimetableEmbed() {
+function TimetableEmbed({ section, src }: { section: "Y" | "Z"; src: string }) {
   return (
     <div className="mx-auto mt-6 w-full max-w-[1180px]">
       <div className="rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden">
         <iframe
-          title="6th Semester Timetable - Section Y"
-          src="/semester/6thSem/section-y-timetable.html"
+          title={`6th Semester Timetable - Section ${section}`}
+          src={src}
           className="w-full h-[calc(100vh-250px)] min-h-[900px]"
         />
       </div>
+      <p className="mt-3 text-center text-xs sm:text-sm text-slate-600">
+        Tip: On mobile, swipe horizontally to view the full timetable.
+      </p>
     </div>
   );
 }
@@ -53,7 +43,17 @@ export default function TimetablePage() {
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
         >
-          {section === "y" ? <SectionYTimetableEmbed /> : <Placeholder section="Z" />}
+          {section === "y" ? (
+            <TimetableEmbed
+              section="Y"
+              src="/semester/6thSem/section-y-timetable.html"
+            />
+          ) : (
+            <TimetableEmbed
+              section="Z"
+              src="/semester/6thSem/section-z-timetable.html"
+            />
+          )}
         </motion.div>
       </AnimatePresence>
     </div>
