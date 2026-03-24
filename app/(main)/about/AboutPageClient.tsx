@@ -80,7 +80,7 @@ export default function AboutPageClient() {
     {
       name: "Vivek Kumar",
       image: "/about/vivek.png",
-      portfolio: "https://github.com/",
+      portfolio: "https://preeminent-brioche-0fc0b8.netlify.app/",
     },
   ];
 
