@@ -4,8 +4,8 @@ import {
   GraduationCap,
   Image,
   LayoutDashboard,
-  Trophy,
   UserRound,
+  Users,
 } from "lucide-react";
 import { readdir } from "node:fs/promises";
 import path from "node:path";
@@ -14,6 +14,7 @@ import Faculty from "@/models/Faculty";
 import Notice from "@/models/Notice";
 import Student from "@/models/Student";
 import TechxploreStudent from "@/models/TechxploreStudent";
+import { getBatchProfiles } from "@/lib/batchProfiles";
 
 export const dynamic = "force-dynamic";
 
@@ -52,6 +53,33 @@ const countImagesInDirectory = async (dirPath: string): Promise<number> => {
   }
 };
 
+const countSemesterStudents = async (semester: number) => {
+  const col = Student.collection;
+  const semesterAliases = [
+    semester,
+    String(semester),
+    `${semester}th`,
+    `${semester}th Semester`,
+    semester === 4 ? "4th" : undefined,
+    semester === 6 ? "6th" : undefined,
+  ].filter((v): v is string | number => Boolean(v));
+
+  const agg = await col
+    .aggregate([
+      {
+        $match: {
+          admissionNo: { $type: "string", $ne: "" },
+          semester: { $in: semesterAliases },
+        },
+      },
+      { $group: { _id: "$admissionNo" } },
+      { $count: "total" },
+    ])
+    .toArray();
+
+  return (agg?.[0]?.total as number | undefined) ?? 0;
+};
+
 const getDashboardStats = async () => {
   const defaultStats = {
     facultyCount: 0,
@@ -59,7 +87,6 @@ const getDashboardStats = async () => {
     noticeCount: 0,
     fourthSemStudentCount: 0,
     sixthSemStudentCount: 0,
-    achivementImageCount: 0,
     galleryImageCount: 0,
   };
 
@@ -74,15 +101,13 @@ const getDashboardStats = async () => {
       noticeCount,
       fourthSemStudentCount,
       sixthSemStudentCount,
-      achivementImageCount,
       galleryImageCount,
     ] = await Promise.all([
       Faculty.countDocuments(),
       TechxploreStudent.countDocuments(),
       Notice.countDocuments(),
-      Student.countDocuments({ semester: "4th" }),
-      Student.countDocuments({ semester: "6th" }),
-      countImagesInDirectory(path.join(publicDir, "achivement")),
+      countSemesterStudents(4),
+      countSemesterStudents(6),
       countImagesInDirectory(path.join(publicDir, "events")),
     ]);
 
@@ -92,7 +117,6 @@ const getDashboardStats = async () => {
       noticeCount,
       fourthSemStudentCount,
       sixthSemStudentCount,
-      achivementImageCount,
       galleryImageCount,
     };
   } catch {
@@ -101,7 +125,13 @@ const getDashboardStats = async () => {
 };
 
 export default async function AdminDashboard() {
-  const stats = await getDashboardStats();
+  const [stats, portfolio4, portfolio6] = await Promise.all([
+    getDashboardStats(),
+    getBatchProfiles("4"),
+    getBatchProfiles("6"),
+  ]);
+  const portfolio4Count = portfolio4.length;
+  const portfolio6Count = portfolio6.length;
 
   const actions = [
     {
@@ -121,14 +151,6 @@ export default async function AdminDashboard() {
       metricLabel: "Students added",
     },
     {
-      title: "Manage Achivement",
-      description: "Create and maintain content for the Achivement section.",
-      href: "/admin/achivement",
-      icon: Trophy,
-      count: stats.achivementImageCount,
-      metricLabel: "Images added",
-    },
-    {
       title: "Manage Gallery",
       description: "Organize event gallery content from admin panel.",
       href: "/admin/gallery",
@@ -145,20 +167,36 @@ export default async function AdminDashboard() {
       metricLabel: "Notices uploaded",
     },
     {
-      title: "4th Semester",
+      title: "Student Portfolio (2024 Batch)",
+      description: "View 2024 batch student portfolio profiles.",
+      href: "/admin/studentportfolio?tab=2024",
+      icon: Users,
+      count: portfolio4Count,
+      metricLabel: "Profiles",
+    },
+    {
+      title: "Student Portfolio (2023 Batch)",
+      description: "View 2023 batch student portfolio profiles.",
+      href: "/admin/studentportfolio?tab=2023",
+      icon: Users,
+      count: portfolio6Count,
+      metricLabel: "Profiles",
+    },
+    {
+      title: "2024 Batch",
       description: "Control syllabus, students, papers and resources.",
       href: "/admin/4th",
       icon: GraduationCap,
       count: stats.fourthSemStudentCount,
-      metricLabel: "Students in 4th sem",
+      metricLabel: "Students in 2024 batch",
     },
     {
-      title: "6th Semester",
-      description: "Manage complete 6th semester learning content.",
+      title: "2023 Batch",
+      description: "Manage complete 2023 batch learning content.",
       href: "/admin/6th",
       icon: LayoutDashboard,
       count: stats.sixthSemStudentCount,
-      metricLabel: "Students in 6th sem",
+      metricLabel: "Students in 2023 batch",
     },
   ];
 

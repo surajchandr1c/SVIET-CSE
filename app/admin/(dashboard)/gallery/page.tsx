@@ -2,6 +2,9 @@
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import SmartImage from "@/components/SmartImage";
+import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
+import { normalizeGoogleDriveFolderUrl } from "@/lib/driveUrl";
+import { formatDateGB } from "@/lib/formatDate";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 
 type GalleryAlbum = {
@@ -17,46 +20,6 @@ const initialForm: GalleryAlbum = {
   date: "",
   coverImageUrl: "",
   driveUrl: "",
-};
-
-const extractGoogleDriveFolderId = (url: string): string | null => {
-  const trimmed = url.trim();
-  if (!trimmed) return null;
-
-  const folderMatch = trimmed.match(/\/folders\/([a-zA-Z0-9_-]+)/);
-  if (folderMatch?.[1]) return folderMatch[1];
-
-  try {
-    const parsed = new URL(trimmed);
-    const idParam = parsed.searchParams.get("id");
-    if (idParam) return idParam;
-  } catch {
-    return null;
-  }
-
-  return null;
-};
-
-const normalizeDriveUrl = (url: string): string => {
-  const trimmed = url.trim();
-  if (!trimmed) return "";
-
-  const folderId = extractGoogleDriveFolderId(trimmed);
-  if (!folderId) return trimmed;
-
-  return `https://drive.google.com/drive/folders/${folderId}`;
-};
-
-const formatDate = (value: string): string => {
-  if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
 };
 
 export default function AdminGalleryPage() {
@@ -108,7 +71,7 @@ export default function AdminGalleryPage() {
           heading: form.heading.trim(),
           date: form.date.trim(),
           coverImageUrl: normalizeImageUrl(form.coverImageUrl),
-          driveUrl: normalizeDriveUrl(form.driveUrl),
+          driveUrl: normalizeGoogleDriveFolderUrl(form.driveUrl),
         }),
       });
 
@@ -152,17 +115,11 @@ export default function AdminGalleryPage() {
 
   return (
     <section className="space-y-8">
-      <div className="mx-auto w-full max-w-6xl admin-card p-8">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-[var(--admin-text-muted)]">
-          Gallery
-        </p>
-        <h1 className="text-3xl font-bold text-[var(--admin-text)] md:text-4xl">
-          Manage Gallery Cards
-        </h1>
-        <p className="mt-3 max-w-2xl text-[15px] text-[var(--admin-text-muted)] md:text-base">
-          Add a cover image link, heading/date, and album Drive link for each event card.
-        </p>
-      </div>
+      <AdminPageIntroCard
+        kicker="Gallery"
+        title="Manage Gallery Cards"
+        description="Add a cover image link, heading/date, and album Drive link for each event card."
+      />
 
       <div className="mx-auto w-full max-w-6xl rounded-2xl bg-white p-8 shadow-xl">
         <h2 className="mb-8 text-3xl font-bold text-gray-800">
@@ -219,7 +176,7 @@ export default function AdminGalleryPage() {
 
           {form.driveUrl && (
             <a
-              href={normalizeDriveUrl(form.driveUrl)}
+              href={normalizeGoogleDriveFolderUrl(form.driveUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block text-blue-600 underline"
@@ -284,7 +241,7 @@ export default function AdminGalleryPage() {
                       {album.heading || `Gallery Album ${index + 1}`}
                     </h3>
                     <p className="text-sm text-gray-500">
-                      {album.date ? formatDate(album.date) : "Date not provided"}
+                      {album.date ? formatDateGB(album.date) : "Date not provided"}
                     </p>
                     <a
                       href={album.driveUrl}

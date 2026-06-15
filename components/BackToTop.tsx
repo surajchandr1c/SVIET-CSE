@@ -23,7 +23,7 @@ export default function BackToTop() {
   return (
     <button
       onClick={scrollTop}
-      className="fixed bottom-30 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#2563EB] text-xl text-white shadow-lg transition hover:bg-[#1D4ED8]"
+      className="fixed bottom-[7.5rem] right-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#2563EB] text-xl text-white shadow-lg transition hover:bg-[#1D4ED8]"
       title="Go to top"
     >
       {"\u2191"}

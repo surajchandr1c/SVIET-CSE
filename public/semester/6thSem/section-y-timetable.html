@@ -16,8 +16,8 @@
         --breakText: #9a3412;
         --cellBg: #ffffff;
         --rowHover: #f8fafc;
-        --shadow: 0 16px 50px rgba(2, 6, 23, 0.12);
-        --radius: 14px;
+        --shadow: 0 10px 15px rgba(15, 23, 42, 0.12);
+        --radius: 12px;
       }
 
       * {
@@ -26,7 +26,7 @@
 
       body {
         margin: 0;
-        background: var(--bg);
+        background: transparent;
         color: var(--text);
         font-family:
           ui-sans-serif,
@@ -42,7 +42,7 @@
       }
 
       .page {
-        padding: 28px 18px 44px;
+        padding: 8px 0 12px;
         max-width: 1180px;
         margin: 0 auto;
         animation: pageFade 380ms ease-out both;
@@ -59,32 +59,6 @@
         }
       }
 
-      header {
-        text-align: center;
-        margin-bottom: 18px;
-      }
-
-      .h-title {
-        font-size: clamp(18px, 2.3vw, 26px);
-        font-weight: 800;
-        letter-spacing: 0.2px;
-        margin: 0;
-      }
-
-      .h-subtitle {
-        margin: 6px 0 0;
-        font-size: clamp(13px, 1.4vw, 16px);
-        color: var(--muted);
-        font-weight: 600;
-      }
-
-      .h-meta {
-        margin: 8px 0 0;
-        font-size: clamp(13px, 1.4vw, 16px);
-        color: var(--muted);
-        font-weight: 700;
-      }
-
       .card {
         background: #fff;
         border: 1px solid var(--border);
@@ -97,12 +71,18 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-gutter: stable;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
       }
 
       .scroll::after {
         content: "";
         display: block;
         height: 8px;
+      }
+
+      .scroll::-webkit-scrollbar {
+        display: none;
       }
 
       table {
@@ -119,14 +99,14 @@
         padding: 10px 10px;
         text-align: center;
         font-weight: 800;
-        font-size: 13px;
+        font-size: 14px;
         white-space: nowrap;
       }
 
       thead .period-row th {
         background: #1d4ed8;
         font-weight: 800;
-        font-size: 12px;
+        font-size: 14px;
         padding: 8px 10px;
       }
 
@@ -135,7 +115,7 @@
         border: 1px solid var(--border);
         padding: 10px 10px;
         text-align: center;
-        font-size: 13px;
+        font-size: 14px;
         vertical-align: middle;
         white-space: nowrap;
       }
@@ -221,14 +201,7 @@
       }
 
       .section {
-        margin-top: 18px;
-      }
-
-      .section h2 {
-        margin: 0 0 10px;
-        font-size: 16px;
-        font-weight: 900;
-        color: #0b3c5d;
+        margin-top: 20px;
       }
 
       .note {
@@ -239,15 +212,27 @@
         font-size: 12px;
       }
 
+      .mini {
+        overflow: hidden;
+      }
+
+      .mini .titlebar {
+        padding: 12px 16px;
+        background: #2563eb;
+        color: #fff;
+        font-weight: 900;
+      }
+
       .mini table {
         min-width: 680px;
       }
 
       .mini thead th {
-        font-size: 12px;
+        font-size: 14px;
       }
 
       .mini tbody td {
+        font-size: 14px;
         text-align: left;
       }
 
@@ -261,11 +246,6 @@
   </head>
   <body>
     <main class="page">
-      <header>
-        <p class="h-title">TIME TABLE JAN-JUNE, 2026</p>
-        <p class="h-subtitle">6th Semester (Section-Y) (G-003)</p>
-      </header>
-
       <section class="card scroll" aria-label="Section Y weekly timetable">
         <table>
           <thead>
@@ -499,8 +479,8 @@
       <p class="note">Tip: On mobile, swipe horizontally to view the full timetable.</p>
 
       <section class="section">
-        <h2>Subject - Faculty</h2>
         <div class="card scroll mini" aria-label="Subject faculty mapping">
+          <div class="titlebar">Subject - Faculty</div>
           <table>
             <thead>
               <tr>

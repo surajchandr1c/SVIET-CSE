@@ -88,7 +88,7 @@ export default function AboutPageClient() {
     <section className="relative overflow-hidden py-14 sm:py-16">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(900px_420px_at_15%_10%,rgba(11,60,93,0.12),transparent_60%),radial-gradient(700px_420px_at_90%_15%,rgba(250,204,21,0.12),transparent_55%)]" />
       <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-10">
-        <div className="rounded-3xl bg-white/80 p-6 shadow-[0_18px_70px_rgba(2,6,23,0.14)] ring-1 ring-black/5 backdrop-blur md:p-10">
+        <div className="rounded-3xl bg-white/80 p-6  ring-1 ring-black/5 backdrop-blur md:p-10">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-[11px] font-semibold tracking-[0.45em] text-slate-500">
               SVIET • CSE

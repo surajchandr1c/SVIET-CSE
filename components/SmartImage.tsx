@@ -15,6 +15,8 @@ export default function SmartImage({
   src,
   alt,
   fallbackSrc = "/no-image.png",
+  loading = "lazy",
+  decoding = "async",
   onError,
   ...props
 }: SmartImageProps) {
@@ -26,8 +28,11 @@ export default function SmartImage({
   return (
     <img
       {...props}
+      suppressHydrationWarning
       src={currentSrc}
       alt={alt}
+      loading={loading}
+      decoding={decoding}
       onError={(e) => {
         if (index < candidates.length - 1) {
           setIndex((prev) => prev + 1);

@@ -1,12 +1,24 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { connectDB } from "@/lib/mongodb";
 import Student from "@/models/Student";
+import { verifyAdminToken } from "@/lib/auth";
+
+const requireAdmin = async () => {
+  const token = (await cookies()).get("admin_token")?.value;
+  return token ? verifyAdminToken(token) : null;
+};
 
 export async function PUT(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await requireAdmin();
+    if (!admin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
     const { id } = await context.params;
     const body = await request.json();
@@ -35,6 +47,11 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await requireAdmin();
+    if (!admin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
     const { id } = await context.params;
 

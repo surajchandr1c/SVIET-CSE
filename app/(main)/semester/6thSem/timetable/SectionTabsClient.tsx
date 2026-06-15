@@ -26,7 +26,7 @@ export default function SectionTabsClient({
       <div
         role="tablist"
         aria-label="Timetable sections"
-        className="relative w-full max-w-xl overflow-hidden rounded-full bg-slate-950/90 p-1 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-black/10"
+        className="relative w-full max-w-2xl overflow-hidden rounded-full bg-slate-950/90 p-1 shadow-[0_18px_60px_rgba(0,0,0,0.25)] ring-1 ring-black/10"
       >
         <div className="grid grid-cols-2 gap-1">
           {tabs.map((tab) => {

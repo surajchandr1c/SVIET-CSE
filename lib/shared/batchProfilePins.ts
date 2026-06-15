@@ -1,0 +1,1 @@
+export const MAX_PINNED_BATCH_PROFILES = 5;

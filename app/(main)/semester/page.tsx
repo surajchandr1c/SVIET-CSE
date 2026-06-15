@@ -4,132 +4,13 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import SemesterTabsClient, { type SemesterKey } from "./SemesterTabsClient";
-import type { LucideIcon } from "lucide-react";
-import {
-  BookOpen,
-  CalendarClock,
-  ClipboardList,
-  FileText,
-  NotebookPen,
-  Presentation,
-  Users,
-  UsersRound,
-} from "lucide-react";
-
-type SemesterItem = {
-  name: string;
-  link: string;
-  description: string;
-  Icon: LucideIcon;
-};
-
-const fourthSemItems: SemesterItem[] = [
-  {
-    name: "Time Table",
-    link: "/semester/4thSem/timetable",
-    description: "University-style timetable (SEC - D).",
-    Icon: CalendarClock,
-  },
-  {
-    name: "Syllabus",
-    link: "/semester/4thSem/syllabus",
-    description: "Subjects and course structure.",
-    Icon: BookOpen,
-  },
-  {
-    name: "Faculty",
-    link: "/faculty",
-    description: "Meet faculty & profiles.",
-    Icon: Users,
-  },
-  {
-    name: "Students List",
-    link: "/semester/4thSem/studentsList",
-    description: "Class list and details.",
-    Icon: UsersRound,
-  },
-  {
-    name: "Previous 5-Year Question Papers",
-    link: "/semester/4thSem/Previous",
-    description: "Prepare with past papers.",
-    Icon: FileText,
-  },
-  {
-    name: "Assignment",
-    link: "/semester/4thSem/assignment",
-    description: "Assignments and uploads.",
-    Icon: ClipboardList,
-  },
-  {
-    name: "Notes",
-    link: "/semester/4thSem/notes",
-    description: "Topic-wise notes.",
-    Icon: NotebookPen,
-  },
-  {
-    name: "PPT",
-    link: "/semester/4thSem/ppt",
-    description: "Presentations & slides.",
-    Icon: Presentation,
-  },
-];
-
-const sixthSemItems: SemesterItem[] = [
-  {
-    name: "Time Table",
-    link: "/semester/6thSem/timetable",
-    description: "Schedule and lectures.",
-    Icon: CalendarClock,
-  },
-  {
-    name: "Syllabus",
-    link: "/semester/6thSem/syllabus",
-    description: "Subjects and course structure.",
-    Icon: BookOpen,
-  },
-  {
-    name: "Faculty",
-    link: "/faculty",
-    description: "Meet faculty & profiles.",
-    Icon: Users,
-  },
-  {
-    name: "Students List",
-    link: "/semester/6thSem/studentsList",
-    description: "Class list and details.",
-    Icon: UsersRound,
-  },
-  {
-    name: "Previous 5-Year Question Papers",
-    link: "/semester/6thSem/Previous",
-    description: "Prepare with past papers.",
-    Icon: FileText,
-  },
-  {
-    name: "Assignment",
-    link: "/semester/6thSem/assignment",
-    description: "Assignments and uploads.",
-    Icon: ClipboardList,
-  },
-  {
-    name: "Notes",
-    link: "/semester/6thSem/notes",
-    description: "Topic-wise notes.",
-    Icon: NotebookPen,
-  },
-  {
-    name: "PPT",
-    link: "/semester/6thSem/ppt",
-    description: "Presentations & slides.",
-    Icon: Presentation,
-  },
-];
+import { getSemesterNavigationItems } from "@/config/semesterNavigation";
 
 export default function SemestersPage() {
   const [semester, setSemester] = useState<SemesterKey>("4th");
 
   const items = useMemo(
-    () => (semester === "4th" ? fourthSemItems : sixthSemItems),
+    () => getSemesterNavigationItems(semester),
     [semester]
   );
 

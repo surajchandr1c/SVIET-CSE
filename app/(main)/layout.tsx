@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import BackToTop from "@/components/BackToTop";
+import CollegePreviewLink from "@/components/CollegePreviewLink";
 
 export const metadata = {
   title: "CSE Department",
@@ -21,6 +22,7 @@ export default function RootLayout({
 
       <main className="min-h-screen">{children}</main>
 
+      <CollegePreviewLink />
       <BackToTop />
       <Footer />
     </div>

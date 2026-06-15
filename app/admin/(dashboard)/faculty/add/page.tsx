@@ -3,6 +3,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import SmartImage from "@/components/SmartImage";
+import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
 import { compareFacultyByPositionThenCreatedAtDesc } from "@/lib/facultyOrder";
 
 type Faculty = {
@@ -175,17 +176,11 @@ export default function AdminFacultyPage() {
 
   return (
     <section className="space-y-8">
-      <div className="mx-auto w-full max-w-6xl admin-card p-8">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-[var(--admin-text-muted)]">
-          Faculty
-        </p>
-        <h1 className="text-3xl font-bold text-[var(--admin-text)] md:text-4xl">
-          Manage Faculty
-        </h1>
-        <p className="mt-3 max-w-2xl text-[15px] text-[var(--admin-text-muted)] md:text-base">
-          Add, update and organize department faculty profiles.
-        </p>
-      </div>
+      <AdminPageIntroCard
+        kicker="Faculty"
+        title="Manage Faculty"
+        description="Add, update and organize department faculty profiles."
+      />
 
       <div className="mx-auto w-full max-w-6xl rounded-2xl bg-white p-8 shadow-xl">
         <h2 className="mb-8 text-3xl font-bold text-gray-800">

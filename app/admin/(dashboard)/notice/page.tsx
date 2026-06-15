@@ -1,38 +1,14 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
+import { normalizeGoogleDriveFileViewUrl } from "@/lib/driveUrl";
 
 type Notice = {
   _id?: string;
   heading: string;
   date: string;
   driveUrl: string;
-};
-
-const extractGoogleDriveFileId = (url: string): string | null => {
-  const trimmed = url.trim();
-  if (!trimmed) return null;
-
-  const directMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (directMatch?.[1]) return directMatch[1];
-
-  try {
-    const parsed = new URL(trimmed);
-    const idParam = parsed.searchParams.get("id");
-    if (idParam) return idParam;
-  } catch {
-    return null;
-  }
-
-  return null;
-};
-
-const normalizeNoticeUrl = (url: string): string => {
-  const trimmed = url.trim();
-  if (!trimmed) return "";
-  const id = extractGoogleDriveFileId(trimmed);
-  if (!id) return trimmed;
-  return `https://drive.google.com/file/d/${id}/view`;
 };
 
 const initialForm: Notice = {
@@ -89,7 +65,7 @@ export default function AdminNoticePage() {
         },
         body: JSON.stringify({
           ...form,
-          driveUrl: normalizeNoticeUrl(form.driveUrl),
+          driveUrl: normalizeGoogleDriveFileViewUrl(form.driveUrl),
         }),
       });
 
@@ -134,17 +110,11 @@ export default function AdminNoticePage() {
 
   return (
     <section className="space-y-8">
-      <div className="mx-auto w-full max-w-6xl admin-card p-8">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-[var(--admin-text-muted)]">
-          Notice Board
-        </p>
-        <h1 className="text-3xl font-bold text-[var(--admin-text)] md:text-4xl">
-          Manage Notice Board
-        </h1>
-        <p className="mt-3 max-w-2xl text-[15px] text-[var(--admin-text-muted)] md:text-base">
-          Publish and edit notices for all students quickly.
-        </p>
-      </div>
+      <AdminPageIntroCard
+        kicker="Notice Board"
+        title="Manage Notice Board"
+        description="Publish and edit notices for all students quickly."
+      />
 
       <div className="mx-auto w-full max-w-6xl rounded-2xl bg-white p-8 shadow-xl">
         <h2 className="mb-8 text-3xl font-bold text-gray-800">
@@ -183,7 +153,7 @@ export default function AdminNoticePage() {
 
           {form.driveUrl && (
             <a
-              href={normalizeNoticeUrl(form.driveUrl)}
+              href={normalizeGoogleDriveFileViewUrl(form.driveUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block text-blue-600 underline"

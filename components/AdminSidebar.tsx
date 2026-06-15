@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import {
@@ -11,7 +11,7 @@ import {
   Menu,
   Moon,
   Sun,
-  Trophy,
+  Users,
   UserRound,
   X,
 } from "lucide-react";
@@ -25,13 +25,8 @@ type AdminSidebarProps = {
 
 export default function AdminSidebar({ theme, onToggleTheme }: AdminSidebarProps) {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleLogout = async () => {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -42,7 +37,8 @@ export default function AdminSidebar({ theme, onToggleTheme }: AdminSidebarProps
     { name: "Home", href: "/admin/dashboard", exact: true, icon: LayoutDashboard },
     { name: "Faculty", href: "/admin/faculty/add", icon: UserRound },
     { name: "TechXplore", href: "/admin/techxplore", exact: true, icon: UserRound },
-    { name: "Achivement", href: "/admin/achivement", exact: true, icon: Trophy },
+    { name: "Student List", href: "/admin/student-list", exact: true, icon: Users },
+    { name: "Student Portfolio", href: "/admin/studentportfolio", exact: true, icon: Users },
     { name: "Gallery", href: "/admin/gallery", exact: true, icon: Image },
     { name: "Notice Board", href: "/admin/notice", exact: true, icon: Bell },
     { name: "4th Sem", href: "/admin/4th", exact: true, icon: LayoutDashboard },
@@ -50,7 +46,6 @@ export default function AdminSidebar({ theme, onToggleTheme }: AdminSidebarProps
   ];
 
   const isActivePath = (href: string, exact?: boolean) => {
-    if (!mounted) return false;
     if (exact) {
       return pathname === href;
     }
@@ -69,7 +64,11 @@ export default function AdminSidebar({ theme, onToggleTheme }: AdminSidebarProps
             className="admin-icon-button"
             title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
           >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            {theme === "dark" ? (
+              <Sun size={18} className="text-white" />
+            ) : (
+              <Moon size={18} className="text-[#111111]" />
+            )}
           </button>
 
           <button
@@ -109,7 +108,7 @@ export default function AdminSidebar({ theme, onToggleTheme }: AdminSidebarProps
             className="admin-icon-button md:hidden"
             title="Close menu"
           >
-            <X size={18} />
+            <X size={18} className="text-current" />
           </button>
         </div>
 
@@ -138,12 +137,16 @@ export default function AdminSidebar({ theme, onToggleTheme }: AdminSidebarProps
             onClick={onToggleTheme}
             className="admin-theme-toggle hidden md:flex"
           >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            {theme === "dark" ? (
+              <Sun size={18} className="text-white" />
+            ) : (
+              <Moon size={18} className="text-[#111111]" />
+            )}
             <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
           </button>
 
           <button type="button" onClick={handleLogout} className="admin-logout-button">
-            <LogOut size={18} />
+            <LogOut size={18} className="text-white" />
             <span>Logout</span>
           </button>
         </div>

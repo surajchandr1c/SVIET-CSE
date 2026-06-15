@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+const COPYRIGHT_YEAR = 2026;
+
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/faculty", label: "Faculty" },
@@ -13,7 +15,6 @@ const navLinks = [
 const fourthSemLinks = [
   { href: "/semester/4thSem/timetable", label: "Time Table" },
   { href: "/semester/4thSem/syllabus", label: "Syllabus" },
-  { href: "/semester/4thSem/studentsList", label: "Students List" },
   { href: "/semester/4thSem/Previous", label: "Previous 5 Year Question Paper" },
   { href: "/semester/4thSem/assignment", label: "Assignment" },
   { href: "/semester/4thSem/notes", label: "Notes" },
@@ -21,9 +22,7 @@ const fourthSemLinks = [
 ];
 
 const sixthSemLinks = [
-  { href: "/semester/6thSem/timetable", label: "Time Table" },
   { href: "/semester/6thSem/syllabus", label: "Syllabus" },
-  { href: "/semester/6thSem/studentsList", label: "Students" },
   { href: "/semester/6thSem/Previous", label: "Previous 5 Year Question Paper" },
   { href: "/semester/6thSem/assignment", label: "Assignment" },
   { href: "/semester/6thSem/notes", label: "Notes" },
@@ -33,10 +32,11 @@ const sixthSemLinks = [
 export default function Footer() {
   return (
     <footer className="px-4 pb-8 pt-12 text-[#111827]">
-      <div className="mx-auto max-w-[1380px] rounded-3xl border border-[#E5E7EB] bg-white px-5 py-6 shadow-[0_14px_32px_rgba(17,24,39,0.10)] lg:px-6 lg:py-7">
+      <div className="mx-auto max-w-[1380px] rounded-3xl border border-[#E5E7EB] bg-white px-5 py-6 lg:px-6 lg:py-7">
         <div className="grid gap-6 md:grid-cols-4">
           <div>
             <img
+              suppressHydrationWarning
               src="/logo.jpeg"
               alt="logo"
               className="mb-4 h-10 w-auto object-contain lg:h-10"
@@ -84,10 +84,11 @@ export default function Footer() {
               ))}
             </ul>
           </div>
+
         </div>
 
         <div className="mt-6 border-t border-[#E5E7EB] pt-4 text-center text-[16px] text-[#6B7280] md:text-[17px] lg:text-base">
-          &copy; {new Date().getFullYear()} CSE Department
+          &copy; {COPYRIGHT_YEAR} CSE Department
         </div>
       </div>
     </footer>

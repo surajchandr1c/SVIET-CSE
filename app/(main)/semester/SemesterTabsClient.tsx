@@ -22,7 +22,7 @@ export default function SemesterTabsClient({
   );
 
   return (
-    <div className="mt-6 mb-6 flex justify-center">
+    <div className="mb-6 mt-6 flex justify-center">
       <div
         role="tablist"
         aria-label="Semester selection"
@@ -61,4 +61,3 @@ export default function SemesterTabsClient({
     </div>
   );
 }
-

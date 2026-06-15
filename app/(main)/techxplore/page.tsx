@@ -14,11 +14,11 @@ export default async function TechxplorePage() {
     .select(
       "name position order image admissionNo batch about instagram whatsapp linkedin github createdAt"
     )
-    .lean();
+    .lean<Array<TechxploreStudentType & { _id: unknown }>>();
 
-  docs.sort(compareTechxploreByOrderThenCreatedAtAsc as any);
+  docs.sort(compareTechxploreByOrderThenCreatedAtAsc);
 
-  const students: TechxploreStudentType[] = docs.map((doc: any) => ({
+  const students: TechxploreStudentType[] = docs.map((doc) => ({
     _id: String(doc._id),
     name: doc.name,
     position: doc.position,

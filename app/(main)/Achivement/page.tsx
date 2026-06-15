@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { formatDateGB } from "@/lib/formatDate";
+import { useApiArrayWithLoading } from "@/lib/hooks/useApiArray";
+import { apiRoutes } from "@/lib/apiRoutes";
 import SmartImage from "@/components/SmartImage";
 
 type AchivementEntry = {
@@ -11,30 +13,9 @@ type AchivementEntry = {
   driveUrl: string;
 };
 
-const formatDate = (value: string): string => {
-  if (!value) return "";
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-};
-
 export default function AchivementPage() {
-  const [entries, setEntries] = useState<AchivementEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/achivement")
-      .then((res) => res.json())
-      .then((data) => setEntries(data))
-      .catch(() => setEntries([]))
-      .finally(() => setLoading(false));
-  }, []);
+  const { items: entries, loading } =
+    useApiArrayWithLoading<AchivementEntry>(apiRoutes.achivement());
 
   return (
     <div className="min-h-screen px-6 pb-10 pt-8">
@@ -69,7 +50,7 @@ export default function AchivementPage() {
                   {entry.heading || `Achivement ${index + 1}`}
                 </h2>
                 <p className="mt-1 text-lg font-semibold text-slate-300 md:text-xl">
-                  {entry.date ? formatDate(entry.date) : "Open Album"}
+                  {entry.date ? formatDateGB(entry.date) : "Open Album"}
                 </p>
               </div>
             </a>

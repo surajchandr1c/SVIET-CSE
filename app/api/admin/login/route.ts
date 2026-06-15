@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { headers } from "next/headers";
 import { generateToken } from "@/lib/auth";
 
 const isBcryptHash = (value: string) => /^\$2[aby]\$\d{2}\$/.test(value);
@@ -65,7 +66,9 @@ export async function POST(req: Request) {
 
         response.cookies.set("admin_token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", 
+        // When running `next start` locally (NODE_ENV=production) over HTTP,
+        // `secure: true` would prevent the cookie from being stored.
+        secure: ((await headers()).get("x-forwarded-proto") ?? "http") === "https",
         sameSite: "lax", 
         path: "/",
       });

@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { formatDateGB } from "@/lib/formatDate";
+import { useApiArrayWithLoading } from "@/lib/hooks/useApiArray";
+import { apiRoutes } from "@/lib/apiRoutes";
 import SmartImage from "@/components/SmartImage";
 
 type GalleryAlbum = {
@@ -11,30 +13,8 @@ type GalleryAlbum = {
   driveUrl: string;
 };
 
-const formatDate = (value: string): string => {
-  if (!value) return "";
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-};
-
 export default function Gallery() {
-  const [albums, setAlbums] = useState<GalleryAlbum[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/gallery")
-      .then((res) => res.json())
-      .then((data) => setAlbums(data))
-      .catch(() => setAlbums([]))
-      .finally(() => setLoading(false));
-  }, []);
+  const { items: albums, loading } = useApiArrayWithLoading<GalleryAlbum>(apiRoutes.gallery());
 
   return (
     <div className="min-h-screen px-6 pb-10 pt-8">
@@ -69,7 +49,7 @@ export default function Gallery() {
                   {album.heading || `Gallery Album ${index + 1}`}
                 </h2>
                 <p className="mt-1 text-lg font-semibold text-slate-300 md:text-xl">
-                  {album.date ? formatDate(album.date) : "Open Album"}
+                  {album.date ? formatDateGB(album.date) : "Open Album"}
                 </p>
               </div>
             </a>

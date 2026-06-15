@@ -1,30 +1,3 @@
-import mongoose, { Schema, Document, models } from "mongoose";
+export { default } from "@/server/db/models/Faculty";
+export * from "@/server/db/models/Faculty";
 
-export interface IFaculty extends Document {
-  name: string;
-  profession: string;
-  image: string;
-  email: string;
-  experience: string;
-  specialization: string;
-  about: string;
-  position?: number | null;
-  createdAt: Date;
-}
-
-const FacultySchema: Schema = new Schema(
-  {
-    name: { type: String, required: true },
-    profession: { type: String, required: true },
-    image: { type: String, required: true },
-    email: { type: String, required: true },
-    experience: { type: String, required: true },
-    specialization: { type: String, required: true },
-    about: { type: String, required: true },
-    position: { type: Number, default: null },
-  },
-  { timestamps: true }
-);
-
-export default models.Faculty ||
-  mongoose.model<IFaculty>("Faculty", FacultySchema);

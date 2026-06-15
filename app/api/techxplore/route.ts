@@ -11,7 +11,7 @@ export async function GET() {
   try {
     await connectDB();
     const students = await TechxploreStudent.find().lean();
-    students.sort(compareTechxploreByOrderThenCreatedAtAsc as any);
+    students.sort(compareTechxploreByOrderThenCreatedAtAsc);
     return NextResponse.json(students);
   } catch (error) {
     console.error("TechXplore fetch error:", error);

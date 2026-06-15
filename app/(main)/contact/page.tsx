@@ -49,16 +49,13 @@ export default function ContactPage() {
       </p>
 
       <div className="grid gap-10 md:grid-cols-2">
-        <div className="rounded-3xl border border-cyan-400/20 bg-[#0b1c47]/75 p-10 shadow-[0_18px_45px_rgba(0,0,0,0.35)]">
+        <div className="p-10">
           <h2 className="mb-4 mt-2 text-3xl font-semibold text-slate-200">College Address</h2>
           <p className="text-lg leading-8 text-slate-300">
             Swami Vivekanand Group of Engineering and Technology <br />
             Zirakpur-Patiala Highway, Ram Nagar, Banur <br />
             Punjab 140601, India
           </p>
-
-          {/* <h2 className="mb-3 mt-8 text-3xl font-semibold text-slate-200">Phone</h2>
-          <p className="text-lg text-slate-300">+91 9XXXXXXXXX</p> */}
 
           <h2 className="mb-3 mt-8 text-3xl font-semibold text-slate-200">Email</h2>
           <p className="text-lg text-slate-300">cse@sviet.ac.in</p>
@@ -67,7 +64,7 @@ export default function ContactPage() {
           <p className="text-lg text-slate-300">Monday - Friday: 9:00 AM - 4:30 PM</p>
         </div>
 
-        <div className="rounded-3xl border border-cyan-400/20 bg-[#0b1c47]/75 p-10 shadow-[0_18px_45px_rgba(0,0,0,0.35)]">
+        <div className="p-10">
           <h2 className="mb-6 text-3xl font-semibold text-slate-200">Send Us a Message</h2>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">

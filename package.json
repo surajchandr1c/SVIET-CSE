@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:students": "tsx scripts/seedStudents.ts",
+    "credentials:md": "node scripts/generateStudentCredentialsMd.js",
+    "credentials:init": "node scripts/initMissingStudentPasswords.js"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
@@ -36,6 +39,7 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.5",
     "typescript": "^5"
   }
 }

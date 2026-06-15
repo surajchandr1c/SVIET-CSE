@@ -5,7 +5,6 @@ import { ChangeEvent, FormEvent, useCallback, useEffect, useMemo, useState } fro
 const semesterTabs = [
   "Time Table",
   "Syllabus",
-  "Student List",
   "Previous 5 Year Question Paper",
   "Assignment",
   "Notes",
@@ -31,13 +30,6 @@ type SyllabusItem = {
   link: string;
 };
 
-type StudentItem = {
-  _id?: string;
-  semester: string;
-  admissionNo: string;
-  name: string;
-};
-
 type QuestionPaperItem = {
   _id?: string;
   semester: string;
@@ -56,7 +48,6 @@ type StudyResourceItem = {
 };
 
 const initialSyllabusForm = { title: "", code: "", link: "" };
-const initialStudentForm = { name: "", admissionNo: "" };
 const initialQuestionPaperForm = { title: "", code: "", link: "" };
 const initialResourceForm = { title: "", code: "", link: "" };
 
@@ -64,17 +55,12 @@ export default function SemesterTabForm({ semesterName, semesterKey }: SemesterT
   const [selectedTab, setSelectedTab] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(false);
-  const [studentLoading, setStudentLoading] = useState(false);
   const [paperLoading, setPaperLoading] = useState(false);
   const [resourceLoading, setResourceLoading] = useState(false);
 
   const [syllabusList, setSyllabusList] = useState<SyllabusItem[]>([]);
   const [editingSyllabusId, setEditingSyllabusId] = useState<string | null>(null);
   const [syllabusForm, setSyllabusForm] = useState(initialSyllabusForm);
-
-  const [studentList, setStudentList] = useState<StudentItem[]>([]);
-  const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
-  const [studentForm, setStudentForm] = useState(initialStudentForm);
 
   const [paperList, setPaperList] = useState<QuestionPaperItem[]>([]);
   const [editingPaperId, setEditingPaperId] = useState<string | null>(null);
@@ -105,17 +91,6 @@ export default function SemesterTabForm({ semesterName, semesterKey }: SemesterT
     if (selectedTab !== "Syllabus") return;
     fetchSyllabus();
   }, [selectedTab, fetchSyllabus]);
-
-  const fetchStudents = useCallback(async () => {
-    const res = await fetch(`/api/students?semester=${semesterKey}`);
-    const data = await res.json();
-    setStudentList(data);
-  }, [semesterKey]);
-
-  useEffect(() => {
-    if (selectedTab !== "Student List") return;
-    fetchStudents();
-  }, [selectedTab, fetchStudents]);
 
   const fetchPapers = useCallback(async () => {
     const res = await fetch(`/api/question-papers?semester=${semesterKey}`);
@@ -187,53 +162,6 @@ export default function SemesterTabForm({ semesterName, semesterKey }: SemesterT
     if (!res.ok) return;
     if (editingSyllabusId === id) resetSyllabusForm();
     fetchSyllabus();
-  };
-
-  const handleStudentChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setStudentForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const resetStudentForm = () => {
-    setEditingStudentId(null);
-    setStudentForm(initialStudentForm);
-  };
-
-  const handleStudentSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setStudentLoading(true);
-    try {
-      const isEditMode = Boolean(editingStudentId);
-      const endpoint = isEditMode ? `/api/students/${editingStudentId}` : "/api/students";
-      const res = await fetch(endpoint, {
-        method: isEditMode ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ semester: semesterKey, ...studentForm }),
-      });
-      if (!res.ok) throw new Error("Failed");
-      alert(isEditMode ? "Student updated successfully!" : "Student added successfully!");
-      resetStudentForm();
-      fetchStudents();
-    } catch {
-      alert(editingStudentId ? "Error updating student" : "Error adding student");
-    } finally {
-      setStudentLoading(false);
-    }
-  };
-
-  const handleStudentEdit = (item: StudentItem) => {
-    if (!item._id) return;
-    setEditingStudentId(item._id);
-    setStudentForm({ name: item.name, admissionNo: item.admissionNo });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleStudentDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this student?")) return;
-    const res = await fetch(`/api/students/${id}`, { method: "DELETE" });
-    if (!res.ok) return;
-    if (editingStudentId === id) resetStudentForm();
-    fetchStudents();
   };
 
   const handlePaperChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -393,34 +321,6 @@ export default function SemesterTabForm({ semesterName, semesterKey }: SemesterT
         </div>
       )}
 
-      {selectedTab === "Student List" && (
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">{editingStudentId ? "Edit Student" : "Add Student"}</h2>
-          <form onSubmit={handleStudentSubmit} className="space-y-4">
-            <input type="text" name="name" value={studentForm.name} onChange={handleStudentChange} placeholder="Student Name" className="w-full border rounded-lg px-4 py-2" required />
-            <input type="text" name="admissionNo" value={studentForm.admissionNo} onChange={handleStudentChange} placeholder="Admission No." className="w-full border rounded-lg px-4 py-2" required />
-            <div className="flex gap-3">
-              <button type="button" onClick={resetStudentForm} className="px-6 py-2 border rounded-lg">{editingStudentId ? "Cancel Edit" : "Reset"}</button>
-              <button type="submit" disabled={studentLoading} className="px-6 py-2 bg-[#0b3c5d] hover:bg-[#0f4f79] text-white rounded-lg disabled:opacity-50">{studentLoading ? (editingStudentId ? "Updating..." : "Adding...") : editingStudentId ? "Update Student" : "Add Student"}</button>
-            </div>
-          </form>
-          <div className="mt-8 overflow-x-auto bg-white shadow rounded-lg">
-            <table className="min-w-full border border-gray-200">
-              <thead className="bg-sky-900 text-white"><tr><th className="py-2 px-4 border">Sr. No.</th><th className="py-2 px-4 border">Admission No.</th><th className="py-2 px-4 border">Name</th><th className="py-2 px-4 border">Actions</th></tr></thead>
-              <tbody>
-                {studentList.map((student, index) => (
-                  <tr key={student._id ?? `${student.admissionNo}-${index}`} className="text-center hover:bg-gray-100">
-                    <td className="py-2 px-4 border">{index + 1}</td><td className="py-2 px-4 border">{student.admissionNo}</td><td className="py-2 px-4 border">{student.name}</td>
-                    <td className="py-2 px-4 border"><div className="flex gap-2 justify-center"><button onClick={() => handleStudentEdit(student)} className="bg-amber-500 text-white px-3 py-1 rounded-lg">Edit</button><button onClick={() => student._id && handleStudentDelete(student._id)} disabled={!student._id} className="bg-red-500 text-white px-3 py-1 rounded-lg disabled:opacity-50">Delete</button></div></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {studentList.length === 0 && <p className="text-gray-500 mt-4">No students added yet.</p>}
-        </div>
-      )}
-
       {selectedTab === "Previous 5 Year Question Paper" && (
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">{editingPaperId ? "Edit Question Paper" : "Add Question Paper"}</h2>
@@ -473,7 +373,7 @@ export default function SemesterTabForm({ semesterName, semesterKey }: SemesterT
         </div>
       )}
 
-      {selectedTab && !isResourceTab && selectedTab !== "Syllabus" && selectedTab !== "Student List" && selectedTab !== "Previous 5 Year Question Paper" && (
+      {selectedTab && !isResourceTab && selectedTab !== "Syllabus" && selectedTab !== "Previous 5 Year Question Paper" && (
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Form</h2>
           <form onSubmit={handleSubmit} className="space-y-4">

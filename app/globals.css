@@ -7,8 +7,6 @@
 
   --ui-text: #111827;
   --ui-text-secondary: #6b7280;
-  --ui-heading: #000000;
-
   --ui-button-bg: #2563eb;
   --ui-button-text: #ffffff;
   --ui-button-hover: #1d4ed8;
@@ -19,20 +17,10 @@
   --ui-icon: #6b7280;
   --ui-icon-hover: #2563eb;
 
-  --ui-navbar-bg: #ffffff;
-  --ui-navbar-text: #111827;
-  --ui-navbar-active: #2563eb;
-
   --ui-form-bg: #ffffff;
   --ui-form-border: #d1d5db;
   --ui-form-focus: #2563eb;
   --ui-placeholder: #9ca3af;
-
-  /* legacy tokens */
-  --color-brand: var(--ui-button-bg);
-  --color-brand-hover: var(--ui-button-hover);
-  --color-page: var(--ui-bg);
-  --color-surface: var(--ui-form-bg);
 }
 
 html {
@@ -69,11 +57,6 @@ select {
 button {
   color: var(--ui-button-text) !important;
 }
-
-.theme-main button a {
-  color: inherit !important;
-}
-
 
 @keyframes fadeIn {
   from {
@@ -144,7 +127,6 @@ button {
 .theme-main .bg-gray-50,
 .theme-main .bg-gray-100,
 .theme-main .bg-gray-200,
-.theme-main .bg-\[\#0b1c47\]\/75,
 .theme-main .bg-\[\#071433\],
 .theme-main .bg-\[\#0b1c47\]\/75,
 .theme-main .bg-\[\#0b1c47\]\/85 {
