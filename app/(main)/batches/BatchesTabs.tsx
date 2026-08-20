@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import BatchProfilesGrid from "./BatchProfilesGrid";
 import type { BatchProfile } from "./types";
 import type { BatchConfig } from "@/lib/shared/batchConfig";
@@ -67,9 +67,10 @@ export default function BatchesTabs({
   batches: Array<BatchConfig & { profiles: BatchProfile[] }>;
   profilesAll: BatchProfile[];
 }) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
+  const [isSwitching, setIsSwitching] = useState(false);
+  const [, startTransition] = useTransition();
   const tabs = useMemo(
     () => [{ key: "all", label: "All Batches" }, ...batches.map((batch) => ({ key: batch.year, label: batch.label }))],
     [batches]
@@ -100,6 +101,19 @@ export default function BatchesTabs({
     () => activeProfiles.filter((profile) => profileMatchesSearch(profile, searchQuery)),
     [activeProfiles, searchQuery]
   );
+
+  const updateSelection = (tab: string, course?: CourseTab) => {
+    const params = new URLSearchParams();
+    if (tab !== "all") params.set("tab", tab);
+    if (course && course !== "cse") params.set("course", course);
+    const query = params.toString();
+
+    setIsSwitching(true);
+    startTransition(() => {
+      window.history.pushState(null, "", query ? `/batches?${query}` : "/batches");
+    });
+    window.requestAnimationFrame(() => setIsSwitching(false));
+  };
 
   return (
     <>
@@ -132,7 +146,7 @@ export default function BatchesTabs({
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                onClick={() => router.push(`/batches?tab=${tab.key}`)}
+                onClick={() => updateSelection(tab.key)}
                 className={[
                   "relative z-10 rounded-full px-6 py-3 text-center text-sm font-semibold md:px-10 md:text-base",
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60",
@@ -170,7 +184,7 @@ export default function BatchesTabs({
                     type="button"
                     role="tab"
                     aria-selected={isActive}
-                    onClick={() => router.push(`/batches?tab=${activeTab}&course=${course.key}`)}
+                    onClick={() => updateSelection(activeTab, course.key)}
                     className={[
                       "relative z-10 rounded-full px-6 py-2.5 text-center text-sm font-semibold md:text-base",
                       "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60",
@@ -192,7 +206,7 @@ export default function BatchesTabs({
         </div>
       )}
 
-      <BatchProfilesGrid profiles={filteredProfiles} />
+      <BatchProfilesGrid profiles={filteredProfiles} isLoading={isSwitching} />
     </>
   );
 }

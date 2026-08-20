@@ -17,7 +17,13 @@ const accentBgs = [
   "bg-[#f6e7c8]",
 ];
 
-export default function BatchProfilesGrid({ profiles }: { profiles: BatchProfile[] }) {
+export default function BatchProfilesGrid({
+  profiles,
+  isLoading = false,
+}: {
+  profiles: BatchProfile[];
+  isLoading?: boolean;
+}) {
   const data = useMemo(() => profiles ?? [], [profiles]);
 
   const countSkills = (profile: BatchProfile) => {
@@ -39,7 +45,17 @@ export default function BatchProfilesGrid({ profiles }: { profiles: BatchProfile
 
   return (
     <>
-      {data.length === 0 ? (
+      {isLoading ? (
+        <div
+          className="mx-4 mt-8 grid grid-cols-1 gap-8 sm:mx-6 sm:grid-cols-2 lg:mx-8 lg:grid-cols-4"
+          aria-label="Loading student profiles"
+          role="status"
+        >
+          {Array.from({ length: 4 }, (_, index) => (
+            <div key={index} className="h-115 animate-pulse rounded-3xl bg-white/70" />
+          ))}
+        </div>
+      ) : data.length === 0 ? (
         <p className="mt-8 text-center text-slate-200/80">No profiles found.</p>
       ) : (
         <div className="mx-4 mt-8 grid grid-cols-1 gap-8 sm:mx-6 sm:grid-cols-2 lg:mx-8 lg:grid-cols-4">
