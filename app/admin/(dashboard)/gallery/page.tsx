@@ -6,6 +6,7 @@ import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
 import { normalizeGoogleDriveFolderUrl } from "@/lib/driveUrl";
 import { formatDateGB } from "@/lib/formatDate";
 import { normalizeImageUrl } from "@/lib/imageUrl";
+import { AdminCardListSkeleton } from "@/components/shared/Skeleton";
 
 type GalleryAlbum = {
   _id?: string;
@@ -25,13 +26,18 @@ const initialForm: GalleryAlbum = {
 export default function AdminGalleryPage() {
   const [albums, setAlbums] = useState<GalleryAlbum[]>([]);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [editingAlbumId, setEditingAlbumId] = useState<string | null>(null);
   const [form, setForm] = useState<GalleryAlbum>(initialForm);
 
   const fetchAlbums = async () => {
-    const res = await fetch("/api/gallery");
-    const data = await res.json();
-    setAlbums(data);
+    try {
+      const res = await fetch("/api/gallery");
+      const data = await res.json();
+      setAlbums(data);
+    } finally {
+      setInitialLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -218,7 +224,9 @@ export default function AdminGalleryPage() {
       <div className="mx-auto w-full max-w-6xl rounded-2xl bg-white p-8 shadow-xl">
         <h2 className="mb-6 text-2xl font-bold">Gallery Cards</h2>
 
-        {albums.length === 0 ? (
+        {initialLoading ? (
+          <AdminCardListSkeleton />
+        ) : albums.length === 0 ? (
           <p className="mt-2 text-center text-gray-500">No gallery cards added yet.</p>
         ) : (
           <div className="space-y-4">

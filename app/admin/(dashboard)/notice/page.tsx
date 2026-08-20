@@ -3,6 +3,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
 import { normalizeGoogleDriveFileViewUrl } from "@/lib/driveUrl";
+import { AdminCardListSkeleton } from "@/components/shared/Skeleton";
 
 type Notice = {
   _id?: string;
@@ -19,14 +20,19 @@ const initialForm: Notice = {
 
 export default function AdminNoticePage() {
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [notices, setNotices] = useState<Notice[]>([]);
   const [editingNoticeId, setEditingNoticeId] = useState<string | null>(null);
   const [form, setForm] = useState<Notice>(initialForm);
 
   const fetchNotices = async () => {
-    const res = await fetch("/api/notices");
-    const data = await res.json();
-    setNotices(data);
+    try {
+      const res = await fetch("/api/notices");
+      const data = await res.json();
+      setNotices(data);
+    } finally {
+      setInitialLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -229,7 +235,9 @@ export default function AdminNoticePage() {
           ))}
         </div>
 
-        {notices.length === 0 && (
+        {initialLoading ? (
+          <AdminCardListSkeleton />
+        ) : notices.length === 0 && (
           <p className="text-gray-500 text-center mt-6">No notice uploaded yet.</p>
         )}
       </div>

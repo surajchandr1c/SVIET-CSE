@@ -1,8 +1,9 @@
 "use client";
 
 import { formatDateGB } from "@/lib/formatDate";
-import { useApiArray } from "@/lib/hooks/useApiArray";
+import { useApiArrayWithLoading } from "@/lib/hooks/useApiArray";
 import { apiRoutes } from "@/lib/apiRoutes";
+import { NoticeListSkeleton } from "@/components/shared/Skeleton";
 
 type Notice = {
   _id: string;
@@ -12,7 +13,7 @@ type Notice = {
 };
 
 export default function NoticePage() {
-  const notices = useApiArray<Notice>(apiRoutes.notices());
+  const { items: notices, loading } = useApiArrayWithLoading<Notice>(apiRoutes.notices());
 
   return (
     <div className="mx-auto mt-10 max-w-[1180px] rounded-3xl border border-cyan-400/20 bg-[#0b1c47]/75 p-8 shadow-[0_18px_45px_rgba(0,0,0,0.35)]">
@@ -20,7 +21,9 @@ export default function NoticePage() {
         NOTICE BOARD
       </h2>
 
-      {notices.length === 0 ? (
+      {loading ? (
+        <NoticeListSkeleton />
+      ) : notices.length === 0 ? (
         <p className="py-4 text-center text-slate-400">No notices available.</p>
       ) : (
         <ul>

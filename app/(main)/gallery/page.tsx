@@ -4,6 +4,7 @@ import { formatDateGB } from "@/lib/formatDate";
 import { useApiArrayWithLoading } from "@/lib/hooks/useApiArray";
 import { apiRoutes } from "@/lib/apiRoutes";
 import SmartImage from "@/components/shared/SmartImage";
+import { CardGridSkeleton } from "@/components/shared/Skeleton";
 
 type GalleryAlbum = {
   _id: string;
@@ -23,7 +24,7 @@ export default function Gallery() {
       </h1>
 
       {loading ? (
-        <p className="text-center text-slate-300">Loading gallery...</p>
+        <CardGridSkeleton />
       ) : albums.length === 0 ? (
         <p className="text-center text-slate-300">No gallery cards available right now.</p>
       ) : (

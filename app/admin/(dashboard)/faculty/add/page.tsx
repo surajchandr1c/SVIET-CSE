@@ -5,6 +5,7 @@ import { normalizeImageUrl } from "@/lib/imageUrl";
 import SmartImage from "@/components/shared/SmartImage";
 import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
 import { compareFacultyByPositionThenCreatedAtDesc } from "@/lib/facultyOrder";
+import { AdminCardListSkeleton } from "@/components/shared/Skeleton";
 
 type Faculty = {
   _id?: string;
@@ -36,6 +37,7 @@ export default function AdminFacultyPage() {
   const [loading, setLoading] = useState(false);
   const [orderLoadingId, setOrderLoadingId] = useState<string | null>(null);
   const [facultyList, setFacultyList] = useState<Faculty[]>([]);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [editingFacultyId, setEditingFacultyId] = useState<string | null>(null);
   const [orderDrafts, setOrderDrafts] = useState<Record<string, string>>({});
 
@@ -43,22 +45,26 @@ export default function AdminFacultyPage() {
   const previewImage = normalizeImageUrl(form.image);
 
   const fetchFaculty = async () => {
-    const res = await fetch("/api/faculty");
-    const data = await res.json();
-    const sorted = Array.isArray(data)
-      ? [...data].sort(compareFacultyByPositionThenCreatedAtDesc)
-      : [];
+    try {
+      const res = await fetch("/api/faculty");
+      const data = await res.json();
+      const sorted = Array.isArray(data)
+        ? [...data].sort(compareFacultyByPositionThenCreatedAtDesc)
+        : [];
 
-    setFacultyList(sorted);
-    setOrderDrafts(() => {
-      const next: Record<string, string> = {};
-      for (const item of sorted) {
-        if (!item?._id) continue;
-        next[item._id] =
-          typeof item.position === "number" ? String(item.position) : "";
-      }
-      return next;
-    });
+      setFacultyList(sorted);
+      setOrderDrafts(() => {
+        const next: Record<string, string> = {};
+        for (const item of sorted) {
+          if (!item?._id) continue;
+          next[item._id] =
+            typeof item.position === "number" ? String(item.position) : "";
+        }
+        return next;
+      });
+    } finally {
+      setInitialLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -428,7 +434,9 @@ export default function AdminFacultyPage() {
           })}
         </div>
 
-        {facultyList.length === 0 && (
+        {initialLoading ? (
+          <AdminCardListSkeleton />
+        ) : facultyList.length === 0 && (
           <p className="text-gray-500 text-center mt-6">No faculty added yet.</p>
         )}
       </div>

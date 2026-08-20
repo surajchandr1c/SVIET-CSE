@@ -6,6 +6,7 @@ import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
 import { normalizeGoogleDriveFolderUrl } from "@/lib/driveUrl";
 import { formatDateGB } from "@/lib/formatDate";
 import { normalizeImageUrl } from "@/lib/imageUrl";
+import { AdminCardListSkeleton } from "@/components/shared/Skeleton";
 
 type AchivementEntry = {
   _id?: string;
@@ -25,13 +26,18 @@ const initialForm: AchivementEntry = {
 export default function AdminAchivementPage() {
   const [entries, setEntries] = useState<AchivementEntry[]>([]);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
   const [form, setForm] = useState<AchivementEntry>(initialForm);
 
   const fetchEntries = async () => {
-    const res = await fetch("/api/achivement");
-    const data = await res.json();
-    setEntries(data);
+    try {
+      const res = await fetch("/api/achivement");
+      const data = await res.json();
+      setEntries(data);
+    } finally {
+      setInitialLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -218,7 +224,9 @@ export default function AdminAchivementPage() {
       <div className="mx-auto w-full max-w-6xl rounded-2xl bg-white p-8 shadow-xl">
         <h2 className="mb-6 text-2xl font-bold">Achivement Cards</h2>
 
-        {entries.length === 0 ? (
+        {initialLoading ? (
+          <AdminCardListSkeleton />
+        ) : entries.length === 0 ? (
           <p className="mt-2 text-center text-gray-500">No achivement cards added yet.</p>
         ) : (
           <div className="space-y-4">

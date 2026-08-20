@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BookOpen, FileText, Link2 } from "lucide-react";
 import ResourceCardLink from "@/components/main/ResourceCardLink";
 import { apiRoutes } from "@/lib/apiRoutes";
+import { ResourceGridSkeleton } from "@/components/shared/Skeleton";
 
 type BaseItem = {
   _id?: string;
@@ -101,9 +102,7 @@ export default function SemesterResourceList({
         </p>
 
         {loading ? (
-          <div className="mt-8 rounded-2xl bg-white p-8 text-center text-slate-500 shadow-lg">
-            Loading...
-          </div>
+          <div className="mt-8"><ResourceGridSkeleton /></div>
         ) : items.length === 0 ? (
           <div className="mt-8 rounded-2xl bg-white p-8 text-center text-slate-500 shadow-lg">
             {meta.empty}

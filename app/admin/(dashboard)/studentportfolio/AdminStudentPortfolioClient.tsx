@@ -9,6 +9,7 @@ import { normalizeImageUrl } from "@/lib/imageUrl";
 import { slugifyProfileName } from "@/app/(main)/batches/slug";
 import type { BatchProfile } from "@/app/(main)/batches/types";
 import { MAX_PINNED_BATCH_PROFILES } from "@/lib/shared/batchProfilePins";
+import { PortfolioGridSkeleton } from "@/components/shared/Skeleton";
 
 type BatchTab = "2024" | "2025";
 
@@ -317,9 +318,7 @@ export default function AdminStudentPortfolioClient() {
           ) : null}
 
           {profilesLoading ? (
-            <p className="mt-6 text-center text-sm text-[var(--admin-text-muted)]">
-              Loading profiles...
-            </p>
+            <div className="mt-6"><PortfolioGridSkeleton /></div>
           ) : profilesError ? (
             <p className="mt-6 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
               {profilesError}

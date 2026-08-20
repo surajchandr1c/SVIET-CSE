@@ -4,6 +4,7 @@ import { formatDateGB } from "@/lib/formatDate";
 import { useApiArrayWithLoading } from "@/lib/hooks/useApiArray";
 import { apiRoutes } from "@/lib/apiRoutes";
 import SmartImage from "@/components/shared/SmartImage";
+import { CardGridSkeleton } from "@/components/shared/Skeleton";
 
 type AchivementEntry = {
   _id: string;
@@ -24,7 +25,7 @@ export default function AchivementPage() {
       </h1>
 
       {loading ? (
-        <p className="text-center text-slate-300">Loading achivement cards...</p>
+        <CardGridSkeleton />
       ) : entries.length === 0 ? (
         <p className="text-center text-slate-300">No achivement cards available right now.</p>
       ) : (

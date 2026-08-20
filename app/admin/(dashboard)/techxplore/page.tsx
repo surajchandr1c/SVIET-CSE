@@ -5,6 +5,7 @@ import { normalizeImageUrl } from "@/lib/imageUrl";
 import SmartImage from "@/components/shared/SmartImage";
 import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
 import { compareTechxploreByOrderThenCreatedAtAsc } from "@/lib/techxploreOrder";
+import { AdminCardListSkeleton } from "@/components/shared/Skeleton";
 
 type TechxploreStudent = {
   _id?: string;
@@ -42,6 +43,7 @@ export default function AdminTechxplorePage() {
   const [loading, setLoading] = useState(false);
   const [orderLoadingId, setOrderLoadingId] = useState<string | null>(null);
   const [students, setStudents] = useState<TechxploreStudent[]>([]);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
   const [orderDrafts, setOrderDrafts] = useState<Record<string, string>>({});
 
@@ -55,21 +57,25 @@ export default function AdminTechxplorePage() {
   }, [students]);
 
   const fetchStudents = async () => {
-    const res = await fetch("/api/techxplore");
-    const data = await res.json();
-    const sorted = Array.isArray(data)
-      ? [...data].sort(compareTechxploreByOrderThenCreatedAtAsc)
-      : [];
+    try {
+      const res = await fetch("/api/techxplore");
+      const data = await res.json();
+      const sorted = Array.isArray(data)
+        ? [...data].sort(compareTechxploreByOrderThenCreatedAtAsc)
+        : [];
 
-    setStudents(sorted);
-    setOrderDrafts(() => {
-      const next: Record<string, string> = {};
-      for (const item of sorted) {
-        if (!item?._id) continue;
-        next[item._id] = typeof item.order === "number" ? String(item.order) : "";
-      }
-      return next;
-    });
+      setStudents(sorted);
+      setOrderDrafts(() => {
+        const next: Record<string, string> = {};
+        for (const item of sorted) {
+          if (!item?._id) continue;
+          next[item._id] = typeof item.order === "number" ? String(item.order) : "";
+        }
+        return next;
+      });
+    } finally {
+      setInitialLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -475,7 +481,9 @@ export default function AdminTechxplorePage() {
           ))}
         </div>
 
-        {students.length === 0 && (
+        {initialLoading ? (
+          <AdminCardListSkeleton />
+        ) : students.length === 0 && (
           <p className="mt-6 text-center text-gray-500">No students added yet.</p>
         )}
       </div>

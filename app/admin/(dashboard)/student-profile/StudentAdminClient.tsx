@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import AdminPagination from "@/components/admin/AdminPagination";
+import { AdminTableSkeleton } from "@/components/shared/Skeleton";
 
 type StudentRow = {
   _id?: string;
@@ -27,7 +28,7 @@ export default function StudentAdminClient() {
   const [admissionNo, setAdmissionNo] = useState("");
   const [page, setPage] = useState(1);
   const [limit] = useState(20);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<StudentsResponse | null>(null);
 
@@ -158,10 +159,14 @@ export default function StudentAdminClient() {
           </p>
         </div>
 
-        {error ? (
+        {!data && loading ? (
+          <div className="overflow-x-auto">
+            <AdminTableSkeleton />
+          </div>
+        ) : error ? (
           <div className="px-5 py-6 text-sm font-semibold text-red-500">{error}</div>
         ) : (
-          <div className="w-full overflow-x-auto">
+          <div className={`w-full overflow-x-auto transition-opacity ${loading ? "opacity-60" : "opacity-100"}`}>
             <table className="min-w-[720px] w-full text-left text-sm">
               <thead className="bg-[var(--admin-muted)] text-[var(--admin-text)]">
                 <tr>

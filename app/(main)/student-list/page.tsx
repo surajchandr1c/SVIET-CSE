@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { listStudentsForSemester } from "@/lib/students";
 import StudentListTabs from "./StudentListTabs";
+import { PublicStudentTableSkeleton } from "@/components/shared/Skeleton";
 
 type Student = {
   _id?: string;
@@ -17,7 +18,7 @@ export default async function StudentListPage() {
   ])) as [Student[], Student[]];
 
   return (
-    <Suspense fallback={<div className="min-h-screen px-6 pb-10 pt-8" />}>
+    <Suspense fallback={<PublicStudentTableSkeleton />}>
       <StudentListTabs students2023={students2023} students2024={students2024} />
     </Suspense>
   );
