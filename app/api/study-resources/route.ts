@@ -191,17 +191,25 @@ export async function GET(req: Request) {
     if (semester) filter.semester = semester;
     if (category) filter.category = category;
 
-    let resources = await StudyResource.find(filter).sort({ createdAt: -1 });
+    let resources = await StudyResource.find(filter)
+      .select("semester category title code link createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
 
     if (semester && category && resources.length === 0) {
       const defaults = getDefaultResources(semester, category);
       if (defaults.length > 0) {
         await StudyResource.insertMany(defaults);
-        resources = await StudyResource.find(filter).sort({ createdAt: -1 });
+        resources = await StudyResource.find(filter)
+          .select("semester category title code link createdAt")
+          .sort({ createdAt: -1 })
+          .lean();
       }
     }
 
-    return NextResponse.json(resources);
+    return NextResponse.json(resources, {
+      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" },
+    });
   } catch (error) {
     console.error("Study resources fetch error:", error);
     return NextResponse.json(

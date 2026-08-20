@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BookOpen, FileText, Link2 } from "lucide-react";
-import ResourceCardLink from "@/components/ResourceCardLink";
+import ResourceCardLink from "@/components/main/ResourceCardLink";
 import { apiRoutes } from "@/lib/apiRoutes";
 
 type BaseItem = {
@@ -16,32 +16,32 @@ const pageMeta = {
   syllabus: {
     title: "Syllabus",
     empty: "No syllabus items available.",
-    load: (semester: "4th" | "6th") => apiRoutes.syllabus(semester),
+    load: (semester: "3rd" | "4th" | "5th" | "6th") => apiRoutes.syllabus(semester),
     icon: BookOpen,
   },
   previous: {
     title: "Previous 5-Year Question Papers",
     empty: "No question papers available.",
-    load: (semester: "4th" | "6th") => apiRoutes.questionPapers(semester),
+    load: (semester: "3rd" | "4th" | "5th" | "6th") => apiRoutes.questionPapers(semester),
     icon: FileText,
   },
   assignment: {
     title: "Assignments",
     empty: "No assignments available.",
-    load: (semester: "4th" | "6th") =>
+    load: (semester: "3rd" | "4th" | "5th" | "6th") =>
       apiRoutes.studyResources(semester, "assignment"),
     icon: Link2,
   },
   notes: {
     title: "Notes",
     empty: "No notes available.",
-    load: (semester: "4th" | "6th") => apiRoutes.studyResources(semester, "notes"),
+    load: (semester: "3rd" | "4th" | "5th" | "6th") => apiRoutes.studyResources(semester, "notes"),
     icon: Link2,
   },
   ppt: {
     title: "PPT",
     empty: "No presentation links available.",
-    load: (semester: "4th" | "6th") => apiRoutes.studyResources(semester, "ppt"),
+    load: (semester: "3rd" | "4th" | "5th" | "6th") => apiRoutes.studyResources(semester, "ppt"),
     icon: Link2,
   },
 } as const;
@@ -52,7 +52,7 @@ export default function SemesterResourceList({
   semester,
   kind,
 }: {
-  semester: "4th" | "6th";
+  semester: "3rd" | "4th" | "5th" | "6th";
   kind: ResourcePageKind;
 }) {
   const [items, setItems] = useState<BaseItem[]>([]);

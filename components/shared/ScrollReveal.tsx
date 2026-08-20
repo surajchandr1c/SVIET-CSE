@@ -2,8 +2,7 @@
 
 import { useEffect } from "react";
 
-const REVEAL_SELECTOR = "main > *, section";
-const IMG_SELECTOR = "img";
+const REVEAL_SELECTOR = "main > section";
 
 export default function ScrollReveal() {
   useEffect(() => {
@@ -12,10 +11,9 @@ export default function ScrollReveal() {
     }
     let cancelled = false;
     let revealObserver: IntersectionObserver | null = null;
-    let imgObserver: IntersectionObserver | null = null;
     let rafOne = 0;
     let rafTwo = 0;
-    let timeoutId: ReturnType<typeof window.setTimeout> | null = null;
+    let timeoutId: number | null = null;
 
     const init = () => {
       if (cancelled) return;
@@ -27,13 +25,6 @@ export default function ScrollReveal() {
         if (el.closest("nav")) continue;
         if (el.classList.contains("reveal")) continue;
         el.classList.add("reveal");
-      }
-
-      const imgTargets = Array.from(root.querySelectorAll<HTMLImageElement>(IMG_SELECTOR));
-      for (const img of imgTargets) {
-        if (img.closest("nav")) continue;
-        if (img.classList.contains("img-reveal")) continue;
-        img.classList.add("img-reveal");
       }
 
       revealObserver = new IntersectionObserver(
@@ -52,25 +43,6 @@ export default function ScrollReveal() {
         revealObserver.observe(el);
       }
 
-      imgObserver = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            const img = entry.target as HTMLImageElement;
-            img.classList.add("img-reveal-visible");
-            imgObserver?.unobserve(img);
-          }
-        },
-        { root: null, threshold: 0.12 }
-      );
-
-      for (const img of imgTargets) {
-        if (img.complete) {
-          img.classList.add("img-reveal-visible");
-          continue;
-        }
-        imgObserver.observe(img);
-      }
     };
 
     // Defer DOM mutations until hydration and the first paint fully settle.
@@ -86,7 +58,6 @@ export default function ScrollReveal() {
       window.cancelAnimationFrame(rafOne);
       window.cancelAnimationFrame(rafTwo);
       revealObserver?.disconnect();
-      imgObserver?.disconnect();
     };
   }, []);
 

@@ -19,5 +19,7 @@ const SyllabusSchema: Schema = new Schema(
   { timestamps: true }
 );
 
+SyllabusSchema.index({ semester: 1, createdAt: -1 });
+
 export default models.Syllabus ||
   mongoose.model<ISyllabus>("Syllabus", SyllabusSchema);

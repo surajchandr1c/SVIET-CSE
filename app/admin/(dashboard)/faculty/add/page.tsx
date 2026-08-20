@@ -2,7 +2,7 @@
 
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { normalizeImageUrl } from "@/lib/imageUrl";
-import SmartImage from "@/components/SmartImage";
+import SmartImage from "@/components/shared/SmartImage";
 import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
 import { compareFacultyByPositionThenCreatedAtDesc } from "@/lib/facultyOrder";
 

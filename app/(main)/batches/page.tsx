@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import BatchesTabs from "./BatchesTabs";
-import { getBatchProfiles } from "@/lib/batchProfiles";
+import { getAllBatchProfiles } from "@/lib/batchProfiles";
+import { getBatchConfigs } from "@/lib/batchConfigs";
 import { getPinnedBatchAdmissionNos } from "@/lib/batchProfilePins";
 import type { BatchProfile } from "./types";
 
@@ -24,17 +25,19 @@ const sortProfilesByPinned = (profiles: BatchProfile[], pinnedAdmissionNos: stri
 };
 
 export default async function BatchesPage() {
-  const [profiles2024, profiles2023, pinnedAdmissionNos] = await Promise.all([
-    getBatchProfiles("4"),
-    getBatchProfiles("6"),
+  const [profiles, batchConfigs, pinnedAdmissionNos] = await Promise.all([
+    getAllBatchProfiles(),
+    getBatchConfigs(),
     getPinnedBatchAdmissionNos(),
   ]);
-  const orderedProfiles2024 = sortProfilesByPinned(profiles2024, pinnedAdmissionNos);
-  const orderedProfiles2023 = sortProfilesByPinned(profiles2023, pinnedAdmissionNos);
-  const orderedProfilesAll = sortProfilesByPinned(
-    [...profiles2023, ...profiles2024],
-    pinnedAdmissionNos
-  );
+  const orderedProfilesAll = sortProfilesByPinned(profiles, pinnedAdmissionNos);
+  const batches = batchConfigs.map((batch) => ({
+    ...batch,
+    profiles: sortProfilesByPinned(
+      profiles.filter((profile) => profile.batch === batch.label),
+      pinnedAdmissionNos
+    ),
+  }));
 
   return (
     <section className="pt-12">
@@ -44,8 +47,7 @@ export default async function BatchesPage() {
         </h1>
         <Suspense fallback={<div className="h-[54px] rounded-full bg-white/10" />}>
           <BatchesTabs
-            profiles2024={orderedProfiles2024}
-            profiles2023={orderedProfiles2023}
+            batches={batches}
             profilesAll={orderedProfilesAll}
           />
         </Suspense>

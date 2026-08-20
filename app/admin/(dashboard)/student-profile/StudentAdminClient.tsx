@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import AdminPagination from "@/components/admin/AdminPagination";
 
 type StudentRow = {
   _id?: string;
@@ -211,25 +212,13 @@ export default function StudentAdminClient() {
           </div>
         )}
 
-        <div className="flex items-center justify-between border-t border-[var(--admin-border)] px-5 py-4">
-          <button
-            type="button"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={loading || (data?.page ?? 1) <= 1}
-            className="rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card)] px-4 py-2 text-sm font-semibold text-[var(--admin-text)] disabled:opacity-60"
-          >
-            Prev
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setPage((p) => p + 1)}
-            disabled={loading || (data?.page ?? 1) >= (data?.totalPages ?? 1)}
-            className="rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card)] px-4 py-2 text-sm font-semibold text-[var(--admin-text)] disabled:opacity-60"
-          >
-            Next
-          </button>
-        </div>
+        <AdminPagination
+          page={data?.page ?? 1}
+          totalPages={data?.totalPages ?? 1}
+          loading={loading}
+          showPageCount
+          onPageChange={(nextPage) => setPage(Math.max(1, nextPage))}
+        />
       </div>
     </section>
   );

@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Github, Instagram, Linkedin, Mail } from "lucide-react";
-import SmartImage from "@/components/SmartImage";
+import { Github, Instagram, Linkedin, Mail, UserRound } from "lucide-react";
+import SmartImage from "@/components/shared/SmartImage";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import type { BatchAchievement, BatchCertificate, BatchProfile, BatchProject, BatchSkillGroup } from "./types";
 import { usePathname } from "next/navigation";
@@ -112,6 +112,7 @@ export default function BatchProfileDetailClient({ profile }: { profile: BatchPr
   const linkedinUrl = normalizeSocialUrl("linkedin", profile.linkedin);
   const githubUrl = normalizeSocialUrl("github", profile.github);
   const profileImageUrl = normalizeImageUrl(profile.image);
+  const hasProfileImage = Boolean(profile.image?.trim()) && profileImageUrl !== "/no-image.png";
 
   const shareUrl =
     typeof window !== "undefined" ? `${window.location.origin}${pathname}` : "";
@@ -145,11 +146,17 @@ export default function BatchProfileDetailClient({ profile }: { profile: BatchPr
         <div className="flex w-full flex-col bg-white md:h-full md:w-[320px] md:flex-none lg:w-[380px] md:min-h-full">
           <div className="px-5 pt-5 sm:px-8 sm:pt-8">
             <div className="relative h-[220px] w-full overflow-hidden rounded-3xl bg-gray-100 sm:h-[260px] md:h-[320px]">
-              <SmartImage
-                src={profileImageUrl}
-                alt={profile.name}
-                className="h-full w-full object-cover"
-              />
+              {hasProfileImage ? (
+                <SmartImage
+                  src={profileImageUrl}
+                  alt={profile.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-slate-500">
+                  <UserRound className="h-28 w-28" strokeWidth={1.25} aria-hidden="true" />
+                </div>
+              )}
               <div className="absolute right-4 top-4 z-10 text-xs font-bold tracking-[0.16em] text-slate-900">
                 {profile.batch}
               </div>

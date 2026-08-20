@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import AdminPagination from "@/components/admin/AdminPagination";
+import AdminTextField from "@/components/admin/AdminTextField";
 
 type StudentRow = {
   _id: string;
   name: string;
   admissionNo: string;
+  course?: "CSE" | "AI/ML";
   semester: number;
   mustChangePassword?: boolean;
   createdAt?: string;
@@ -22,14 +25,17 @@ type StudentsResponse = {
 
 type Props = {
   semesterLocked?: number;
+  courseLocked?: "CSE" | "AI/ML";
   showHeader?: boolean;
 };
 
 export default function StudentAccountsAdminClient({
   semesterLocked,
+  courseLocked,
   showHeader = true,
 }: Props) {
   const semester = semesterLocked ?? 4;
+  const course = courseLocked ?? "CSE";
   const [admissionNo, setAdmissionNo] = useState("");
   const [page, setPage] = useState(1);
   const [limit] = useState(20);
@@ -50,17 +56,18 @@ export default function StudentAccountsAdminClient({
   const query = useMemo(() => {
     const params = new URLSearchParams();
     params.set("semester", String(semester));
+    params.set("course", course);
     params.set("page", String(page));
     params.set("limit", String(limit));
-    if (admissionNo.trim()) params.set("admissionNo", admissionNo.trim());
+    if (admissionNo.trim()) params.set("search", admissionNo.trim());
     return params.toString();
-  }, [semester, page, limit, admissionNo]);
+  }, [semester, course, page, limit, admissionNo]);
 
-  const fetchStudents = async () => {
+  const fetchStudents = async (requestQuery = query) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/admin/students?${query}`, { cache: "no-store" });
+      const res = await fetch(`/api/admin/students?${requestQuery}`, { cache: "no-store" });
       const json = (await res.json()) as StudentsResponse;
       if (!res.ok) throw new Error(json.error || "Failed to fetch students");
       setData(json);
@@ -88,14 +95,16 @@ export default function StudentAccountsAdminClient({
       const res = await fetch("/api/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, admissionNo: admission, semester }),
+        body: JSON.stringify({ name, admissionNo: admission, semester, course }),
       });
       const json = (await res.json()) as { error?: string };
       if (!res.ok) throw new Error(json.error || "Failed to add student");
       setAddName("");
       setAddAdmissionNo("");
       setPage(1);
-      await fetchStudents();
+      const refreshQuery = new URLSearchParams(query);
+      refreshQuery.set("page", "1");
+      await fetchStudents(refreshQuery.toString());
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : "Failed to add student");
     } finally {
@@ -144,7 +153,7 @@ export default function StudentAccountsAdminClient({
     cancelEdit();
     setError(null);
     setData(null);
-  }, [semester]);
+  }, [semester, course]);
 
   const submitEdit = async (e: FormEvent) => {
     e.preventDefault();
@@ -225,28 +234,20 @@ export default function StudentAccountsAdminClient({
           </div>
 
           <form onSubmit={submitEdit} className="mt-5 grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-sm font-semibold text-[var(--admin-text)]">
-                Name
-              </label>
-              <input
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card)] px-4 py-2.5 text-[var(--admin-text)] placeholder:text-[var(--admin-text-muted)]"
-                required
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-semibold text-[var(--admin-text)]">
-                Admission No
-              </label>
-              <input
-                value={editAdmissionNo}
-                onChange={(e) => setEditAdmissionNo(e.target.value)}
-                className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card)] px-4 py-2.5 text-[var(--admin-text)] placeholder:text-[var(--admin-text-muted)]"
-                required
-              />
-            </div>
+            <AdminTextField
+              id="edit-student-name"
+              label="Name"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              required
+            />
+            <AdminTextField
+              id="edit-student-admission-no"
+              label="Admission No"
+              value={editAdmissionNo}
+              onChange={(e) => setEditAdmissionNo(e.target.value)}
+              required
+            />
             <div className="md:col-span-2 flex justify-end">
               <button
                 type="submit"
@@ -273,30 +274,22 @@ export default function StudentAccountsAdminClient({
         </div>
 
         <form onSubmit={addStudent} className="mt-5 grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="mb-1 block text-sm font-semibold text-[var(--admin-text)]">
-              Name
-            </label>
-            <input
-              value={addName}
-              onChange={(e) => setAddName(e.target.value)}
-              placeholder="Student name"
-              className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card)] px-4 py-2.5 text-[var(--admin-text)] placeholder:text-[var(--admin-text-muted)]"
-              required
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-semibold text-[var(--admin-text)]">
-              Admission No
-            </label>
-            <input
-              value={addAdmissionNo}
-              onChange={(e) => setAddAdmissionNo(e.target.value)}
-              placeholder="e.g. 2024BTCS007"
-              className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card)] px-4 py-2.5 text-[var(--admin-text)] placeholder:text-[var(--admin-text-muted)]"
-              required
-            />
-          </div>
+          <AdminTextField
+            id="add-student-name"
+            label="Name"
+            value={addName}
+            onChange={(e) => setAddName(e.target.value)}
+            placeholder="Student name"
+            required
+          />
+          <AdminTextField
+            id="add-student-admission-no"
+            label="Admission No"
+            value={addAdmissionNo}
+            onChange={(e) => setAddAdmissionNo(e.target.value)}
+            placeholder="e.g. 2024BTCS007"
+            required
+          />
           <div className="md:col-span-2 flex justify-end">
             <button
               type="submit"
@@ -313,22 +306,22 @@ export default function StudentAccountsAdminClient({
         <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
           <div>
             <label className="mb-1 block text-sm font-semibold text-[var(--admin-text)]">
-              Admission No
+              Search Student
             </label>
             <input
               value={admissionNo}
               onChange={(e) => {
                 setPage(1);
-                setAdmissionNo(e.target.value);
+                setAdmissionNo(e.target.value.toUpperCase());
               }}
-              placeholder="e.g. 2024BTCS007"
+              placeholder="Search by name or admission no."
               className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card)] px-4 py-2.5 text-[var(--admin-text)] placeholder:text-[var(--admin-text-muted)]"
             />
           </div>
 
           <button
             type="button"
-            onClick={fetchStudents}
+            onClick={() => fetchStudents()}
             disabled={loading}
             className="h-[44px] cursor-pointer rounded-xl bg-[var(--admin-accent-strong)] px-5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
@@ -405,29 +398,13 @@ export default function StudentAccountsAdminClient({
           </div>
         )}
 
-        <div className="flex items-center justify-between border-t border-[var(--admin-border)] px-5 py-4">
-          <button
-            type="button"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={loading || (data?.page ?? 1) <= 1}
-            className="cursor-pointer rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card)] px-4 py-2 text-sm font-semibold text-[var(--admin-text)] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            Prev
-          </button>
-
-          <p className="text-sm text-[var(--admin-text-muted)]">
-            Page {data?.page ?? 1} / {data?.totalPages ?? 1}
-          </p>
-
-          <button
-            type="button"
-            onClick={() => setPage((p) => p + 1)}
-            disabled={loading || (data?.page ?? 1) >= (data?.totalPages ?? 1)}
-            className="cursor-pointer rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card)] px-4 py-2 text-sm font-semibold text-[var(--admin-text)] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            Next
-          </button>
-        </div>
+        <AdminPagination
+          page={data?.page ?? 1}
+          totalPages={data?.totalPages ?? 1}
+          loading={loading}
+          showPageCount
+          onPageChange={(nextPage) => setPage(Math.max(1, nextPage))}
+        />
       </div>
     </section>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AdminSidebar from "@/components/AdminSidebar";
+import AdminSidebar from "@/components/admin/AdminSidebar";
 
 type AdminTheme = "light" | "dark";
 const ADMIN_THEME_KEY = "admin-theme";

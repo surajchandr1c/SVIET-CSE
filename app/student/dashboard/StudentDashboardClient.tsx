@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import SmartImage from "@/components/SmartImage";
+import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import SmartImage from "@/components/shared/SmartImage";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import { slugifyProfileName } from "@/app/(main)/batches/slug";
 import LogoutButton from "./LogoutButton";
@@ -93,7 +93,7 @@ const normalizeStudentProfileForm = (
   admissionNo: typeof profile.admissionNo === "string" ? profile.admissionNo : "",
   batch: typeof profile.batch === "string" ? profile.batch : "",
   course: typeof profile.course === "string" ? profile.course : "",
-  about: typeof profile.about === "string" ? profile.about : "",
+  about: typeof profile.about === "string" ? limitWords(profile.about, 100) : "",
   keywords: typeof profile.keywords === "string" ? profile.keywords : "",
   instagram: typeof profile.instagram === "string" ? profile.instagram : "",
   email: typeof profile.email === "string" ? profile.email : "",
@@ -147,6 +147,9 @@ const parseSkillItems = (value: string) =>
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+const countWords = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;
+const limitWords = (value: string, limit: number) =>
+  (value.match(/\S+\s*/g) ?? []).slice(0, limit).join("").trimEnd();
 export default function StudentDashboardClient({
   initialProfile,
 }: {
@@ -155,6 +158,7 @@ export default function StudentDashboardClient({
   const [form, setForm] = useState<StudentProfileForm>(() => normalizeStudentProfileForm(initialProfile));
   const [activeTab, setActiveTab] = useState<DashboardTab>("About");
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [deletingImage, setDeletingImage] = useState(false);
   const [deleteHovered, setDeleteHovered] = useState(false);
   const [hoveredSkillGroupDelete, setHoveredSkillGroupDelete] = useState<number | null>(null);
@@ -193,9 +197,13 @@ export default function StudentDashboardClient({
     () => `/batches/${slugifyProfileName(form.name || initialProfile.name || "student")}`,
     [form.name, initialProfile.name]
   );
+  const hasProfileImage = Boolean(form.image.trim()) && normalizeImageUrl(form.image) !== "/no-image.png";
 
   const handleChange = (key: keyof StudentProfileForm, value: string) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [key]: key === "about" ? limitWords(value, 100) : value,
+    }));
   };
 
   const updateSkillGroup = (index: number, field: keyof SkillGroup, value: string) => {
@@ -339,6 +347,43 @@ export default function StudentDashboardClient({
     }
   };
 
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please select an image file.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image must be 5 MB or smaller.");
+      return;
+    }
+
+    setUploadingImage(true);
+    setMessage(null);
+    setError(null);
+
+    try {
+      const uploadData = new FormData();
+      uploadData.append("file", file);
+      const res = await fetch("/api/student/profile/image", {
+        method: "POST",
+        body: uploadData,
+      });
+      const data = (await res.json()) as { image?: string; error?: string };
+      if (!res.ok || !data.image) throw new Error(data.error || "Failed to upload image.");
+
+      setForm((prev) => ({ ...prev, image: data.image! }));
+      setMessage("Profile image uploaded.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to upload image.");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   return (
     <section className="w-full px-4 pt-5 pb-12">
       <div className="overflow-hidden rounded-[2rem] bg-white">
@@ -354,7 +399,7 @@ export default function StudentDashboardClient({
               <div className="flex flex-wrap items-center justify-end gap-3">
                 <button
                   type="submit"
-                  disabled={saving || deletingImage}
+                  disabled={saving || deletingImage || uploadingImage}
                   className="cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(31,86,228,0.20)] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {saving ? "Saving..." : "Update Profile"}
@@ -364,13 +409,22 @@ export default function StudentDashboardClient({
             </div>
 
             <div className="grid items-stretch gap-4 md:grid-cols-[300px_1fr]">
-              <div className="flex h-full flex-col rounded-[1.75rem] bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)] p-4">
-                <div className="relative flex min-h-[200px] flex-1 items-center justify-center overflow-hidden rounded-[1.5rem] bg-slate-100 md:min-h-[210px]">
-                  <SmartImage
-                    src={normalizeImageUrl(form.image || "/no-image.png")}
-                    alt={form.name || "Student profile"}
-                    className="max-h-[72%] w-auto max-w-[72%] object-contain"
-                  />
+              <div className="flex h-fit flex-col rounded-[1.75rem] p-4">
+                <div className="relative flex min-h-[150px] items-center justify-center overflow-hidden rounded-[1.5rem] sm:min-h-[165px] md:min-h-[180px]">
+                  {hasProfileImage ? (
+                    <SmartImage
+                      key={form.image}
+                      src={normalizeImageUrl(form.image)}
+                      alt={form.name || "Student profile"}
+                      loading="eager"
+                      decoding="sync"
+                      className="max-h-[58%] w-auto max-w-[58%] rounded-[1.5rem] object-contain md:max-h-[35%] md:max-w-[35%] lg:max-h-[80%] lg:max-w-[80%]"
+                    />
+                  ) : (
+                    <div className="flex min-h-[150px] w-full items-center justify-center rounded-[1.5rem] border border-dashed border-sky-200 bg-sky-50 px-5 text-center text-sm font-semibold text-sky-700 sm:min-h-[165px] md:min-h-[180px]">
+                      Upload your image
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-3 text-center">
@@ -391,7 +445,7 @@ export default function StudentDashboardClient({
                     onBlur={() => setDeleteHovered(false)}
                     disabled={deletingImage || saving}
                     className={[
-                      "flex w-full cursor-pointer items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold shadow-[0_10px_24px_rgba(15,23,42,0.08)] transition-colors duration-300 ease-out disabled:cursor-not-allowed disabled:opacity-60",
+                      "delete-image-button flex w-full cursor-pointer items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold shadow-[0_10px_24px_rgba(15,23,42,0.08)] transition-colors duration-300 ease-out disabled:cursor-not-allowed disabled:opacity-60",
                       deleteHovered
                         ? "border border-red-500 bg-red-500 text-white"
                         : "border border-slate-200 bg-white text-slate-900",
@@ -399,6 +453,16 @@ export default function StudentDashboardClient({
                   >
                     {deletingImage ? "Deleting..." : "Delete Image"}
                   </button>
+                  <label className="mt-2 flex cursor-pointer items-center justify-center rounded-xl border border-sky-200 bg-sky-50 px-4 py-2.5 text-sm font-semibold text-sky-700 transition-colors hover:bg-sky-100">
+                    {uploadingImage ? "Uploading..." : "Upload new image"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploadingImage || saving || deletingImage}
+                      className="sr-only"
+                    />
+                  </label>
                 </div>
               </div>
 
@@ -407,7 +471,7 @@ export default function StudentDashboardClient({
                   STUDENT DASHBOARD
                 </p>
                 <h2 className="mt-2 text-2xl font-extrabold text-slate-900 md:text-[28px]">About Section</h2>
-                <p className="mt-2 flex-1 text-[15px] leading-7 text-slate-600">
+                <p className="mt-2 min-w-0 whitespace-pre-wrap break-words text-[15px] leading-7 text-slate-600">
                   {form.about ||
                     "Add your profile summary here. This content appears on your public batches profile."}
                 </p>
@@ -485,7 +549,7 @@ export default function StudentDashboardClient({
                           className={[
                             "flex w-full cursor-pointer items-center justify-start rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors",
                             "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60",
-                            isActive ? "bg-[#f7c316] text-slate-900" : "text-white hover:bg-white/10",
+                            isActive ? "bg-[#f7c316] text-slate-900" : "text-white",
                           ].join(" ")}
                         >
                           {tab}
@@ -518,19 +582,19 @@ export default function StudentDashboardClient({
                     placeholder="Keywords for search only, separated by commas"
                     className="md:col-span-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-[#08b8a8] focus:ring-2 focus:ring-[#08b8a8]/20"
                   />
-                  <input
-                    value={form.image ?? ""}
-                    onChange={(e) => handleChange("image", e.target.value)}
-                    placeholder="Profile image URL"
-                    className="md:col-span-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-[#08b8a8] focus:ring-2 focus:ring-[#08b8a8]/20"
-                  />
+                  <div className="md:col-span-2 rounded-xl border border-dashed border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-700">
+                    Use the image upload control above to add or replace your portfolio image.
+                  </div>
                   <textarea
                     value={form.about ?? ""}
                     onChange={(e) => handleChange("about", e.target.value)}
-                    placeholder="Write your about section"
+                    placeholder="Write your about section (maximum 100 words)"
                     className="md:col-span-2 min-h-36 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-[#08b8a8] focus:ring-2 focus:ring-[#08b8a8]/20"
                     required
                   />
+                  <p className="md:col-span-2 -mt-2 text-right text-xs text-slate-500">
+                    {countWords(form.about ?? "")}/100 words
+                  </p>
                 </div>
               ) : null}
 

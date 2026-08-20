@@ -41,8 +41,7 @@ export default function AdminSidebar({ theme, onToggleTheme }: AdminSidebarProps
     { name: "Student Portfolio", href: "/admin/studentportfolio", exact: true, icon: Users },
     { name: "Gallery", href: "/admin/gallery", exact: true, icon: Image },
     { name: "Notice Board", href: "/admin/notice", exact: true, icon: Bell },
-    { name: "4th Sem", href: "/admin/4th", exact: true, icon: LayoutDashboard },
-    { name: "6th Sem", href: "/admin/6th", exact: true, icon: LayoutDashboard },
+    { name: "Semesters", href: "/admin/semester", exact: true, icon: LayoutDashboard },
   ];
 
   const isActivePath = (href: string, exact?: boolean) => {

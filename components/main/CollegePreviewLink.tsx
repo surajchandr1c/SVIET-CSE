@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 export default function CollegePreviewLink() {
   return (
@@ -27,10 +28,11 @@ export default function CollegePreviewLink() {
         rel="noopener noreferrer"
         className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] ring-1 ring-gray-200 transition-transform duration-300 hover:scale-110 sm:h-16 sm:w-16"
       >
-        <img
-          suppressHydrationWarning
+        <Image
           src="/logo.jpeg"
           alt="SVIET Logo"
+          width={64}
+          height={64}
           className="h-full w-full object-contain p-1.5"
         />
       </Link>

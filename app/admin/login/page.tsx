@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import PasswordInput from "@/components/PasswordInput";
+import PasswordInput from "@/components/shared/PasswordInput";
 
 export default function AdminLoginPage() {
   const router = useRouter();

@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/mongodb";
 import BatchProfile from "@/models/BatchProfile";
+import { unstable_cache } from "next/cache";
 import type {
   BatchAchievement,
   BatchCertificate,
@@ -110,31 +111,43 @@ const toPublicBatchProfile = (doc: BatchProfileDoc): PublicBatchProfile => ({
   github: normalizeString(doc.github),
 });
 
-export const getAllBatchProfiles = async (
-  options?: { includeDisabled?: boolean }
-): Promise<PublicBatchProfile[]> => {
+const queryBatchProfiles = async (includeDisabled: boolean): Promise<PublicBatchProfile[]> => {
   try {
     await connectDB();
-    const docs = await BatchProfile.find().lean<BatchProfileDoc[]>();
+    const docs = await BatchProfile.find(includeDisabled ? {} : { isDisabled: { $ne: true } })
+      .select(
+        "name position image admissionNo batch course about keywords skills projects certificates achievements isDisabled instagram email whatsapp linkedin github"
+      )
+      .lean<BatchProfileDoc[]>();
     return docs
       .map(toPublicBatchProfile)
-      .filter(
-        (profile) =>
-          profile.name &&
-          profile.admissionNo &&
-          (options?.includeDisabled ? true : !profile.isDisabled)
-      );
+      .filter((profile) => profile.name && profile.admissionNo);
   } catch {
     return [];
   }
 };
 
+const getCachedPublicBatchProfiles = unstable_cache(
+  () => queryBatchProfiles(false),
+  ["batch-profiles-public"],
+  { revalidate: 60, tags: ["batch-profiles"] }
+);
+
+export const getAllBatchProfiles = async (
+  options?: { includeDisabled?: boolean }
+): Promise<PublicBatchProfile[]> =>
+  options?.includeDisabled ? queryBatchProfiles(true) : getCachedPublicBatchProfiles();
+
 export const getBatchProfiles = async (
-  tab: "4" | "6",
+  tab: "4" | "5" | "6",
   options?: { includeDisabled?: boolean }
 ): Promise<PublicBatchProfile[]> => {
   const profiles = await getAllBatchProfiles(options);
   return profiles.filter((profile) =>
-    tab === "6" ? profile.batch === "2023 Batch" : profile.batch === "2024 Batch"
+    tab === "5"
+      ? profile.batch === "2025 Batch"
+      : tab === "6"
+        ? profile.batch === "2023 Batch"
+        : profile.batch === "2024 Batch"
   );
 };

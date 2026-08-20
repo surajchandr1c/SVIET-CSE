@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import BatchProfile from "@/models/BatchProfile";
 import { verifyAdminToken } from "@/lib/auth";
@@ -26,8 +27,11 @@ export async function PATCH(
       return NextResponse.json({ error: "Admission number is required." }, { status: 400 });
     }
 
-    const body = (await request.json()) as { isDisabled?: unknown };
-    if (typeof body.isDisabled !== "boolean") {
+    const body = (await request.json()) as {
+      isDisabled?: unknown;
+      removeImage?: unknown;
+    };
+    if (body.removeImage !== true && typeof body.isDisabled !== "boolean") {
       return NextResponse.json({ error: "Valid disable status is required." }, { status: 400 });
     }
 
@@ -43,12 +47,18 @@ export async function PATCH(
 
     await BatchProfile.collection.updateOne(
       { _id: existing._id },
-      { $set: { isDisabled: body.isDisabled } }
+      {
+        $set:
+          body.removeImage === true
+            ? { image: "/no-image.png" }
+            : { isDisabled: body.isDisabled },
+      }
     );
+    revalidateTag("batch-profiles", "default");
 
     const updated = await BatchProfile.collection.findOne(
       { _id: existing._id },
-      { projection: { admissionNo: 1, isDisabled: 1 } }
+      { projection: { admissionNo: 1, isDisabled: 1, image: 1 } }
     );
 
     if (!updated?.admissionNo) {
@@ -60,6 +70,7 @@ export async function PATCH(
       profile: {
         admissionNo: String(updated.admissionNo),
         isDisabled: updated.isDisabled === true,
+        image: typeof updated.image === "string" ? updated.image : "/no-image.png",
       },
     });
   } catch (error) {
@@ -91,6 +102,7 @@ export async function DELETE(
     }
 
     const pinnedAdmissionNos = await removePinnedBatchProfile(admissionNo);
+    revalidateTag("batch-profiles", "default");
 
     return NextResponse.json({
       ok: true,

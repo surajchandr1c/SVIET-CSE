@@ -1,5 +1,5 @@
 import "./globals.css";
-import ScrollReveal from "@/components/ScrollReveal";
+import ScrollReveal from "@/components/shared/ScrollReveal";
 import { Analytics } from "@vercel/analytics/react";
 
 

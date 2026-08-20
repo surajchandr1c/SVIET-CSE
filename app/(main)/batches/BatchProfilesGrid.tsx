@@ -2,11 +2,11 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import SmartImage from "@/components/SmartImage";
+import SmartImage from "@/components/shared/SmartImage";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import { slugifyProfileName } from "./slug";
 import type { BatchProfile } from "./types";
-import { Award, BadgeCheck, Briefcase, GraduationCap, LayoutGrid } from "lucide-react";
+import { Award, BadgeCheck, Briefcase, GraduationCap, LayoutGrid, UserRound } from "lucide-react";
 
 const accentBgs = [
   "bg-[#f3ede7]",
@@ -42,10 +42,11 @@ export default function BatchProfilesGrid({ profiles }: { profiles: BatchProfile
       {data.length === 0 ? (
         <p className="mt-8 text-center text-slate-200/80">No profiles found.</p>
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-4 mt-8 grid grid-cols-1 gap-8 sm:mx-6 sm:grid-cols-2 lg:mx-8 lg:grid-cols-4">
           {data.map((profile, index) => {
             const accentBg = accentBgs[index % accentBgs.length];
             const imageSrc = normalizeImageUrl(profile.image);
+            const hasProfileImage = Boolean(profile.image?.trim()) && imageSrc !== "/no-image.png";
             const slug = slugifyProfileName(profile.name);
             const skillsCount = countSkills(profile);
             const projectsCount = profile.projects?.length ?? 0;
@@ -61,11 +62,17 @@ export default function BatchProfilesGrid({ profiles }: { profiles: BatchProfile
               >
                 <div className={`relative h-72 overflow-hidden ${accentBg}`}>
                   <div className="absolute inset-0 overflow-hidden">
-                    <SmartImage
-                      src={imageSrc}
-                      alt={profile.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                    />
+                    {hasProfileImage ? (
+                      <SmartImage
+                        src={imageSrc}
+                        alt={profile.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-slate-500">
+                        <UserRound className="h-24 w-24" strokeWidth={1.25} aria-hidden="true" />
+                      </div>
+                    )}
                   </div>
                   <div className="absolute right-4 top-4 z-10 text-xs font-bold tracking-[0.16em] text-slate-900">
                     {profile.batch}

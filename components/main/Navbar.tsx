@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Bell,
@@ -30,36 +31,39 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
-  const loadSession = useCallback(async (signal?: AbortSignal) => {
-    try {
-      const res = await fetch("/api/session", {
-        method: "GET",
-        credentials: "include",
-        signal,
-        cache: "no-store",
-      });
-      const data = (await res.json()) as {
-        signedIn?: boolean;
-        adminSignedIn?: boolean;
-        studentSignedIn?: boolean;
-      };
-      setStudentSignedIn(Boolean(data?.studentSignedIn));
-      setAdminSignedIn(Boolean(data?.adminSignedIn));
-      setSignedIn(Boolean(data?.signedIn));
-    } catch {
-      setSignedIn(false);
-      setStudentSignedIn(false);
-      setAdminSignedIn(false);
-    } finally {
-      setAuthResolved(true);
-    }
-  }, []);
-
   useEffect(() => {
     const controller = new AbortController();
-    loadSession(controller.signal);
+    fetch("/api/session", {
+      method: "GET",
+      credentials: "include",
+      signal: controller.signal,
+      cache: "no-store",
+    })
+      .then(async (res) => {
+        if (!res.ok) throw new Error("Session request failed");
+        return (await res.json()) as {
+          signedIn?: boolean;
+          adminSignedIn?: boolean;
+          studentSignedIn?: boolean;
+        };
+      })
+      .then((data) => {
+        setStudentSignedIn(Boolean(data.studentSignedIn));
+        setAdminSignedIn(Boolean(data.adminSignedIn));
+        setSignedIn(Boolean(data.signedIn));
+      })
+      .catch(() => {
+        if (controller.signal.aborted) return;
+        setSignedIn(false);
+        setStudentSignedIn(false);
+        setAdminSignedIn(false);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setAuthResolved(true);
+      });
+
     return () => controller.abort();
-  }, [loadSession, pathname]);
+  }, []);
 
   const logout = async () => {
     try {
@@ -135,10 +139,12 @@ export default function Navbar() {
           <div className="flex items-center rounded-2xl ">
             <div className="flex items-center gap-2.5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl ">
-                <img
-                  suppressHydrationWarning
+                <Image
                   src="/logo.jpeg"
                   alt="SVIET logo"
+                  width={60}
+                  height={60}
+                  priority
                   className="h-[3.75rem] w-[3.75rem] object-contain"
                 />
               </div>

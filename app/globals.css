@@ -192,6 +192,16 @@ button {
   box-shadow: 0 10px 18px rgba(0, 0, 0, 0.12);
 }
 
+.frontend-shell .password-toggle-button:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.delete-image-button:hover,
+.student-dashboard-remove-button:hover {
+  transform: none;
+}
+
 /* Card hover (lift + shadow) */
 .theme-main [class*="shadow"] {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -233,6 +243,7 @@ button {
   --admin-text: #132237;
   --admin-text-muted: #4d647f;
   --admin-surface: rgba(255, 255, 255, 0.88);
+  --admin-card: var(--admin-surface);
   --admin-muted: rgba(238, 245, 255, 0.9);
   --admin-border: rgba(23, 95, 132, 0.2);
   --admin-border-strong: rgba(23, 95, 132, 0.32);
@@ -256,6 +267,7 @@ button {
   --admin-text: #e6efff;
   --admin-text-muted: #9eb2d2;
   --admin-surface: rgba(18, 30, 58, 0.75);
+  --admin-card: var(--admin-surface);
   --admin-muted: rgba(15, 24, 48, 0.68);
   --admin-border: rgba(108, 154, 211, 0.26);
   --admin-border-strong: rgba(125, 177, 222, 0.4);
@@ -328,6 +340,11 @@ button {
   background: linear-gradient(135deg, color-mix(in srgb, var(--admin-accent) 30%, transparent), color-mix(in srgb, var(--admin-accent-strong) 30%, transparent));
 }
 
+.admin-shell .admin-batch-tab:hover,
+.admin-shell .admin-course-tab:hover {
+  transform: none;
+}
+
 .admin-shell .admin-theme-toggle,
 .admin-shell .admin-logout-button {
   display: flex;
@@ -369,6 +386,71 @@ button {
   background: var(--admin-surface);
   box-shadow: var(--admin-shadow);
   backdrop-filter: blur(10px);
+}
+
+.admin-shell .admin-input {
+  width: 100%;
+  border: 1px solid var(--admin-border);
+  border-radius: 0.75rem;
+  background: var(--admin-input-bg);
+  padding: 0.625rem 1rem;
+  color: var(--admin-text);
+}
+
+.admin-shell .admin-input::placeholder {
+  color: var(--admin-text-muted);
+}
+
+.admin-shell .admin-input:focus {
+  outline: none;
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--admin-accent) 22%, transparent);
+}
+
+.admin-shell .admin-secondary-button,
+.admin-shell .admin-primary-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+.admin-shell .admin-secondary-button {
+  border: 1px solid var(--admin-border);
+  background: var(--admin-card);
+  color: var(--admin-text);
+}
+
+.admin-shell .admin-primary-button {
+  background: var(--admin-accent-strong);
+  color: #fff;
+}
+
+.admin-shell .admin-secondary-button:hover,
+.admin-shell .admin-primary-button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.admin-shell .admin-secondary-button:disabled,
+.admin-shell .admin-primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+
+.admin-shell .admin-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--admin-border);
+  padding: 1rem 1.25rem;
 }
 
 .admin-shell .admin-kpi {

@@ -19,5 +19,7 @@ const GalleryAlbumSchema: Schema = new Schema(
   { timestamps: true }
 );
 
+GalleryAlbumSchema.index({ date: -1, createdAt: -1 });
+
 export default models.GalleryAlbum ||
   mongoose.model<IGalleryAlbum>("GalleryAlbum", GalleryAlbumSchema);

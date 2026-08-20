@@ -20,7 +20,7 @@ export const getImageUrlCandidates = (url: string): string[] => {
 
   const candidates = [
     `/api/images/drive/${encodeURIComponent(fileId)}`,
-    `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`,
+    `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`,
     `https://drive.google.com/uc?export=view&id=${fileId}`,
     `https://drive.google.com/uc?export=download&id=${fileId}`,
   ];

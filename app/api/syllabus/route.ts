@@ -117,19 +117,30 @@ export async function GET(req: Request) {
     const semester = searchParams.get("semester");
 
     const filter = semester ? { semester } : {};
-    let syllabus = await Syllabus.find(filter).sort({ createdAt: -1 });
+    let syllabus = await Syllabus.find(filter)
+      .select("semester title code link createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
 
     if (semester === "4th" && syllabus.length === 0) {
       await Syllabus.insertMany(DEFAULT_4TH_SUBJECTS);
-      syllabus = await Syllabus.find(filter).sort({ createdAt: -1 });
+      syllabus = await Syllabus.find(filter)
+        .select("semester title code link createdAt")
+        .sort({ createdAt: -1 })
+        .lean();
     }
 
     if (semester === "6th" && syllabus.length === 0) {
       await Syllabus.insertMany(DEFAULT_6TH_SUBJECTS);
-      syllabus = await Syllabus.find(filter).sort({ createdAt: -1 });
+      syllabus = await Syllabus.find(filter)
+        .select("semester title code link createdAt")
+        .sort({ createdAt: -1 })
+        .lean();
     }
 
-    return NextResponse.json(syllabus);
+    return NextResponse.json(syllabus, {
+      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" },
+    });
   } catch (error) {
     console.error("Syllabus fetch error:", error);
     return NextResponse.json(

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function CSEIntroOverlay() {
   const [isVisible, setIsVisible] = useState(true);
@@ -34,10 +35,11 @@ export default function CSEIntroOverlay() {
       aria-hidden="true"
     >
       <div className="cse-intro-mark">
-        <img
-          suppressHydrationWarning
+        <Image
           src="/logo.jpeg"
           alt="College logo"
+          width={160}
+          height={160}
           className="cse-intro-logo"
           draggable="false"
         />

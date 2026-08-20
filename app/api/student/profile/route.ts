@@ -6,10 +6,17 @@ import BatchProfile from "@/models/BatchProfile";
 import Student from "@/models/Student";
 import { verifyStudentToken } from "@/lib/studentAuth";
 
-const batchLabel = (semester: number) => (semester === 6 ? "2023 Batch" : "2024 Batch");
+const batchLabel = (admissionNo: string, semester: number) => {
+  const year = admissionNo.match(/^(20\d{2})/i)?.[1];
+  if (year) return `${year} Batch`;
+  return semester === 6 ? "2023 Batch" : "2024 Batch";
+};
 
 const normalizeText = (value: unknown, fallback = "") =>
   typeof value === "string" ? value.trim() : fallback;
+
+const limitWords = (value: string, limit: number) =>
+  (value.match(/\S+\s*/g) ?? []).slice(0, limit).join("").trimEnd();
 
 const normalizeSkillGroups = (value: unknown) => {
   if (!Array.isArray(value)) return [];
@@ -86,16 +93,22 @@ export async function GET() {
 
     await connectDB();
     const student = await Student.findOne({ admissionNo: payload.admissionNo })
-      .select("name admissionNo semester")
+      .select("name admissionNo semester course")
       .sort({ updatedAt: -1, createdAt: -1, _id: -1 })
-      .lean<{ _id?: unknown; name?: string; admissionNo?: string; semester?: number } | null>();
+      .lean<{
+        _id?: unknown;
+        name?: string;
+        admissionNo?: string;
+        semester?: number;
+        course?: string;
+      } | null>();
 
     if (!student?.admissionNo) {
       return NextResponse.json({ error: "Student not found." }, { status: 404 });
     }
 
     const profile = await BatchProfile.findOne({ admissionNo: student.admissionNo }).lean<Record<string, unknown> | null>();
-    const semester = student.semester === 6 ? 6 : 4;
+    const semester = typeof student.semester === "number" ? student.semester : 4;
 
     return NextResponse.json({
       profile: {
@@ -103,8 +116,8 @@ export async function GET() {
         position: normalizeText(profile?.position, "Student"),
         image: normalizeText(profile?.image, "/no-image.png"),
         admissionNo: student.admissionNo,
-        batch: normalizeText(profile?.batch, batchLabel(semester)),
-        course: normalizeText(profile?.course, "B.Tech CSE"),
+        batch: normalizeText(profile?.batch, batchLabel(student.admissionNo, semester)),
+        course: student.course === "AI/ML" ? "AI/ML" : "CSE",
         about: normalizeText(profile?.about),
         keywords: normalizeText(profile?.keywords),
         instagram: normalizeText(profile?.instagram),
@@ -133,7 +146,7 @@ export async function PUT(req: Request) {
 
     await connectDB();
     const student = await Student.findOne({ admissionNo: payload.admissionNo })
-      .select("name admissionNo semester")
+      .select("name admissionNo semester course")
       .sort({ updatedAt: -1, createdAt: -1, _id: -1 });
 
     if (!student?.admissionNo) {
@@ -141,7 +154,7 @@ export async function PUT(req: Request) {
     }
 
     const body = (await req.json()) as Record<string, unknown>;
-    const semester = student.semester === 6 ? 6 : 4;
+    const semester = typeof student.semester === "number" ? student.semester : 4;
 
     const update = {
       studentId: mongoose.Types.ObjectId.isValid(String(student._id))
@@ -151,9 +164,9 @@ export async function PUT(req: Request) {
       position: normalizeText(body.position, "Student"),
       image: normalizeText(body.image, "/no-image.png"),
       admissionNo: student.admissionNo,
-      batch: batchLabel(semester),
-      course: normalizeText(body.course, "B.Tech CSE"),
-      about: normalizeText(body.about),
+      batch: batchLabel(student.admissionNo, semester),
+      course: student.course === "AI/ML" ? "AI/ML" : "CSE",
+      about: limitWords(normalizeText(body.about), 100),
       keywords: normalizeText(body.keywords),
       instagram: normalizeText(body.instagram),
       email: normalizeText(body.email, normalizeText(body.whatsapp)),

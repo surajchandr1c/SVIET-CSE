@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/mongodb";
 import TechxploreStudent from "@/models/TechxploreStudent";
+import { unstable_cache } from "next/cache";
 import { compareTechxploreByOrderThenCreatedAtAsc } from "@/lib/techxploreOrder";
 import TechxploreClient, {
   type TechxploreStudent as TechxploreStudentType,
@@ -7,14 +8,19 @@ import TechxploreClient, {
 
 export const dynamic = "force-dynamic";
 
-export default async function TechxplorePage() {
-  await connectDB();
+const getCachedTechxploreStudents = unstable_cache(
+  async () => {
+    await connectDB();
+    return TechxploreStudent.find()
+      .select("name position order image admissionNo batch about instagram whatsapp linkedin github createdAt")
+      .lean<Array<TechxploreStudentType & { _id: unknown }>>();
+  },
+  ["techxplore-page"],
+  { revalidate: 60, tags: ["techxplore:list"] }
+);
 
-  const docs = await TechxploreStudent.find()
-    .select(
-      "name position order image admissionNo batch about instagram whatsapp linkedin github createdAt"
-    )
-    .lean<Array<TechxploreStudentType & { _id: unknown }>>();
+export default async function TechxplorePage() {
+  const docs = await getCachedTechxploreStudents();
 
   docs.sort(compareTechxploreByOrderThenCreatedAtAsc);
 

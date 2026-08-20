@@ -7,7 +7,7 @@ import SemesterTabsClient, { type SemesterKey } from "./SemesterTabsClient";
 import { getSemesterNavigationItems } from "@/config/semesterNavigation";
 
 export default function SemestersPage() {
-  const [semester, setSemester] = useState<SemesterKey>("4th");
+  const [semester, setSemester] = useState<SemesterKey>("3rd");
 
   const items = useMemo(
     () => getSemesterNavigationItems(semester),

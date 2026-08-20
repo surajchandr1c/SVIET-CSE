@@ -45,7 +45,7 @@ export default function SectionTabsClient({
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60",
                   isActive
                     ? "text-slate-900"
-                    : "text-slate-200/80 hover:text-white",
+                    : "text-slate-200/80",
                 ].join(" ")}
               >
                 {tab.label}

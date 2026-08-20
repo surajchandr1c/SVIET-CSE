@@ -3,7 +3,7 @@
 import { formatDateGB } from "@/lib/formatDate";
 import { useApiArrayWithLoading } from "@/lib/hooks/useApiArray";
 import { apiRoutes } from "@/lib/apiRoutes";
-import SmartImage from "@/components/SmartImage";
+import SmartImage from "@/components/shared/SmartImage";
 
 type AchivementEntry = {
   _id: string;

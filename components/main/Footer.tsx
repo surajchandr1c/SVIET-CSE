@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const COPYRIGHT_YEAR = 2026;
 
@@ -35,10 +36,11 @@ export default function Footer() {
       <div className="mx-auto max-w-[1380px] rounded-3xl border border-[#E5E7EB] bg-white px-5 py-6 lg:px-6 lg:py-7">
         <div className="grid gap-6 md:grid-cols-4">
           <div>
-            <img
-              suppressHydrationWarning
+            <Image
               src="/logo.jpeg"
               alt="logo"
+              width={80}
+              height={40}
               className="mb-4 h-10 w-auto object-contain lg:h-10"
             />
             <p className="max-w-xs text-[16px] leading-7 text-[#6B7280] md:text-[17px] lg:text-base">

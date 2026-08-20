@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import PasswordInput from "@/components/PasswordInput";
+import PasswordInput from "@/components/shared/PasswordInput";
 
 export default function ChangePasswordPage() {
   const router = useRouter();

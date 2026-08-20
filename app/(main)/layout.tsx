@@ -1,10 +1,10 @@
 import "../globals.css";
 import type { ReactNode } from "react";
 
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
-import BackToTop from "@/components/BackToTop";
-import CollegePreviewLink from "@/components/CollegePreviewLink";
+import Navbar from "@/components/main/Navbar";
+import Footer from "@/components/main/Footer";
+import BackToTop from "@/components/main/BackToTop";
+import CollegePreviewLink from "@/components/main/CollegePreviewLink";
 
 export const metadata = {
   title: "CSE Department",

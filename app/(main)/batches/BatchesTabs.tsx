@@ -5,14 +5,10 @@ import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import BatchProfilesGrid from "./BatchProfilesGrid";
 import type { BatchProfile } from "./types";
+import type { BatchConfig } from "@/lib/shared/batchConfig";
 
-type BatchTab = "all" | "4" | "6";
-
-const tabs: Array<{ key: BatchTab; label: string; href: string }> = [
-  { key: "all", label: "All Batches", href: "/batches" },
-  { key: "6", label: "2023 Batch", href: "/semester/6thSem/studentsList" },
-  { key: "4", label: "2024 Batch", href: "/semester/4thSem/studentsList" },
-];
+type BatchTab = "all" | string;
+type CourseTab = "cse" | "aiMl";
 
 const normalizeText = (value: string) => value.trim().toLowerCase();
 
@@ -65,33 +61,40 @@ const profileMatchesSearch = (profile: BatchProfile, query: string) => {
 };
 
 export default function BatchesTabs({
-  profiles2024,
-  profiles2023,
+  batches,
   profilesAll,
 }: {
-  profiles2024: BatchProfile[];
-  profiles2023: BatchProfile[];
+  batches: Array<BatchConfig & { profiles: BatchProfile[] }>;
   profilesAll: BatchProfile[];
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
+  const tabs = useMemo(
+    () => [{ key: "all", label: "All Batches" }, ...batches.map((batch) => ({ key: batch.year, label: batch.label }))],
+    [batches]
+  );
+  const requestedTab = searchParams.get("tab");
 
-  const activeTab =
-    (searchParams.get("tab") === "4"
-      ? "4"
-      : searchParams.get("tab") === "6"
-        ? "6"
-        : "all") satisfies BatchTab;
+  const activeTab: BatchTab =
+    requestedTab && tabs.some((tab) => tab.key === requestedTab) ? requestedTab : "all";
+  const activeCourse = (searchParams.get("course") === "aiMl" ? "aiMl" : "cse") satisfies CourseTab;
   const activeIndex = useMemo(
     () => Math.max(0, tabs.findIndex((tab) => tab.key === activeTab)),
-    [activeTab]
+    [activeTab, tabs]
   );
+  const activeBatch = batches.find((batch) => batch.year === activeTab);
   const activeProfiles = useMemo(() => {
-    if (activeTab === "4") return profiles2024;
-    if (activeTab === "6") return profiles2023;
+    if (activeBatch) {
+      if (!activeBatch.courseSplit) return activeBatch.profiles;
+      return activeBatch.profiles.filter((profile) =>
+        activeCourse === "aiMl"
+          ? profile.course?.trim().toUpperCase() === "AI/ML"
+          : profile.course?.trim().toUpperCase() !== "AI/ML"
+      );
+    }
     return profilesAll;
-  }, [activeTab, profiles2023, profiles2024, profilesAll]);
+  }, [activeBatch, activeCourse, profilesAll]);
   const searchQuery = useMemo(() => normalizeText(search), [search]);
   const filteredProfiles = useMemo(
     () => activeProfiles.filter((profile) => profileMatchesSearch(profile, searchQuery)),
@@ -114,8 +117,13 @@ export default function BatchesTabs({
         </div>
       </div>
 
-      <div className="relative overflow-hidden rounded-full bg-slate-950/90 p-1 ring-1 ring-black/10">
-        <div role="tablist" aria-label="Batch selection" className="grid grid-cols-3 gap-1">
+      <div className="mx-4 relative overflow-hidden rounded-full bg-slate-950/90 p-1 ring-1 ring-black/10 sm:mx-6 lg:mx-8">
+        <div
+          role="tablist"
+          aria-label="Batch selection"
+          className={tabs.length === 3 ? "grid grid-cols-3 gap-1" : "grid gap-1"}
+          style={tabs.length === 3 ? undefined : { gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}
+        >
           {tabs.map((tab) => {
             const isActive = tab.key === activeTab;
             return (
@@ -139,10 +147,50 @@ export default function BatchesTabs({
 
         <div
           aria-hidden
-          className="absolute left-1 top-1 h-[calc(100%-0.5rem)] w-[calc((100%-0.5rem)/3)] rounded-full bg-yellow-400 shadow-[0_10px_26px_rgba(250,204,21,0.35)] transition-transform duration-300 ease-out"
-          style={{ transform: `translateX(${activeIndex * 100}%)` }}
+          className="absolute left-1 top-1 h-[calc(100%-0.5rem)] rounded-full bg-yellow-400 shadow-[0_10px_26px_rgba(250,204,21,0.35)] transition-transform duration-300 ease-out"
+          style={{
+            width: tabs.length === 3 ? "calc((100% - 0.5rem) / 3)" : `calc((100% - ${(tabs.length - 1) * 0.25}rem) / ${tabs.length})`,
+            transform: `translateX(${activeIndex * 100}%)`,
+          }}
         />
       </div>
+
+      {activeBatch?.courseSplit && (
+        <div className="mx-4 mt-3 flex justify-center sm:mx-6 lg:mx-8">
+          <div className="relative w-full max-w-xl overflow-hidden rounded-full bg-slate-900/90 p-1 ring-1 ring-black/10">
+            <div role="tablist" aria-label="Course selection" className="grid grid-cols-2 gap-1">
+              {([
+                { key: "cse", label: "CSE" },
+                { key: "aiMl", label: "AI/ML" },
+              ] as const).map((course) => {
+                const isActive = course.key === activeCourse;
+                return (
+                  <button
+                    key={course.key}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => router.push(`/batches?tab=${activeTab}&course=${course.key}`)}
+                    className={[
+                      "relative z-10 rounded-full px-6 py-2.5 text-center text-sm font-semibold md:text-base",
+                      "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60",
+                      isActive ? "text-slate-900" : "text-white",
+                    ].join(" ")}
+                  >
+                    {course.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div
+              aria-hidden
+              className="absolute left-1 top-1 h-[calc(100%-0.5rem)] w-[calc((100%-0.25rem)/2)] rounded-full bg-yellow-400 transition-transform duration-300 ease-out"
+              style={{ transform: `translateX(${activeCourse === "aiMl" ? 100 : 0}%)` }}
+            />
+          </div>
+        </div>
+      )}
 
       <BatchProfilesGrid profiles={filteredProfiles} />
     </>

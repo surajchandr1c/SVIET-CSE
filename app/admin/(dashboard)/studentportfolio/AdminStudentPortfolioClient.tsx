@@ -3,38 +3,39 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { EyeOff, Pin, Trash2 } from "lucide-react";
-import SmartImage from "@/components/SmartImage";
+import { EyeOff, ImageOff, Pin, Trash2 } from "lucide-react";
+import SmartImage from "@/components/shared/SmartImage";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import { slugifyProfileName } from "@/app/(main)/batches/slug";
 import type { BatchProfile } from "@/app/(main)/batches/types";
 import { MAX_PINNED_BATCH_PROFILES } from "@/lib/shared/batchProfilePins";
 
-type BatchTab = "2023" | "2024";
+type BatchTab = "2024" | "2025";
 
 const tabs: Array<{ key: BatchTab; label: string }> = [
-  { key: "2023", label: "2023 Batch" },
   { key: "2024", label: "2024 Batch" },
+  { key: "2025", label: "2025 Batch" },
 ];
 
 export default function AdminStudentPortfolioClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const activeTab = (searchParams.get("tab") === "2024" ? "2024" : "2023") satisfies BatchTab;
+  const activeTab = (searchParams.get("tab") === "2024" ? "2024" : "2025") satisfies BatchTab;
   const [profiles4th, setProfiles4th] = useState<BatchProfile[]>([]);
-  const [profiles6th, setProfiles6th] = useState<BatchProfile[]>([]);
+  const [profiles5th, setProfiles5th] = useState<BatchProfile[]>([]);
   const [profilesError, setProfilesError] = useState("");
   const [profilesLoading, setProfilesLoading] = useState(true);
   const [pinnedAdmissionNos, setPinnedAdmissionNos] = useState<string[]>([]);
   const [pendingAdmissionNo, setPendingAdmissionNo] = useState<string>("");
   const [pinError, setPinError] = useState("");
   const [actionError, setActionError] = useState("");
+  const [actionMessage, setActionMessage] = useState("");
 
   const activeIndex = useMemo(
     () => Math.max(0, tabs.findIndex((tab) => tab.key === activeTab)),
     [activeTab]
   );
-  const profiles = activeTab === "2023" ? profiles6th : profiles4th;
+  const profiles = activeTab === "2025" ? profiles5th : profiles4th;
 
   useEffect(() => {
     let ignore = false;
@@ -47,14 +48,14 @@ export default function AdminStudentPortfolioClient() {
         });
         const data = (await res.json()) as {
           profiles4th?: BatchProfile[];
-          profiles6th?: BatchProfile[];
+          profiles5th?: BatchProfile[];
           error?: string;
         };
         if (!res.ok) throw new Error(data.error || "Failed to load student portfolios.");
 
         if (!ignore) {
           setProfiles4th(Array.isArray(data.profiles4th) ? data.profiles4th : []);
-          setProfiles6th(Array.isArray(data.profiles6th) ? data.profiles6th : []);
+          setProfiles5th(Array.isArray(data.profiles5th) ? data.profiles5th : []);
           setProfilesError("");
         }
       } catch (error) {
@@ -102,13 +103,13 @@ export default function AdminStudentPortfolioClient() {
     });
     const data = (await res.json()) as {
       profiles4th?: BatchProfile[];
-      profiles6th?: BatchProfile[];
+      profiles5th?: BatchProfile[];
       error?: string;
     };
     if (!res.ok) throw new Error(data.error || "Failed to load student portfolios.");
 
     setProfiles4th(Array.isArray(data.profiles4th) ? data.profiles4th : []);
-    setProfiles6th(Array.isArray(data.profiles6th) ? data.profiles6th : []);
+    setProfiles5th(Array.isArray(data.profiles5th) ? data.profiles5th : []);
     setProfilesError("");
   };
 
@@ -138,6 +139,7 @@ export default function AdminStudentPortfolioClient() {
     try {
       setPendingAdmissionNo(admissionNo);
       setActionError("");
+      setActionMessage("");
 
       const res = await fetch(`/api/admin/studentportfolio/${encodeURIComponent(admissionNo)}`, {
         method: "PATCH",
@@ -161,6 +163,35 @@ export default function AdminStudentPortfolioClient() {
     }
   };
 
+  const deleteImage = async (admissionNo: string, name: string) => {
+    const confirmed = window.confirm(
+      `Delete ${name}'s portfolio image? The student can upload a new image from the student dashboard.`
+    );
+    if (!confirmed) return;
+
+    try {
+      setPendingAdmissionNo(admissionNo);
+      setActionError("");
+      setActionMessage("");
+
+      const res = await fetch(`/api/admin/studentportfolio/${encodeURIComponent(admissionNo)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ removeImage: true }),
+      });
+      const data = (await res.json()) as { error?: string };
+      if (!res.ok) throw new Error(data.error || "Failed to delete profile image.");
+
+      await refreshProfiles();
+      setActionMessage(`${name}'s portfolio image was deleted.`);
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : "Failed to delete profile image.");
+    } finally {
+      setPendingAdmissionNo("");
+    }
+  };
+
   const deleteProfile = async (admissionNo: string, name: string) => {
     const confirmed = window.confirm(
       `Delete ${name}'s profile? This removes only the portfolio profile, not the student account.`
@@ -170,6 +201,7 @@ export default function AdminStudentPortfolioClient() {
     try {
       setPendingAdmissionNo(admissionNo);
       setActionError("");
+      setActionMessage("");
 
       const res = await fetch(`/api/admin/studentportfolio/${encodeURIComponent(admissionNo)}`, {
         method: "DELETE",
@@ -210,7 +242,7 @@ export default function AdminStudentPortfolioClient() {
               <div role="tablist" aria-label="Student portfolio batch selection" className="grid grid-cols-2 gap-1">
                 {tabs.map((tab) => {
                   const isActive = tab.key === activeTab;
-                  const count = tab.key === "2023" ? profiles6th.length : profiles4th.length;
+                  const count = tab.key === "2025" ? profiles5th.length : profiles4th.length;
 
                   return (
                     <button
@@ -246,7 +278,7 @@ export default function AdminStudentPortfolioClient() {
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--admin-text-muted)]">
-                {activeTab === "2023" ? "2023 Batch" : "2024 Batch"}
+                {activeTab === "2025" ? "2025 Batch" : "2024 Batch"}
               </p>
               <h2 className="mt-1 text-2xl font-bold text-[var(--admin-text)]">
                 Student Portfolios
@@ -275,6 +307,12 @@ export default function AdminStudentPortfolioClient() {
           {actionError ? (
             <p className="mt-4 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
               {actionError}
+            </p>
+          ) : null}
+
+          {actionMessage ? (
+            <p className="mt-4 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+              {actionMessage}
             </p>
           ) : null}
 
@@ -314,28 +352,46 @@ export default function AdminStudentPortfolioClient() {
                       </div>
                     ) : null}
 
-                    <Link
-                      href={`/batches/${slug}`}
-                      className="flex items-center gap-4"
-                      aria-label={`Open profile: ${profile.name}`}
-                    >
-                      <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-muted)]">
-                        <SmartImage
-                          src={imageSrc}
-                          alt={profile.name}
-                          className="portfolio-profile-image-admin"
-                        />
-                      </div>
+                    <div className="flex items-center gap-4">
+                      <Link
+                        href={`/batches/${slug}`}
+                        className="flex min-w-0 flex-1 items-center gap-4"
+                        aria-label={`Open profile: ${profile.name}`}
+                      >
+                        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-muted)]">
+                          <SmartImage
+                            src={imageSrc}
+                            alt={profile.name}
+                            className="portfolio-profile-image-admin"
+                          />
+                        </div>
 
-                      <div className="min-w-0 flex-1">
-                        <p className="text-lg font-bold leading-tight text-[var(--admin-text)]">
-                          {profile.name}
-                        </p>
-                        <p className="mt-2 text-sm font-semibold text-[var(--admin-text-muted)]">
-                          {profile.admissionNo}
-                        </p>
-                      </div>
-                    </Link>
+                        <div className="min-w-0">
+                          <p className="text-lg font-bold leading-tight text-[var(--admin-text)]">
+                            {profile.name}
+                          </p>
+                          <p className="mt-2 text-sm font-semibold text-[var(--admin-text-muted)]">
+                            {profile.admissionNo}
+                          </p>
+                        </div>
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={() => deleteImage(profile.admissionNo, profile.name)}
+                        disabled={isPending || imageSrc === "/no-image.png"}
+                        className="admin-secondary-button shrink-0 px-3 text-xs"
+                        aria-label={`Delete image for ${profile.name}`}
+                        title={
+                          imageSrc === "/no-image.png"
+                            ? "No portfolio image to delete"
+                            : "Delete portfolio image"
+                        }
+                      >
+                        <ImageOff size={15} aria-hidden="true" />
+                        <span className="hidden sm:inline">Delete image</span>
+                      </button>
+                    </div>
 
                     <div className="mt-4 flex flex-wrap gap-2 border-t border-[var(--admin-border)] pt-4">
                       <button

@@ -1,18 +1,24 @@
 import { connectDB } from "@/lib/mongodb";
 import Faculty from "@/models/Faculty";
+import { unstable_cache } from "next/cache";
 import { compareFacultyByPositionThenCreatedAtDesc } from "@/lib/facultyOrder";
 import FacultyClient, { type Faculty as FacultyType } from "./FacultyClient";
 
 export const dynamic = "force-dynamic";
 
-export default async function FacultyPage() {
-  await connectDB();
+const getCachedFaculty = unstable_cache(
+  async () => {
+    await connectDB();
+    return Faculty.find()
+      .select("name profession image email experience specialization about position createdAt")
+      .lean();
+  },
+  ["faculty-page"],
+  { revalidate: 60, tags: ["faculty:list"] }
+);
 
-  const docs = await Faculty.find()
-    .select(
-      "name profession image email experience specialization about position createdAt"
-    )
-    .lean();
+export default async function FacultyPage() {
+  const docs = await getCachedFaculty();
 
   docs.sort(compareFacultyByPositionThenCreatedAtDesc);
 

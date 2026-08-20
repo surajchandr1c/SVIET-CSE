@@ -5,6 +5,7 @@ export type StudentRole = "student";
 export interface IStudent extends Document {
   name: string;
   admissionNo: string;
+  course?: "CSE" | "AI/ML";
   password?: string;
   semester: number;
   role: StudentRole;
@@ -17,6 +18,7 @@ const StudentSchema: Schema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     admissionNo: { type: String, required: true, trim: true, unique: true, index: true },
+    course: { type: String, enum: ["CSE", "AI/ML"], default: "CSE" },
     password: { type: String, required: false, select: false },
     semester: { type: Number, required: true, default: 4 },
     role: { type: String, required: true, default: "student" },
@@ -33,10 +35,14 @@ if (process.env.NODE_ENV === "development") {
   const hasPasswordPath = Boolean(existing?.schema?.path("password"));
   const hasRolePath = Boolean(existing?.schema?.path("role"));
   const hasMustChangePath = Boolean(existing?.schema?.path("mustChangePassword"));
+  const hasCoursePath = Boolean(existing?.schema?.path("course"));
   const semesterPath = existing?.schema?.path("semester") as { instance?: string } | undefined;
   const hasNumericSemester = Boolean(semesterPath?.instance === "Number");
 
-  if (existing && (!hasPasswordPath || !hasRolePath || !hasMustChangePath || !hasNumericSemester)) {
+  if (
+    existing &&
+    (!hasPasswordPath || !hasRolePath || !hasMustChangePath || !hasCoursePath || !hasNumericSemester)
+  ) {
     delete models.Student;
   }
 }

@@ -3,7 +3,6 @@ import {
   Bell,
   GraduationCap,
   Image,
-  LayoutDashboard,
   UserRound,
   Users,
 } from "lucide-react";
@@ -183,20 +182,12 @@ export default async function AdminDashboard() {
       metricLabel: "Profiles",
     },
     {
-      title: "2024 Batch",
-      description: "Control syllabus, students, papers and resources.",
-      href: "/admin/4th",
+      title: "Semester Content",
+      description: "Manage 4th and 5th semester learning content.",
+      href: "/admin/semester",
       icon: GraduationCap,
       count: stats.fourthSemStudentCount,
-      metricLabel: "Students in 2024 batch",
-    },
-    {
-      title: "2023 Batch",
-      description: "Manage complete 2023 batch learning content.",
-      href: "/admin/6th",
-      icon: LayoutDashboard,
-      count: stats.sixthSemStudentCount,
-      metricLabel: "Students in 2023 batch",
+      metricLabel: "Students in 4th semester",
     },
   ];
 

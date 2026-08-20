@@ -19,7 +19,7 @@ const resourceTabToCategory = {
 
 type SemesterTabFormProps = {
   semesterName: string;
-  semesterKey: "4th" | "6th";
+  semesterKey: "3rd" | "4th" | "5th" | "6th";
 };
 
 type SyllabusItem = {
@@ -284,7 +284,7 @@ export default function SemesterTabForm({ semesterName, semesterKey }: SemesterT
             className={`cursor-pointer text-left border rounded-xl px-5 py-4 transition ${
               selectedTab === tab
                 ? "bg-[#0b3c5d] text-white border-[#0b3c5d]"
-                : "bg-white text-slate-800 hover:-translate-y-0.5 hover:border-[#0b3c5d] hover:bg-slate-50 hover:text-slate-900 hover:shadow-md"
+                : "bg-white text-slate-800"
             }`}
           >
             {tab}

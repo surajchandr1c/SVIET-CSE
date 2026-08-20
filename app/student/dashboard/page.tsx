@@ -46,7 +46,7 @@ export default async function StudentDashboard() {
 
   await connectDB();
   const candidates = await Student.find({ admissionNo: payload.admissionNo })
-    .select("name admissionNo semester mustChangePassword")
+    .select("name admissionNo semester course mustChangePassword")
     .select("+password")
     .sort({ updatedAt: -1, createdAt: -1, _id: -1 })
     .limit(5)
@@ -55,6 +55,7 @@ export default async function StudentDashboard() {
         name: string;
         admissionNo: string;
         semester: number;
+        course?: string;
         mustChangePassword?: boolean;
         password?: string;
       }>
@@ -72,7 +73,12 @@ export default async function StudentDashboard() {
     .select("name position image admissionNo batch course about keywords instagram email whatsapp linkedin github skills projects certificates achievements")
     .lean<Record<string, unknown> | null>();
 
-  const batch = student.semester === 6 ? "2023 Batch" : "2024 Batch";
+  const admissionYear = student.admissionNo.match(/^(20\d{2})/i)?.[1];
+  const batch = admissionYear
+    ? `${admissionYear} Batch`
+    : student.semester === 6
+      ? "2023 Batch"
+      : "2024 Batch";
 
   return (
     <StudentDashboardClient
@@ -82,7 +88,12 @@ export default async function StudentDashboard() {
         image: typeof profile?.image === "string" && profile.image ? profile.image : "/no-image.png",
         admissionNo: student.admissionNo,
         batch: typeof profile?.batch === "string" && profile.batch ? profile.batch : batch,
-        course: typeof profile?.course === "string" && profile.course ? profile.course : "B.Tech CSE",
+        course:
+          typeof profile?.course === "string" && profile.course
+            ? profile.course
+            : student.course === "AI/ML"
+              ? "AI/ML"
+              : "B.Tech CSE",
         about: typeof profile?.about === "string" ? profile.about : "",
         keywords: typeof profile?.keywords === "string" ? profile.keywords : "",
         instagram: typeof profile?.instagram === "string" ? profile.instagram : "",

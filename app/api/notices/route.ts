@@ -5,8 +5,13 @@ import Notice from "@/models/Notice";
 export async function GET() {
   try {
     await connectDB();
-    const notices = await Notice.find().sort({ date: -1, createdAt: -1 });
-    return NextResponse.json(notices);
+    const notices = await Notice.find()
+      .select("heading date driveUrl createdAt")
+      .sort({ date: -1, createdAt: -1 })
+      .lean();
+    return NextResponse.json(notices, {
+      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" },
+    });
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch notices" },

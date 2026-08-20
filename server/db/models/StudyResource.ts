@@ -25,5 +25,7 @@ const StudyResourceSchema: Schema = new Schema(
   { timestamps: true }
 );
 
+StudyResourceSchema.index({ semester: 1, category: 1, createdAt: -1 });
+
 export default models.StudyResource ||
   mongoose.model<IStudyResource>("StudyResource", StudyResourceSchema);

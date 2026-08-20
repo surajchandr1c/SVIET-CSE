@@ -15,6 +15,9 @@ const parseSemester = (value: string | null): number | null => {
   return Number.isFinite(parsed) ? parsed : null;
 };
 
+const normalizeCourse = (value: unknown): "CSE" | "AI/ML" =>
+  typeof value === "string" && value.toUpperCase() === "AI/ML" ? "AI/ML" : "CSE";
+
 type FallbackStudentRow = {
   srNo?: number;
   admissionNo: string;
@@ -88,7 +91,11 @@ export async function POST(req: Request) {
     await connectDB();
     const body = await req.json();
     const semester = parseSemester(body?.semester ?? null);
-    const payload = semester ? { ...body, semester } : body;
+    const payload = {
+      ...body,
+      ...(semester ? { semester } : {}),
+      course: normalizeCourse(body?.course),
+    };
     const newStudent = await Student.create(payload);
     return NextResponse.json(newStudent, { status: 201 });
   } catch (error) {

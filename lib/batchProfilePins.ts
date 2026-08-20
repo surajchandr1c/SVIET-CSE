@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/mongodb";
 import PinnedBatchProfile from "@/models/PinnedBatchProfile";
 import { MAX_PINNED_BATCH_PROFILES } from "@/lib/shared/batchProfilePins";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 type PinnedDoc = {
   admissionNo?: unknown;
@@ -13,7 +14,7 @@ const normalizeAdmissionNo = (value: unknown) =>
 const normalizeOrder = (value: unknown) =>
   typeof value === "number" && Number.isFinite(value) ? value : 0;
 
-export async function getPinnedBatchAdmissionNos(): Promise<string[]> {
+const queryPinnedBatchAdmissionNos = async (): Promise<string[]> => {
   try {
     await connectDB();
     const docs = await PinnedBatchProfile.find().sort({ order: 1, createdAt: 1 }).lean<PinnedDoc[]>();
@@ -21,6 +22,16 @@ export async function getPinnedBatchAdmissionNos(): Promise<string[]> {
   } catch {
     return [];
   }
+};
+
+const getCachedPinnedBatchAdmissionNos = unstable_cache(
+  queryPinnedBatchAdmissionNos,
+  ["batch-profile-pins-public"],
+  { revalidate: 60, tags: ["batch-profile-pins"] }
+);
+
+export async function getPinnedBatchAdmissionNos(): Promise<string[]> {
+  return getCachedPinnedBatchAdmissionNos();
 }
 
 export async function setBatchProfilePinned(admissionNo: string, pinned: boolean): Promise<string[]> {
@@ -59,7 +70,9 @@ export async function setBatchProfilePinned(admissionNo: string, pinned: boolean
   const nextPins = await PinnedBatchProfile.find()
     .sort({ order: 1, createdAt: 1 })
     .lean<PinnedDoc[]>();
-  return nextPins.map((doc) => normalizeAdmissionNo(doc.admissionNo)).filter(Boolean);
+  const result = nextPins.map((doc) => normalizeAdmissionNo(doc.admissionNo)).filter(Boolean);
+  revalidateTag("batch-profile-pins", "default");
+  return result;
 }
 
 export async function removePinnedBatchProfile(admissionNo: string): Promise<string[]> {

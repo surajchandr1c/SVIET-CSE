@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const DRIVE_SOURCES = (id: string) => [
-  `https://drive.google.com/thumbnail?id=${id}&sz=w1200`,
+  `https://drive.google.com/thumbnail?id=${id}&sz=w2000`,
   `https://drive.google.com/uc?export=view&id=${id}`,
   `https://drive.google.com/uc?export=download&id=${id}`,
   `https://drive.usercontent.google.com/download?id=${id}&export=view&authuser=0`,

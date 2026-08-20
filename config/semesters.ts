@@ -1,5 +1,7 @@
 export const SEMESTERS = [
+  { key: "3rd", number: 3, slug: "3rdSem" },
   { key: "4th", number: 4, slug: "4thSem" },
+  { key: "5th", number: 5, slug: "5thSem" },
   { key: "6th", number: 6, slug: "6thSem" },
 ] as const;
 

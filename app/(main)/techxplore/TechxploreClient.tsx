@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Instagram, MessageCircle, Linkedin, Github } from "lucide-react";
 import { normalizeImageUrl } from "@/lib/imageUrl";
-import SmartImage from "@/components/SmartImage";
+import SmartImage from "@/components/shared/SmartImage";
 import { compareTechxploreByOrderThenCreatedAtAsc } from "@/lib/techxploreOrder";
 
 export type TechxploreStudent = {

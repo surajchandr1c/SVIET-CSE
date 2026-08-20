@@ -38,8 +38,13 @@ const getValidationError = (
 export async function GET() {
   try {
     await connectDB();
-    const albums = await GalleryAlbum.find().sort({ date: -1, createdAt: -1 });
-    return NextResponse.json(albums);
+    const albums = await GalleryAlbum.find()
+      .select("heading date coverImageUrl driveUrl createdAt")
+      .sort({ date: -1, createdAt: -1 })
+      .lean();
+    return NextResponse.json(albums, {
+      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" },
+    });
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch gallery albums" },

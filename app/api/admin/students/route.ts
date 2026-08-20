@@ -28,6 +28,9 @@ const normalizeSemester = (value: unknown): number => {
 
 const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+const normalizeCourse = (value: string | null): "CSE" | "AI/ML" =>
+  value?.toUpperCase() === "AI/ML" ? "AI/ML" : "CSE";
+
 export async function GET(req: Request) {
   try {
     const token = (await cookies()).get("admin_token")?.value;
@@ -37,7 +40,8 @@ export async function GET(req: Request) {
     }
 
     const { searchParams } = new URL(req.url);
-    const admissionNo = (searchParams.get("admissionNo") ?? "").trim().toUpperCase();
+    const search = (searchParams.get("search") ?? searchParams.get("admissionNo") ?? "").trim();
+    const course = normalizeCourse(searchParams.get("course"));
     // `0` means "all semesters".
     const semester = parseNonNegativeInt(searchParams.get("semester"), 4);
     const page = parsePositiveInt(searchParams.get("page"), 1);
@@ -48,7 +52,7 @@ export async function GET(req: Request) {
     // Use the underlying collection + aggregation to:
     // - avoid Mongoose casting issues with legacy data (e.g. `semester: "4th"` stored as a string)
     // - remove duplicate admission numbers from the list
-    const match: Record<string, unknown> = {
+    const match: Record<string, unknown> & { $and?: Array<Record<string, unknown>> } = {
       admissionNo: { $type: "string", $ne: "" },
     };
     if (semester !== 0) {
@@ -63,8 +67,15 @@ export async function GET(req: Request) {
       match.semester = { $in: semesterAliases };
     }
 
-    if (admissionNo) {
-      match.admissionNo = new RegExp(`^${escapeRegex(admissionNo)}$`, "i");
+    match.$and = [
+      course === "AI/ML"
+        ? { course: "AI/ML" }
+        : { $or: [{ course: "CSE" }, { course: { $exists: false } }, { course: null }] },
+    ];
+
+    if (search) {
+      const searchRegex = new RegExp(escapeRegex(search), "i");
+      match.$and.push({ $or: [{ name: searchRegex }, { admissionNo: searchRegex }] });
     }
 
     const col = Student.collection;
@@ -99,6 +110,7 @@ export async function GET(req: Request) {
                 $project: {
                   name: 1,
                   admissionNo: 1,
+                  course: 1,
                   semester: 1,
                   mustChangePassword: 1,
                   createdAt: 1,
@@ -118,6 +130,7 @@ export async function GET(req: Request) {
       _id?: unknown;
       name?: unknown;
       admissionNo?: unknown;
+      course?: unknown;
       semester?: unknown;
       mustChangePassword?: unknown;
       createdAt?: unknown;
@@ -129,6 +142,7 @@ export async function GET(req: Request) {
         _id: String(doc._id),
         name: String(doc.name ?? ""),
         admissionNo: String(doc.admissionNo ?? ""),
+        course: doc.course === "AI/ML" ? "AI/ML" : "CSE",
         semester: normalizeSemester(doc.semester) || (semester === 0 ? 4 : semester),
       mustChangePassword:
         typeof doc.mustChangePassword === "boolean" ? doc.mustChangePassword : true,

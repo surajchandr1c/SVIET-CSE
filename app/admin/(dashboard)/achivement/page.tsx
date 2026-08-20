@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import SmartImage from "@/components/SmartImage";
+import SmartImage from "@/components/shared/SmartImage";
 import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
 import { normalizeGoogleDriveFolderUrl } from "@/lib/driveUrl";
 import { formatDateGB } from "@/lib/formatDate";

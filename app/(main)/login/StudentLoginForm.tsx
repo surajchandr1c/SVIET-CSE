@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import PasswordInput from "@/components/PasswordInput";
+import PasswordInput from "@/components/shared/PasswordInput";
 
 export default function StudentLoginForm() {
   const router = useRouter();
