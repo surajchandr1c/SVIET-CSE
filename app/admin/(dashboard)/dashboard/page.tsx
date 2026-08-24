@@ -124,13 +124,13 @@ const getDashboardStats = async () => {
 };
 
 export default async function AdminDashboard() {
-  const [stats, portfolio4, portfolio6] = await Promise.all([
+  const [stats, portfolio4, portfolio5] = await Promise.all([
     getDashboardStats(),
     getBatchProfiles("4"),
-    getBatchProfiles("6"),
+    getBatchProfiles("5"),
   ]);
   const portfolio4Count = portfolio4.length;
-  const portfolio6Count = portfolio6.length;
+  const portfolio5Count = portfolio5.length;
 
   const actions = [
     {
@@ -174,11 +174,11 @@ export default async function AdminDashboard() {
       metricLabel: "Profiles",
     },
     {
-      title: "Student Portfolio (2023 Batch)",
-      description: "View 2023 batch student portfolio profiles.",
-      href: "/admin/studentportfolio?tab=2023",
+      title: "Student Portfolio (2025 Batch)",
+      description: "View 2025 batch student portfolio profiles.",
+      href: "/admin/studentportfolio?tab=2025",
       icon: Users,
-      count: portfolio6Count,
+      count: portfolio5Count,
       metricLabel: "Profiles",
     },
     {
