@@ -1,15 +1,6 @@
-export const extractGoogleDriveFileId = (url: string): string | null => {
-  const trimmed = url.trim();
-  if (!trimmed) return null;
+import { extractGoogleDriveFileId } from "@/lib/shared/driveUrl";
 
-  const directMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (directMatch?.[1]) return directMatch[1];
-
-  const idParamMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if (idParamMatch?.[1]) return idParamMatch[1];
-
-  return null;
-};
+export { extractGoogleDriveFileId };
 
 export const getImageUrlCandidates = (url: string): string[] => {
   const trimmed = url.trim();

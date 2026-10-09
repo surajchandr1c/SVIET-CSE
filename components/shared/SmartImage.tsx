@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { getImageUrlCandidates } from "@/lib/imageUrl";
 
 type SmartImageProps = Omit<
@@ -21,11 +21,13 @@ export default function SmartImage({
   ...props
 }: SmartImageProps) {
   const candidates = useMemo(() => getImageUrlCandidates(src), [src]);
+  const [prevSrc, setPrevSrc] = useState(src);
   const [index, setIndex] = useState(0);
 
-  useEffect(() => {
+  if (prevSrc !== src) {
+    setPrevSrc(src);
     setIndex(0);
-  }, [src]);
+  }
 
   const currentSrc = candidates[index] ?? fallbackSrc;
 

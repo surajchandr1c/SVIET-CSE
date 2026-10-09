@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "
 import { AlertCircle, CheckCircle2, ExternalLink, Loader2, Save, UserRound, X } from "lucide-react";
 import SmartImage from "@/components/shared/SmartImage";
 import { normalizeImageUrl } from "@/lib/imageUrl";
-import { getProfileSlug, slugifyProfileName } from "@/app/(main)/batches/slug";
+import { getProfileSlug } from "@/app/(main)/batches/slug";
 import LogoutButton from "./LogoutButton";
 
 type ProjectItem = {

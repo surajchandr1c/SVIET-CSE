@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import BatchProfilesGrid from "./BatchProfilesGrid";
 import type { BatchProfile } from "./types";
 import type { BatchConfig } from "@/lib/shared/batchConfig";
@@ -77,23 +77,11 @@ export default function BatchesTabs({
     [batches]
   );
 
-  const initialTabParam = searchParams.get("tab") as BatchTab | null;
-  const [activeTab, setActiveTab] = useState<BatchTab>(
-    initialTabParam && tabs.some((tab) => tab.key === initialTabParam) ? initialTabParam : "all"
-  );
-  const [activeCourse, setActiveCourse] = useState<CourseTab>(
-    searchParams.get("course") === "aiMl" ? "aiMl" : "cse"
-  );
-
-  useEffect(() => {
-    const tabParam = searchParams.get("tab") as BatchTab | null;
-    if (tabParam && tabs.some((tab) => tab.key === tabParam)) {
-      setActiveTab(tabParam);
-    } else {
-      setActiveTab("all");
-    }
-    setActiveCourse(searchParams.get("course") === "aiMl" ? "aiMl" : "cse");
-  }, [searchParams, tabs]);
+  const tabParam = searchParams.get("tab") as BatchTab | null;
+  const activeTab: BatchTab =
+    tabParam && tabs.some((tab) => tab.key === tabParam) ? tabParam : "all";
+  const activeCourse: CourseTab =
+    searchParams.get("course") === "aiMl" ? "aiMl" : "cse";
 
   const activeIndex = useMemo(
     () => Math.max(0, tabs.findIndex((tab) => tab.key === activeTab)),
@@ -120,9 +108,6 @@ export default function BatchesTabs({
   const updateSelection = (tab: string, course?: CourseTab) => {
     const validTab = (tab && tabs.some((t) => t.key === tab) ? tab : "all") as BatchTab;
     const validCourse = course ?? activeCourse;
-
-    setActiveTab(validTab);
-    if (course) setActiveCourse(course);
 
     const params = new URLSearchParams();
     if (validTab !== "all") params.set("tab", validTab);

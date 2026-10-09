@@ -5,60 +5,6 @@ import SectionTabsClient, { type SectionKey } from "./SectionTabsClient";
 import { AnimatePresence, motion } from "framer-motion";
 
 
-type Subject = {
-  code: string;
-  name: string;
-  faculty: string;
-  group: string;
-  time: string;
-  hall: string;
-};
-
-type DaySchedule = {
-  day: string;
-  subjects: Subject[];
-};
-
-function formatHall(raw: string) {
-  const trimmed = String(raw ?? "").trim();
-  if (!trimmed) return "";
-
-  const blockMatch = trimmed.match(/block\s*g\s*-\s*(\d+)/i);
-  if (blockMatch?.[1]) return `G-${blockMatch[1].padStart(3, "0")}`;
-
-  const shortMatch = trimmed.match(/\bg\s*-\s*(\d+)\b/i);
-  if (shortMatch?.[1]) return `G-${shortMatch[1].padStart(3, "0")}`;
-
-  return trimmed;
-}
-
-function formatTime(raw: string) {
-  const trimmed = String(raw ?? "").trim();
-  if (!trimmed) return "";
-
-  // Normalize common mojibake for an en dash (–) that may exist in stored data.
-  const normalized = trimmed.replace(/â€“/g, "–");
-
-  // Already in desired format: "P3 11:01–11:55"
-  if (/^P\d+\s+\d{2}:\d{2}–\d{2}:\d{2}$/.test(normalized)) return normalized;
-
-  // Common format: "P3 (11:01 AM - 11:55 AM)"
-  const match = normalized.match(
-    /^P(\d+)\s*\(\s*([0-9: ]+(?:AM|PM)?)\s*-\s*([0-9: ]+(?:AM|PM)?)\s*\)$/i
-  );
-  if (match) {
-    const p = match[1];
-    const start = match[2].replace(/\s*(AM|PM)\s*/gi, "").trim();
-    const end = match[3].replace(/\s*(AM|PM)\s*/gi, "").trim();
-    return `P${p} ${start}–${end}`;
-  }
-
-  // Fallback: normalize hyphen to en dash and strip AM/PM
-  return normalized
-    .replace(/\s*(AM|PM)\s*/gi, "")
-    .replace(/\s*-\s*/g, "–");
-}
-
 function SectionAUniversityTimetable() {
   const dayRows: Array<{
     day: string;
