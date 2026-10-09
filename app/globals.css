@@ -209,6 +209,25 @@ button {
   color: var(--ui-icon-hover);
 }
 
+.theme-main button.text-white,
+.theme-main button.text-white:hover,
+.theme-main button.\!text-white,
+.theme-main button.\!text-white:hover {
+  color: #ffffff !important;
+}
+
+.theme-main button.text-white svg,
+.theme-main button.text-white:hover svg,
+.theme-main button.\!text-white svg,
+.theme-main button.\!text-white:hover svg,
+.theme-main a.text-white svg,
+.theme-main a.text-white:hover svg,
+.theme-main a.\!text-white svg,
+.theme-main a.\!text-white:hover svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
 .frontend-shell button,
 .frontend-shell a {
   transition: all 0.3s ease;

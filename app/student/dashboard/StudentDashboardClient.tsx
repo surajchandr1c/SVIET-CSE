@@ -418,18 +418,18 @@ export default function StudentDashboardClient({
                 <button
                   type="submit"
                   disabled={saving || deletingImage || uploadingImage}
-                  className="inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_14px_rgba(31,86,228,0.25)] hover:shadow-[0_6px_20px_rgba(31,86,228,0.35)] hover:brightness-105 active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-5 py-2.5 text-sm font-semibold !text-white text-white shadow-[0_4px_14px_rgba(31,86,228,0.25)] hover:shadow-[0_6px_20px_rgba(31,86,228,0.35)] hover:brightness-105 hover:!text-white active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:!text-white [&_svg]:!stroke-white [&:hover_svg]:!text-white [&:hover_svg]:!stroke-white"
                   title="Save and update profile"
                 >
                   {saving ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin shrink-0" />
-                      <span>Saving...</span>
+                      <Loader2 className="h-4 w-4 animate-spin shrink-0 !text-white text-white" color="#ffffff" />
+                      <span className="!text-white text-white">Saving...</span>
                     </>
                   ) : (
                     <>
-                      <Save className="h-4 w-4 shrink-0" />
-                      <span>Update Profile</span>
+                      <Save className="h-4 w-4 shrink-0 !text-white text-white" color="#ffffff" />
+                      <span className="!text-white text-white">Update Profile</span>
                     </>
                   )}
                 </button>
@@ -940,17 +940,17 @@ export default function StudentDashboardClient({
               <button
                 type="submit"
                 disabled={saving || deletingImage || uploadingImage}
-                className="inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_14px_rgba(31,86,228,0.25)] hover:shadow-[0_6px_20px_rgba(31,86,228,0.35)] hover:brightness-105 active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-5 py-2.5 text-sm font-semibold !text-white text-white shadow-[0_4px_14px_rgba(31,86,228,0.25)] hover:shadow-[0_6px_20px_rgba(31,86,228,0.35)] hover:brightness-105 hover:!text-white active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:!text-white [&_svg]:!stroke-white [&:hover_svg]:!text-white [&:hover_svg]:!stroke-white"
               >
                 {saving ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin shrink-0" />
-                    <span>Saving...</span>
+                    <Loader2 className="h-4 w-4 animate-spin shrink-0 !text-white text-white" color="#ffffff" />
+                    <span className="!text-white text-white">Saving...</span>
                   </>
                 ) : (
                   <>
-                    <Save className="h-4 w-4 shrink-0" />
-                    <span>Update Profile</span>
+                    <Save className="h-4 w-4 shrink-0 !text-white text-white" color="#ffffff" />
+                    <span className="!text-white text-white">Update Profile</span>
                   </>
                 )}
               </button>
