@@ -260,7 +260,7 @@ export default function BatchProfileDetailClient({ profile }: { profile: BatchPr
                         className={[
                           "min-w-0 truncate rounded-full px-5 py-2 text-sm font-semibold transition-colors sm:text-base",
                           "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/70",
-                          isActive ? "text-slate-900" : "text-white/90",
+                          isActive ? "!text-black text-black" : "!text-white text-white",
                         ].join(" ")}
                       >
                         {tab}

@@ -39,7 +39,7 @@ export default function SectionTabsClient({
                 className={[
                   "relative z-10 rounded-full px-3 py-2.5 text-sm font-semibold transition md:text-base",
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60",
-                  isActive ? "text-slate-900" : "text-slate-200/80",
+                  isActive ? "!text-black text-black" : "!text-white text-white",
                 ].join(" ")}
               >
                 {tab.label}

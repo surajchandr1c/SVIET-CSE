@@ -216,6 +216,17 @@ button {
   color: #ffffff !important;
 }
 
+.theme-main button.text-black,
+.theme-main button.text-black:hover,
+.theme-main button.\!text-black,
+.theme-main button.\!text-black:hover,
+.theme-main a.text-black,
+.theme-main a.text-black:hover,
+.theme-main a.\!text-black,
+.theme-main a.\!text-black:hover {
+  color: #000000 !important;
+}
+
 .theme-main button.text-white svg,
 .theme-main button.text-white:hover svg,
 .theme-main button.\!text-white svg,

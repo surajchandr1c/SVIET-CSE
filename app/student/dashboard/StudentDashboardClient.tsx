@@ -577,7 +577,7 @@ export default function StudentDashboardClient({
                       className={[
                         "cursor-pointer rounded-full px-2 py-3 text-center text-xs font-semibold transition-colors md:px-3 md:text-base",
                         "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60",
-                        isActive ? "text-slate-900" : "text-white",
+                        isActive ? "!text-black text-black" : "!text-white text-white",
                       ].join(" ")}
                     >
                       {tab}
@@ -615,7 +615,7 @@ export default function StudentDashboardClient({
                           className={[
                             "flex w-full cursor-pointer items-center justify-start rounded-2xl px-4 py-3 text-left text-sm font-semibold transition-colors",
                             "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60",
-                            isActive ? "bg-[#f7c316] text-slate-900" : "text-white",
+                            isActive ? "bg-[#f7c316] !text-black text-black" : "!text-white text-white",
                           ].join(" ")}
                         >
                           {tab}

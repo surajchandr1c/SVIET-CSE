@@ -44,8 +44,8 @@ export default function SemesterTabsClient({
                   "relative z-10 rounded-full px-3 py-2.5 text-base font-semibold transition",
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60",
                   isActive
-                    ? "text-slate-900"
-                    : "text-slate-200/80",
+                    ? "!text-black text-black"
+                    : "!text-white text-white",
                 ].join(" ")}
               >
                 {tab.label}

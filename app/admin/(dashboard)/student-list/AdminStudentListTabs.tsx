@@ -142,7 +142,7 @@ export default function AdminStudentListTabs() {
                     className={[
                       "admin-batch-tab relative z-10 rounded-full px-6 py-3 text-center text-sm font-semibold md:px-10 md:text-base",
                       "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60",
-                      isActive ? "text-slate-900" : "text-white",
+                      isActive ? "!text-black text-black" : "!text-white text-white",
                     ].join(" ")}
                   >
                     {batch.label}
