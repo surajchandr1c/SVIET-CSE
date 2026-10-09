@@ -648,9 +648,6 @@ export default function StudentDashboardClient({
                     placeholder="Keywords for search only, separated by commas"
                     className="md:col-span-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-[#08b8a8] focus:ring-2 focus:ring-[#08b8a8]/20"
                   />
-                  <div className="md:col-span-2 rounded-xl border border-dashed border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-700">
-                    Use the image upload control above to add or replace your portfolio image.
-                  </div>
                   <textarea
                     value={form.about ?? ""}
                     onChange={(e) => handleChange("about", e.target.value)}
