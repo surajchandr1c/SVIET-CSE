@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import BatchProfile from "@/models/BatchProfile";
@@ -184,6 +185,7 @@ export async function PUT(req: Request) {
       { new: true, upsert: true, strict: false, setDefaultsOnInsert: true }
     ).lean<Record<string, unknown> | null>();
 
+    revalidateTag("batch-profiles", "default");
     return NextResponse.json({ profile: saved });
   } catch (error) {
     console.error("Student profile update error:", error);
@@ -211,6 +213,7 @@ export async function DELETE() {
 
     await BatchProfile.deleteOne({ admissionNo: student.admissionNo });
 
+    revalidateTag("batch-profiles", "default");
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Student profile delete error:", error);

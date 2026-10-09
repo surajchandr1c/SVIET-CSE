@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import "./globals.css";
 import ScrollReveal from "@/components/shared/ScrollReveal";
 import { Analytics } from "@vercel/analytics/react";
+
+export const metadata: Metadata = {
+  title: "Department of Computer Science & Engineering | SVIET",
+  description: "Official portal of Department of CSE, SVIET",
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
 
 
 export default function RootLayout({

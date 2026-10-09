@@ -1,6 +1,5 @@
 "use client";
 
-import Head from "next/head";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
@@ -259,11 +258,10 @@ export default function HomeHeroClient() {
 
   return (
     <>
-      <Head>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <section className="mx-auto mt-2 w-full max-w-[1380px] px-3 pt-2 sm:mt-12 sm:px-4 md:px-6">
+      <section
+        suppressHydrationWarning={true}
+        className="mx-auto mt-2 w-full max-w-[1380px] px-3 pt-2 sm:mt-12 sm:px-4 md:px-6"
+      >
         <div className="home-hero-shell relative overflow-hidden rounded-[2.4rem] bg-white px-4 py-6 transition-none sm:px-6 sm:py-8 lg:px-10 lg:py-10">
           <div className="relative flex flex-col gap-8 lg:gap-10">
             <div className="mx-auto flex w-full max-w-[90rem] flex-col items-center justify-center text-center">
@@ -361,7 +359,10 @@ export default function HomeHeroClient() {
         </div>
       </section>
 
-      <section className="mx-auto mt-6 w-full max-w-[1380px] px-3 sm:px-4 md:px-6">
+      <section
+        suppressHydrationWarning={true}
+        className="mx-auto mt-6 w-full max-w-[1380px] px-3 sm:px-4 md:px-6"
+      >
         <div className="rounded-[2.4rem] bg-white px-6 py-4 sm:px-10 sm:py-6 lg:px-14 lg:py-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
             <div className="text-center lg:text-left">
@@ -391,7 +392,10 @@ export default function HomeHeroClient() {
         </div>
       </section>
 
-      <section className="relative mt-4 py-10 sm:mt-6 sm:py-12">
+      <section
+        suppressHydrationWarning={true}
+        className="relative mt-4 py-10 sm:mt-6 sm:py-12"
+      >
         <div className="absolute inset-0 -z-10 bg-white" />
 
         <div className="mx-auto w-full max-w-[1380px] px-6">

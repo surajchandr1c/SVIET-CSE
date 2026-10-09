@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const REVEAL_SELECTOR = "main > section";
 
 export default function ScrollReveal() {
+  const pathname = usePathname();
+
   useEffect(() => {
     if (typeof window === "undefined" || typeof IntersectionObserver === "undefined") {
       return;
@@ -19,13 +22,25 @@ export default function ScrollReveal() {
       if (cancelled) return;
 
       const root = document.querySelector("main") ?? document.body;
-
       const revealTargets = Array.from(root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));
+      const belowTheFoldTargets: HTMLElement[] = [];
+      const windowHeight = window.innerHeight;
+
       for (const el of revealTargets) {
-        if (el.closest("nav")) continue;
-        if (el.classList.contains("reveal")) continue;
+        if (el.closest("nav") || el.dataset.noReveal === "true") continue;
+        if (el.classList.contains("reveal") || el.classList.contains("reveal-visible")) continue;
+
+        const rect = el.getBoundingClientRect();
+        // Skip elements that are already within the viewport above the fold
+        if (rect.top < windowHeight && rect.bottom > 0) {
+          continue;
+        }
+
         el.classList.add("reveal");
+        belowTheFoldTargets.push(el);
       }
+
+      if (belowTheFoldTargets.length === 0) return;
 
       revealObserver = new IntersectionObserver(
         (entries) => {
@@ -39,10 +54,9 @@ export default function ScrollReveal() {
         { root: null, threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
       );
 
-      for (const el of revealTargets) {
+      for (const el of belowTheFoldTargets) {
         revealObserver.observe(el);
       }
-
     };
 
     // Defer DOM mutations until hydration and the first paint fully settle.
@@ -59,7 +73,8 @@ export default function ScrollReveal() {
       window.cancelAnimationFrame(rafTwo);
       revealObserver?.disconnect();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }
+

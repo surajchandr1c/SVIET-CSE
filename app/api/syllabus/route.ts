@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Syllabus from "@/models/Syllabus";
+import { checkAdminAuth } from "@/lib/auth";
 
 const DEFAULT_4TH_SUBJECTS = [
   {
@@ -31,7 +32,7 @@ const DEFAULT_4TH_SUBJECTS = [
     semester: "4th",
     title: "Universal Human Values - II",
     code: "HSMC122-18",
-    link: "#",
+    link: "/update",
   },
   {
     semester: "4th",
@@ -94,19 +95,19 @@ const DEFAULT_6TH_SUBJECTS = [
     semester: "6th",
     title: "Software Project Management",
     code: "OE-6XX",
-    link: "#",
+    link: "/update",
   },
   {
     semester: "6th",
     title: "Machine Learning",
     code: "OE-6XX",
-    link: "#",
+    link: "/update",
   },
   {
     semester: "6th",
     title: "Mobile Application Development",
     code: "OE-6XX",
-    link: "#",
+    link: "/update",
   },
 ];
 
@@ -152,6 +153,10 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    if (!(await checkAdminAuth(req))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
     const body = await req.json();
     const newItem = await Syllabus.create(body);

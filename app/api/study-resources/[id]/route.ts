@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import StudyResource from "@/models/StudyResource";
+import { checkAdminAuth } from "@/lib/auth";
 
 export async function PUT(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    if (!(await checkAdminAuth(request))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
     const { id } = await context.params;
     const body = await request.json();
@@ -38,6 +43,10 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    if (!(await checkAdminAuth(request))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
     const { id } = await context.params;
 

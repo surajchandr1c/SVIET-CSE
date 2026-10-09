@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { connectDB } from "@/lib/mongodb";
 import TechxploreStudent from "@/models/TechxploreStudent";
 import { unstable_cache } from "next/cache";
@@ -5,6 +7,8 @@ import { compareTechxploreByOrderThenCreatedAtAsc } from "@/lib/techxploreOrder"
 import TechxploreClient, {
   type TechxploreStudent as TechxploreStudentType,
 } from "./TechxploreClient";
+import { verifyStudentToken } from "@/lib/studentAuth";
+import { verifyAdminToken } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +24,17 @@ const getCachedTechxploreStudents = unstable_cache(
 );
 
 export default async function TechxplorePage() {
+  const cookieStore = await cookies();
+  const studentToken = cookieStore.get("student_token")?.value;
+  const adminToken = cookieStore.get("admin_token")?.value;
+
+  const isStudent = Boolean(studentToken && verifyStudentToken(studentToken));
+  const isAdmin = Boolean(adminToken && verifyAdminToken(adminToken));
+
+  if (!isStudent && !isAdmin) {
+    redirect("/login?redirect=/techxplore");
+  }
+
   const docs = await getCachedTechxploreStudents();
 
   docs.sort(compareTechxploreByOrderThenCreatedAtAsc);

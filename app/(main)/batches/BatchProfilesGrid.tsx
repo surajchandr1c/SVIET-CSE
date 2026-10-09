@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 import SmartImage from "@/components/shared/SmartImage";
 import { normalizeImageUrl } from "@/lib/imageUrl";
-import { slugifyProfileName } from "./slug";
+import { getProfileSlug } from "./slug";
 import type { BatchProfile } from "./types";
 import { Award, BadgeCheck, Briefcase, GraduationCap, LayoutGrid, UserRound } from "lucide-react";
 
@@ -63,7 +63,7 @@ export default function BatchProfilesGrid({
             const accentBg = accentBgs[index % accentBgs.length];
             const imageSrc = normalizeImageUrl(profile.image);
             const hasProfileImage = Boolean(profile.image?.trim()) && imageSrc !== "/no-image.png";
-            const slug = slugifyProfileName(profile.name);
+            const slug = getProfileSlug(profile);
             const skillsCount = countSkills(profile);
             const projectsCount = profile.projects?.length ?? 0;
             const certificatesCount = profile.certificates?.length ?? 0;

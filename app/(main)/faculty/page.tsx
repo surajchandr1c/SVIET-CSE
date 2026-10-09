@@ -32,6 +32,7 @@ export default async function FacultyPage() {
     specialization: doc.specialization,
     about: doc.about,
     position: doc.position ?? null,
+    createdAt: doc.createdAt ? new Date(doc.createdAt).toISOString() : null,
   }));
 
   return <FacultyClient initialFaculty={faculty} />;

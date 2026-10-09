@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { AlertCircle, CheckCircle2, ExternalLink, Loader2, Save, UserRound, X } from "lucide-react";
 import SmartImage from "@/components/shared/SmartImage";
 import { normalizeImageUrl } from "@/lib/imageUrl";
-import { slugifyProfileName } from "@/app/(main)/batches/slug";
+import { getProfileSlug, slugifyProfileName } from "@/app/(main)/batches/slug";
 import LogoutButton from "./LogoutButton";
 
 type ProjectItem = {
@@ -155,6 +157,7 @@ export default function StudentDashboardClient({
 }: {
   initialProfile: StudentProfileForm;
 }) {
+  const router = useRouter();
   const [form, setForm] = useState<StudentProfileForm>(() => normalizeStudentProfileForm(initialProfile));
   const [activeTab, setActiveTab] = useState<DashboardTab>("About");
   const [saving, setSaving] = useState(false);
@@ -194,8 +197,12 @@ export default function StudentDashboardClient({
     [activeTab]
   );
   const profileHref = useMemo(
-    () => `/batches/${slugifyProfileName(form.name || initialProfile.name || "student")}`,
-    [form.name, initialProfile.name]
+    () =>
+      `/batches/${getProfileSlug({
+        name: form.name || initialProfile.name || "student",
+        admissionNo: form.admissionNo || initialProfile.admissionNo,
+      })}`,
+    [form.name, form.admissionNo, initialProfile.admissionNo, initialProfile.name]
   );
   const hasProfileImage = Boolean(form.image.trim()) && normalizeImageUrl(form.image) !== "/no-image.png";
 
@@ -290,6 +297,13 @@ export default function StudentDashboardClient({
     setError(null);
 
     try {
+      if (!form.name.trim()) {
+        setError("Please enter your name in the About section.");
+        setActiveTab("About");
+        setSaving(false);
+        return;
+      }
+
       const normalizedSkills = form.skills.map((group, index) => ({
         ...group,
         items: parseSkillItems(skillInputs[index] ?? skillItemsToInput(group.items)),
@@ -307,7 +321,8 @@ export default function StudentDashboardClient({
       });
       const data = (await res.json()) as { error?: string };
       if (!res.ok) throw new Error(data.error || "Failed to update profile");
-      setMessage("Profile updated");
+      setMessage("Profile updated successfully!");
+      router.refresh();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to update profile");
     } finally {
@@ -385,28 +400,62 @@ export default function StudentDashboardClient({
   };
 
   return (
-    <section className="w-full px-4 pt-5 pb-12">
-      <div className="overflow-hidden rounded-[2rem] bg-white">
-        <div className="p-4 md:p-5">
-          <form onSubmit={handleSubmit} className="mt-0">
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <section className="w-full px-4 pt-3 pb-12 sm:pt-5">
+      <div className="rounded-[2rem] bg-white shadow-sm ring-1 ring-slate-100">
+        <form onSubmit={handleSubmit} className="mt-0">
+          {/* Sticky Header Action Bar on Top */}
+          <div className="sticky top-0 z-40 rounded-t-[2rem] border-b border-slate-100 bg-white/95 px-4 py-3.5 backdrop-blur-md shadow-xs transition-shadow md:px-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <Link
                 href={profileHref}
-                className="cursor-pointer rounded-full border border-sky-200 bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-700 transition-colors hover:bg-sky-100"
+                className="inline-flex items-center gap-2 cursor-pointer rounded-full border border-sky-200 bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-700 transition-colors hover:bg-sky-100 active:scale-[0.98]"
               >
-                Go to your profile
+                <UserRound className="h-4 w-4 shrink-0 text-sky-600" />
+                <span>Go to your profile</span>
+                <ExternalLink className="h-3.5 w-3.5 shrink-0 opacity-70" />
               </Link>
-              <div className="flex flex-wrap items-center justify-end gap-3">
+              <div className="flex items-center justify-end gap-2.5 sm:gap-3">
                 <button
                   type="submit"
                   disabled={saving || deletingImage || uploadingImage}
-                  className="cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(31,86,228,0.20)] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_14px_rgba(31,86,228,0.25)] hover:shadow-[0_6px_20px_rgba(31,86,228,0.35)] hover:brightness-105 active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-60"
+                  title="Save and update profile"
                 >
-                  {saving ? "Saving..." : "Update Profile"}
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 shrink-0" />
+                      <span>Update Profile</span>
+                    </>
+                  )}
                 </button>
                 <LogoutButton />
               </div>
             </div>
+
+            {error ? (
+              <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 shrink-0 text-red-600" />
+                  <span>{error}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setError(null)}
+                  className="cursor-pointer text-red-500 hover:text-red-700"
+                  aria-label="Dismiss error"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="p-4 md:p-5">
 
             <div className="grid items-stretch gap-4 md:grid-cols-[300px_1fr]">
               <div className="flex h-fit flex-col rounded-[1.75rem] p-4">
@@ -886,13 +935,34 @@ export default function StudentDashboardClient({
               </div>
             ) : null}
 
-          </form>
-        </div>
+            {/* Secondary Update Profile button at bottom of active section */}
+            <div className="mt-8 flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 pt-5">
+              <button
+                type="submit"
+                disabled={saving || deletingImage || uploadingImage}
+                className="inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_14px_rgba(31,86,228,0.25)] hover:shadow-[0_6px_20px_rgba(31,86,228,0.35)] hover:brightness-105 active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                    <span>Saving...</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 shrink-0" />
+                    <span>Update Profile</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
 
       {message ? (
-        <div className="fixed bottom-5 right-5 z-50 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(5,150,105,0.28)]">
-          {message}
+        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(5,150,105,0.28)]">
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          <span>{message}</span>
         </div>
       ) : null}
     </section>

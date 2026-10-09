@@ -13,11 +13,14 @@ export default function ResourceCardLink({
   Icon?: LucideIcon;
   targetBlank?: boolean;
 }) {
+  const cleanHref = !href || href === "#" ? "/update" : href;
+  const isExternal = cleanHref.startsWith("http://") || cleanHref.startsWith("https://");
+
   return (
     <a
-      href={href}
-      target={targetBlank ? "_blank" : undefined}
-      rel={targetBlank ? "noopener noreferrer" : undefined}
+      href={cleanHref}
+      target={isExternal && targetBlank ? "_blank" : undefined}
+      rel={isExternal && targetBlank ? "noopener noreferrer" : undefined}
       className="group relative h-full overflow-hidden rounded-2xl bg-white p-7 shadow-[0_10px_24px_rgba(17,24,39,0.10)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(17,24,39,0.14)] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
     >
       <span

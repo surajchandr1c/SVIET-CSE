@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/notice", label: "Notice Board" },
   { href: "/semester", label: "Semesters" },
   { href: "/gallery", label: "Gallery" },
+  { href: "/achivement", label: "Achievements" },
   { href: "/contact", label: "Contact" },
   { href: "/about", label: "About" },
 ];

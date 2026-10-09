@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import BatchProfilesGrid from "./BatchProfilesGrid";
@@ -67,6 +67,7 @@ export default function BatchesTabs({
   batches: Array<BatchConfig & { profiles: BatchProfile[] }>;
   profilesAll: BatchProfile[];
 }) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
   const [isSwitching, setIsSwitching] = useState(false);
@@ -75,11 +76,25 @@ export default function BatchesTabs({
     () => [{ key: "all", label: "All Batches" }, ...batches.map((batch) => ({ key: batch.year, label: batch.label }))],
     [batches]
   );
-  const requestedTab = searchParams.get("tab");
 
-  const activeTab: BatchTab =
-    requestedTab && tabs.some((tab) => tab.key === requestedTab) ? requestedTab : "all";
-  const activeCourse = (searchParams.get("course") === "aiMl" ? "aiMl" : "cse") satisfies CourseTab;
+  const initialTabParam = searchParams.get("tab") as BatchTab | null;
+  const [activeTab, setActiveTab] = useState<BatchTab>(
+    initialTabParam && tabs.some((tab) => tab.key === initialTabParam) ? initialTabParam : "all"
+  );
+  const [activeCourse, setActiveCourse] = useState<CourseTab>(
+    searchParams.get("course") === "aiMl" ? "aiMl" : "cse"
+  );
+
+  useEffect(() => {
+    const tabParam = searchParams.get("tab") as BatchTab | null;
+    if (tabParam && tabs.some((tab) => tab.key === tabParam)) {
+      setActiveTab(tabParam);
+    } else {
+      setActiveTab("all");
+    }
+    setActiveCourse(searchParams.get("course") === "aiMl" ? "aiMl" : "cse");
+  }, [searchParams, tabs]);
+
   const activeIndex = useMemo(
     () => Math.max(0, tabs.findIndex((tab) => tab.key === activeTab)),
     [activeTab, tabs]
@@ -103,14 +118,20 @@ export default function BatchesTabs({
   );
 
   const updateSelection = (tab: string, course?: CourseTab) => {
+    const validTab = (tab && tabs.some((t) => t.key === tab) ? tab : "all") as BatchTab;
+    const validCourse = course ?? activeCourse;
+
+    setActiveTab(validTab);
+    if (course) setActiveCourse(course);
+
     const params = new URLSearchParams();
-    if (tab !== "all") params.set("tab", tab);
-    if (course && course !== "cse") params.set("course", course);
+    if (validTab !== "all") params.set("tab", validTab);
+    if (validCourse !== "cse") params.set("course", validCourse);
     const query = params.toString();
 
     setIsSwitching(true);
     startTransition(() => {
-      window.history.pushState(null, "", query ? `/batches?${query}` : "/batches");
+      router.replace(query ? `/batches?${query}` : "/batches", { scroll: false });
     });
     window.requestAnimationFrame(() => setIsSwitching(false));
   };

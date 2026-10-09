@@ -3,12 +3,17 @@ import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import Faculty from "@/models/Faculty";
 import { normalizeFacultyPosition } from "@/lib/facultyPosition";
+import { checkAdminAuth } from "@/lib/auth";
 
 export async function PUT(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    if (!(await checkAdminAuth(request))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
 
     const { id } = await context.params;
@@ -59,6 +64,10 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    if (!(await checkAdminAuth(request))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
 
     // 🔥 IMPORTANT: Await params

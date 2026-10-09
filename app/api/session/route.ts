@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { verifyAdminToken } from "@/lib/auth";
+import { verifyStudentToken } from "@/lib/studentAuth";
 
 export async function GET() {
   const cookieStore = await cookies();
 
-  // Navbar visibility only needs to know whether a session cookie exists.
-  // Actual route protection is handled elsewhere.
-  const adminSignedIn = Boolean(cookieStore.get("admin_token")?.value);
-  const studentSignedIn = Boolean(cookieStore.get("student_token")?.value);
+  const adminToken = cookieStore.get("admin_token")?.value;
+  const studentToken = cookieStore.get("student_token")?.value;
+
+  const adminSignedIn = Boolean(adminToken && verifyAdminToken(adminToken));
+  const studentSignedIn = Boolean(studentToken && verifyStudentToken(studentToken));
 
   const signedIn = adminSignedIn || studentSignedIn;
   const role = adminSignedIn ? ("admin" as const) : studentSignedIn ? ("student" as const) : null;

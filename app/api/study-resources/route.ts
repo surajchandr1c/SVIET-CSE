@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import StudyResource from "@/models/StudyResource";
+import { checkAdminAuth } from "@/lib/auth";
 
 const DEFAULT_4TH_ASSIGNMENTS = [
   {
@@ -36,28 +37,28 @@ const DEFAULT_4TH_ASSIGNMENTS = [
     category: "assignment",
     title: "Universal Human Values - II",
     code: "HSMC122-18",
-    link: "#",
+    link: "/update",
   },
   {
     semester: "4th",
     category: "assignment",
     title: "Environmental Studies",
     code: "EVS101-18",
-    link: "#",
+    link: "/update",
   },
   {
     semester: "4th",
     category: "assignment",
     title: "Development of Societies",
     code: "HSMC101-18",
-    link: "#",
+    link: "/update",
   },
   {
     semester: "4th",
     category: "assignment",
     title: "Philosophy",
     code: "HSMC102-18",
-    link: "#",
+    link: "/update",
   },
 ];
 
@@ -221,6 +222,10 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    if (!(await checkAdminAuth(req))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
     const body = await req.json();
     const newResource = await StudyResource.create(body);

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Achivement from "@/models/Achivement";
+import { checkAdminAuth } from "@/lib/auth";
 
 type AchivementPayload = {
   heading?: unknown;
@@ -50,6 +51,10 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    if (!(await checkAdminAuth(req))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
     const body = (await req.json()) as AchivementPayload;
     const payload = normalizePayload(body);

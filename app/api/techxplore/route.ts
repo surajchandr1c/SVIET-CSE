@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import TechxploreStudent from "@/models/TechxploreStudent";
 import { compareTechxploreByOrderThenCreatedAtAsc } from "@/lib/techxploreOrder";
 import { normalizeTechxploreOrder } from "@/lib/techxploreOrderValue";
+import { checkAdminAuth } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,10 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    if (!(await checkAdminAuth(req))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
     const body = await req.json();
 

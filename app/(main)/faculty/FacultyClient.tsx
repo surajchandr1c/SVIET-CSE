@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import SmartImage from "@/components/shared/SmartImage";
+import { compareFacultyByPositionThenCreatedAtDesc } from "@/lib/facultyOrder";
 
 export type Faculty = {
   _id: string;
@@ -16,6 +17,7 @@ export type Faculty = {
   specialization: string;
   about: string;
   position?: number | null;
+  createdAt?: string | null;
 };
 
 export default function FacultyClient({
@@ -27,12 +29,7 @@ export default function FacultyClient({
 
   const facultyData = useMemo(() => {
     const data = [...(initialFaculty ?? [])];
-    data.sort((a, b) => {
-      const aPos = a.position ?? Number.POSITIVE_INFINITY;
-      const bPos = b.position ?? Number.POSITIVE_INFINITY;
-      if (aPos !== bPos) return aPos - bPos;
-      return (a.name ?? "").localeCompare(b.name ?? "");
-    });
+    data.sort(compareFacultyByPositionThenCreatedAtDesc);
     return data;
   }, [initialFaculty]);
 

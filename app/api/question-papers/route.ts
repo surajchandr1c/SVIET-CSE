@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import QuestionPaper from "@/models/QuestionPaper";
+import { checkAdminAuth } from "@/lib/auth";
 
 const DEFAULT_4TH_PAPERS = [
   {
@@ -99,6 +100,10 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    if (!(await checkAdminAuth(req))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await connectDB();
     const body = await req.json();
     const newPaper = await QuestionPaper.create(body);

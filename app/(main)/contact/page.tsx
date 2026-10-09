@@ -1,11 +1,11 @@
-﻿"use client";
+"use client";
 
 import { useState, ChangeEvent, FormEvent } from "react";
 
 export default function ContactPage() {
   const [form, setForm] = useState({
     name: "",
-    asmission_no: "",
+    admission_no: "",
     email: "",
     message: "",
   });
@@ -31,7 +31,7 @@ export default function ContactPage() {
 
     if (data.success) {
       alert("Message sent successfully");
-      setForm({ name: "", asmission_no: "", email: "", message: "" });
+      setForm({ name: "", admission_no: "", email: "", message: "" });
     } else {
       alert("Something went wrong");
     }
@@ -80,9 +80,9 @@ export default function ContactPage() {
 
             <input
               type="text"
-              name="asmission_no"
+              name="admission_no"
               placeholder="Admission Number"
-              value={form.asmission_no}
+              value={form.admission_no}
               onChange={handleChange}
               required
               className="rounded-xl border border-cyan-300/25 bg-[#071433] p-4 text-lg text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/55"

@@ -10,7 +10,7 @@ export default function AboutPageClient() {
   const [feedbackLoading, setFeedbackLoading] = useState(false);
   const [feedbackForm, setFeedbackForm] = useState({
     name: "",
-    asmission_no: "",
+    admission_no: "",
     email: "",
     message: "",
   });
@@ -414,7 +414,7 @@ export default function AboutPageClient() {
                     alert("Feedback sent successfully");
                     setFeedbackForm({
                       name: "",
-                      asmission_no: "",
+                      admission_no: "",
                       email: "",
                       message: "",
                     });
@@ -461,13 +461,13 @@ export default function AboutPageClient() {
 
                 <input
                   type="text"
-                  name="asmission_no"
+                  name="admission_no"
                   placeholder="Role / Class / Admission No (optional)"
-                  value={feedbackForm.asmission_no}
+                  value={feedbackForm.admission_no}
                   onChange={(e) =>
                     setFeedbackForm((prev) => ({
                       ...prev,
-                      asmission_no: e.target.value,
+                      admission_no: e.target.value,
                     }))
                   }
                   className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3.5 text-base text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0b3c5d]/30 md:col-span-2"
