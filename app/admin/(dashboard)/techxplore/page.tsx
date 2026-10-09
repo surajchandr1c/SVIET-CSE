@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useMemo, useState, useEffect, useRef, ChangeEvent, FormEvent } from "react";
+import { Upload, CheckCircle2, Loader2 } from "lucide-react";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import SmartImage from "@/components/shared/SmartImage";
 import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
@@ -41,6 +42,10 @@ const initialForm: TechxploreForm = {
 
 export default function AdminTechxplorePage() {
   const [loading, setLoading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [orderLoadingId, setOrderLoadingId] = useState<string | null>(null);
   const [students, setStudents] = useState<TechxploreStudent[]>([]);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -92,10 +97,76 @@ export default function AdminTechxplorePage() {
   const handleReset = () => {
     setEditingStudentId(null);
     setForm(initialForm);
+    setUploadError(null);
+    setUploadSuccess(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Please select an image file.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError("Image size must be 5 MB or smaller.");
+      return;
+    }
+
+    setUploadingImage(true);
+    setUploadError(null);
+    setUploadSuccess(null);
+
+    try {
+      const uploadData = new FormData();
+      uploadData.append("file", file);
+
+      const res = await fetch("/api/techxplore/image", {
+        method: "POST",
+        credentials: "include",
+        body: uploadData,
+      });
+
+      const data = (await res.json()) as { image?: string; error?: string };
+      if (!res.ok || !data.image) {
+        throw new Error(data.error || "Failed to upload image.");
+      }
+
+      setForm((prev) => ({ ...prev, image: data.image! }));
+      setUploadSuccess("Image uploaded successfully to Cloudinary!");
+    } catch (err: unknown) {
+      setUploadError(err instanceof Error ? err.message : "Failed to upload image.");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setForm((prev) => ({ ...prev, image: "" }));
+    setUploadError(null);
+    setUploadSuccess(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (uploadingImage) {
+      alert("Please wait for the image upload to complete.");
+      return;
+    }
+
+    if (!form.image.trim()) {
+      alert("Please upload a student image.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -176,6 +247,12 @@ export default function AdminTechxplorePage() {
       linkedin: student.linkedin ?? "",
       github: student.github ?? "",
     });
+
+    setUploadError(null);
+    setUploadSuccess(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
 
     setOrderDrafts((prev) => ({
       ...prev,
@@ -264,15 +341,105 @@ export default function AdminTechxplorePage() {
             />
           </div>
 
-          <input
-            type="text"
-            name="image"
-            value={form.image}
-            onChange={handleChange}
-            placeholder="Paste Google Drive image link"
-            className="w-full rounded-lg border px-4 py-2"
-            required
-          />
+          <div className="rounded-xl border border-gray-200 bg-gray-50/70 p-4 transition-colors">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-semibold text-gray-700">
+                  Student Image <span className="text-red-500">*</span>
+                </label>
+                {uploadingImage && (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    Uploading to Cloudinary...
+                  </span>
+                )}
+              </div>
+
+              {form.image ? (
+                <div className="flex flex-wrap items-center gap-4 rounded-xl border border-gray-200 bg-white p-3.5 shadow-xs">
+                  <SmartImage
+                    src={previewImage}
+                    alt="Uploaded student image"
+                    className="h-20 w-20 rounded-xl border border-gray-100 object-cover shadow-sm"
+                  />
+                  <div className="flex-1 min-w-[200px]">
+                    <p className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                      Uploaded to Cloudinary
+                    </p>
+                    <p className="mt-1 max-w-md truncate text-xs text-gray-400" title={form.image}>
+                      {form.image}
+                    </p>
+                    <div className="mt-2.5 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        disabled={uploadingImage || loading}
+                        onClick={() => fileInputRef.current?.click()}
+                        className="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+                      >
+                        Replace Image
+                      </button>
+                      <button
+                        type="button"
+                        disabled={uploadingImage || loading}
+                        onClick={handleRemoveImage}
+                        className="cursor-pointer rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100 disabled:opacity-50"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  onClick={() => !uploadingImage && fileInputRef.current?.click()}
+                  className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed py-7 px-4 text-center transition ${
+                    uploadingImage
+                      ? "border-blue-400 bg-blue-50/30"
+                      : "border-gray-300 bg-white hover:border-blue-500 hover:bg-blue-50/20"
+                  }`}
+                >
+                  {uploadingImage ? (
+                    <>
+                      <Loader2 className="mb-2 h-8 w-8 animate-spin text-blue-600" />
+                      <p className="text-sm font-semibold text-blue-700">
+                        Uploading image to Cloudinary...
+                      </p>
+                      <p className="mt-1 text-xs text-blue-500">
+                        Please wait a moment
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="mb-2 h-8 w-8 text-gray-400" />
+                      <p className="text-sm font-semibold text-gray-800">
+                        Click to upload student image
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        PNG, JPG, WebP up to 5 MB • Automatically saved to Cloudinary
+                      </p>
+                    </>
+                  )}
+                </div>
+              )}
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploadingImage || loading}
+                className="hidden"
+              />
+
+              {uploadSuccess && (
+                <p className="text-xs font-medium text-emerald-600">{uploadSuccess}</p>
+              )}
+              {uploadError && (
+                <p className="text-xs font-medium text-red-600">{uploadError}</p>
+              )}
+            </div>
+          </div>
 
           <textarea
             name="about"
@@ -321,17 +488,6 @@ export default function AdminTechxplorePage() {
             />
           </div>
 
-          {form.image && (
-            <div className="mt-4">
-              <p className="mb-2 text-sm text-gray-500">Preview:</p>
-              <SmartImage
-                src={previewImage}
-                alt="Preview"
-                className="h-32 w-32 rounded-lg border object-cover"
-              />
-            </div>
-          )}
-
           <div className="flex justify-end gap-4">
             <button
               type="button"
@@ -343,16 +499,18 @@ export default function AdminTechxplorePage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || uploadingImage}
               className="rounded-lg bg-blue-600 px-6 py-2 text-white disabled:opacity-50"
             >
               {loading
                 ? editingStudentId
                   ? "Updating..."
                   : "Adding..."
-                : editingStudentId
-                  ? "Update Student"
-                  : "Add Student"}
+                : uploadingImage
+                  ? "Uploading Image..."
+                  : editingStudentId
+                    ? "Update Student"
+                    : "Add Student"}
             </button>
           </div>
         </form>
