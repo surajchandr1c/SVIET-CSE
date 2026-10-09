@@ -98,7 +98,7 @@ export default function FacultyClient({
       <AnimatePresence>
         {selected && (
           <motion.div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-start justify-center z-50 px-2 sm:px-4 pb-2 sm:pb-4 pt-3 sm:pt-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[150] px-2 sm:px-4 py-3 sm:py-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -110,7 +110,7 @@ export default function FacultyClient({
             >
               <button
                 onClick={() => setSelected(null)}
-                className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white rounded-full p-2 shadow-md hover:bg-gray-100"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 bg-white rounded-full p-2 shadow-md hover:bg-gray-100"
               >
                 <X size={22} />
               </button>
