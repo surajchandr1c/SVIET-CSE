@@ -31,7 +31,7 @@ export default function LogoutButton({ className }: LogoutButtonProps) {
       onClick={logout}
       className={
         className ??
-        "inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold !text-white text-white shadow-sm hover:bg-slate-800 hover:!text-white active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:!text-white [&_svg]:!stroke-white [&:hover_svg]:!text-white [&:hover_svg]:!stroke-white"
+        "inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold !text-white text-white disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:!text-white [&_svg]:!stroke-white"
       }
       title="Logout from student portal"
     >

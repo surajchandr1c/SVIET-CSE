@@ -400,15 +400,15 @@ export default function StudentDashboardClient({
   };
 
   return (
-    <section className="w-full px-4 pt-3 pb-12 sm:pt-5">
-      <div className="rounded-[2rem] bg-white shadow-sm ring-1 ring-slate-100">
+    <section className="student-dashboard w-full px-4 pt-3 pb-12 sm:pt-5">
+      <div className="rounded-[2rem] bg-white ring-1 ring-slate-100">
         <form onSubmit={handleSubmit} className="mt-0">
           {/* Sticky Header Action Bar on Top */}
-          <div className="sticky top-0 z-40 rounded-t-[2rem] border-b border-slate-100 bg-white/95 px-4 py-3.5 backdrop-blur-md shadow-xs transition-shadow md:px-5">
+          <div className="student-dashboard-top-nav sticky top-0 z-40 rounded-t-[2rem] border-b border-slate-100 bg-white/95 px-4 py-3.5 backdrop-blur-md md:px-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <Link
                 href={profileHref}
-                className="inline-flex items-center gap-2 cursor-pointer rounded-full border border-sky-200 bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-700 transition-colors hover:bg-sky-100 active:scale-[0.98]"
+                className="inline-flex items-center gap-2 cursor-pointer rounded-full border border-sky-200 bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-700"
               >
                 <UserRound className="h-4 w-4 shrink-0 text-sky-600" />
                 <span>Go to your profile</span>
@@ -418,7 +418,7 @@ export default function StudentDashboardClient({
                 <button
                   type="submit"
                   disabled={saving || deletingImage || uploadingImage}
-                  className="inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-5 py-2.5 text-sm font-semibold !text-white text-white shadow-[0_4px_14px_rgba(31,86,228,0.25)] hover:shadow-[0_6px_20px_rgba(31,86,228,0.35)] hover:brightness-105 hover:!text-white active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:!text-white [&_svg]:!stroke-white [&:hover_svg]:!text-white [&:hover_svg]:!stroke-white"
+                  className="inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-5 py-2.5 text-sm font-semibold !text-white text-white disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:!text-white [&_svg]:!stroke-white"
                   title="Save and update profile"
                 >
                   {saving ? (
@@ -559,7 +559,7 @@ export default function StudentDashboardClient({
               </div>
             </div>
 
-            <div className="mt-6 relative overflow-hidden rounded-full bg-[#10265e] p-1 shadow-[0_18px_45px_rgba(0,0,0,0.18)] ring-1 ring-black/10 md:hidden">
+            <div className="student-dashboard-tab-nav mt-6 relative overflow-hidden rounded-full bg-[#10265e] p-1 ring-1 ring-black/10 md:hidden">
               <div
                 role="tablist"
                 aria-label="Student profile sections"
@@ -600,7 +600,7 @@ export default function StudentDashboardClient({
                 <div
                   role="tablist"
                   aria-label="Student profile sections"
-                  className="rounded-[1.75rem] bg-[#10265e] p-3 shadow-[0_18px_45px_rgba(0,0,0,0.18)]"
+                  className="student-dashboard-tab-nav rounded-[1.75rem] bg-[#10265e] p-3"
                 >
                   <div className="space-y-2">
                     {tabs.map((tab) => {

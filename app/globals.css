@@ -245,8 +245,16 @@ button {
 }
 
 .delete-image-button:hover,
-.student-dashboard-remove-button:hover {
-  transform: none;
+.student-dashboard-remove-button:hover,
+.theme-main .student-dashboard-top-nav,
+.theme-main .student-dashboard-top-nav:hover,
+.theme-main .student-dashboard-top-nav *:hover,
+.theme-main .student-dashboard-tab-nav,
+.theme-main .student-dashboard-tab-nav:hover,
+.theme-main .student-dashboard-tab-nav *:hover,
+.theme-main .student-dashboard [class*="shadow"]:hover {
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* Card hover (lift + shadow) */
