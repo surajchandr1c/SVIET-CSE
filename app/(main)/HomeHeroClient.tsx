@@ -93,12 +93,12 @@ function ExpandableSpotlight() {
                   }
                 }}
                 className={[
-                  "relative flex min-h-[128px] cursor-default overflow-hidden rounded-[1.6rem] text-left",
+                  "relative flex min-h-[128px] overflow-hidden rounded-[1.6rem] text-left",
                   "focus:outline-none",
                   "md:min-h-[500px]",
                   isActive
-                    ? "w-full md:flex-[5.5]"
-                    : "w-full md:flex-[0.48]",
+                    ? "w-full md:flex-[5.5] cursor-default"
+                    : "w-full md:flex-[0.48] cursor-pointer",
                 ].join(" ")}
                 transition={{ layout: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
               >
