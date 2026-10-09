@@ -167,7 +167,7 @@ export async function PUT(req: Request) {
       admissionNo: student.admissionNo,
       batch: batchLabel(student.admissionNo, semester),
       course: student.course === "AI/ML" ? "AI/ML" : "CSE",
-      about: limitWords(normalizeText(body.about), 100),
+      about: limitWords(normalizeText(body.about), 70),
       keywords: normalizeText(body.keywords),
       instagram: normalizeText(body.instagram),
       email: normalizeText(body.email, normalizeText(body.whatsapp)),

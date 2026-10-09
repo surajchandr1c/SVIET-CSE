@@ -95,7 +95,7 @@ const normalizeStudentProfileForm = (
   admissionNo: typeof profile.admissionNo === "string" ? profile.admissionNo : "",
   batch: typeof profile.batch === "string" ? profile.batch : "",
   course: typeof profile.course === "string" ? profile.course : "",
-  about: typeof profile.about === "string" ? limitWords(profile.about, 100) : "",
+  about: typeof profile.about === "string" ? limitWords(profile.about, 70) : "",
   keywords: typeof profile.keywords === "string" ? profile.keywords : "",
   instagram: typeof profile.instagram === "string" ? profile.instagram : "",
   email: typeof profile.email === "string" ? profile.email : "",
@@ -209,7 +209,7 @@ export default function StudentDashboardClient({
   const handleChange = (key: keyof StudentProfileForm, value: string) => {
     setForm((prev) => ({
       ...prev,
-      [key]: key === "about" ? limitWords(value, 100) : value,
+      [key]: key === "about" ? limitWords(value, 70) : value,
     }));
   };
 
@@ -537,7 +537,7 @@ export default function StudentDashboardClient({
                   STUDENT DASHBOARD
                 </p>
                 <h2 className="mt-2 text-2xl font-extrabold text-slate-900 md:text-[28px]">About Section</h2>
-                <p className="mt-2 min-w-0 whitespace-pre-wrap break-words text-[15px] leading-7 text-slate-600">
+                <p className="mt-2 min-w-0 whitespace-pre-wrap break-words text-[13px] leading-relaxed text-slate-600 sm:text-sm sm:leading-6">
                   {form.about ||
                     "Add your profile summary here. This content appears on your public batches profile."}
                 </p>
@@ -651,12 +651,12 @@ export default function StudentDashboardClient({
                   <textarea
                     value={form.about ?? ""}
                     onChange={(e) => handleChange("about", e.target.value)}
-                    placeholder="Write your about section (maximum 100 words)"
+                    placeholder="Write your about section (maximum 70 words)"
                     className="md:col-span-2 min-h-36 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-[#08b8a8] focus:ring-2 focus:ring-[#08b8a8]/20"
                     required
                   />
                   <p className="md:col-span-2 -mt-2 text-right text-xs text-slate-500">
-                    {countWords(form.about ?? "")}/100 words
+                    {countWords(form.about ?? "")}/70 words
                   </p>
                 </div>
               ) : null}

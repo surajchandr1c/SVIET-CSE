@@ -223,8 +223,8 @@ export default function BatchProfileDetailClient({ profile }: { profile: BatchPr
           </div>
 
           {profile.about ? (
-            <div className="w-full bg-white px-5 pb-4 text-[15px] leading-7 text-gray-700 sm:px-8 md:pb-5">
-              <p className="line-clamp-5 md:line-clamp-6">{profile.about}</p>
+            <div className="w-full bg-white px-5 pb-4 text-xs leading-relaxed text-gray-600 sm:px-8 sm:text-[13px] md:pb-5">
+              <p className="min-w-0 whitespace-pre-wrap break-words">{profile.about}</p>
             </div>
           ) : null}
 
