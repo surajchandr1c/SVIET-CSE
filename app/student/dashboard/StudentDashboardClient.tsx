@@ -185,7 +185,7 @@ export default function StudentDashboardClient({
 
     const timeout = window.setTimeout(() => {
       setMessage(null);
-    }, 2500);
+    }, 4000);
 
     return () => {
       window.clearTimeout(timeout);
@@ -436,6 +436,23 @@ export default function StudentDashboardClient({
                 <LogoutButton />
               </div>
             </div>
+
+            {message ? (
+              <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-semibold text-emerald-800 shadow-xs">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+                  <span>{message}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMessage(null)}
+                  className="cursor-pointer text-emerald-600 hover:text-emerald-800"
+                  aria-label="Dismiss message"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ) : null}
 
             {error ? (
               <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700">
@@ -935,36 +952,9 @@ export default function StudentDashboardClient({
               </div>
             ) : null}
 
-            {/* Secondary Update Profile button at bottom of active section */}
-            <div className="mt-8 flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 pt-5">
-              <button
-                type="submit"
-                disabled={saving || deletingImage || uploadingImage}
-                className="inline-flex items-center justify-center gap-2 cursor-pointer rounded-xl bg-gradient-to-r from-[#1f56e4] to-[#08b8a8] px-5 py-2.5 text-sm font-semibold !text-white text-white shadow-[0_4px_14px_rgba(31,86,228,0.25)] hover:shadow-[0_6px_20px_rgba(31,86,228,0.35)] hover:brightness-105 hover:!text-white active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:!text-white [&_svg]:!stroke-white [&:hover_svg]:!text-white [&:hover_svg]:!stroke-white"
-              >
-                {saving ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin shrink-0 !text-white text-white" color="#ffffff" />
-                    <span className="!text-white text-white">Saving...</span>
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4 shrink-0 !text-white text-white" color="#ffffff" />
-                    <span className="!text-white text-white">Update Profile</span>
-                  </>
-                )}
-              </button>
-            </div>
           </div>
         </form>
       </div>
-
-      {message ? (
-        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(5,150,105,0.28)]">
-          <CheckCircle2 className="h-4 w-4 shrink-0" />
-          <span>{message}</span>
-        </div>
-      ) : null}
     </section>
   );
 }
