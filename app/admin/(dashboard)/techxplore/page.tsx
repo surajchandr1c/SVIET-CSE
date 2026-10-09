@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect, useRef, ChangeEvent, FormEvent } from "react";
-import { Upload, CheckCircle2, Loader2 } from "lucide-react";
+import { Upload, Loader2 } from "lucide-react";
 import { normalizeImageUrl } from "@/lib/imageUrl";
 import SmartImage from "@/components/shared/SmartImage";
 import AdminPageIntroCard from "@/components/admin/AdminPageIntroCard";
@@ -44,7 +44,6 @@ export default function AdminTechxplorePage() {
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [orderLoadingId, setOrderLoadingId] = useState<string | null>(null);
   const [students, setStudents] = useState<TechxploreStudent[]>([]);
@@ -98,7 +97,6 @@ export default function AdminTechxplorePage() {
     setEditingStudentId(null);
     setForm(initialForm);
     setUploadError(null);
-    setUploadSuccess(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -119,7 +117,6 @@ export default function AdminTechxplorePage() {
 
     setUploadingImage(true);
     setUploadError(null);
-    setUploadSuccess(null);
 
     try {
       const uploadData = new FormData();
@@ -137,7 +134,6 @@ export default function AdminTechxplorePage() {
       }
 
       setForm((prev) => ({ ...prev, image: data.image! }));
-      setUploadSuccess("Image uploaded successfully to Cloudinary!");
     } catch (err: unknown) {
       setUploadError(err instanceof Error ? err.message : "Failed to upload image.");
     } finally {
@@ -148,7 +144,6 @@ export default function AdminTechxplorePage() {
   const handleRemoveImage = () => {
     setForm((prev) => ({ ...prev, image: "" }));
     setUploadError(null);
-    setUploadSuccess(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -249,7 +244,6 @@ export default function AdminTechxplorePage() {
     });
 
     setUploadError(null);
-    setUploadSuccess(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -341,7 +335,7 @@ export default function AdminTechxplorePage() {
             />
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-gray-50/70 p-4 transition-colors">
+          <div className="rounded-xl border border-gray-200 bg-white p-4 transition-colors">
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-semibold text-gray-700">
@@ -363,11 +357,7 @@ export default function AdminTechxplorePage() {
                     className="h-20 w-20 rounded-xl border border-gray-100 object-cover shadow-sm"
                   />
                   <div className="flex-1 min-w-[200px]">
-                    <p className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-                      Uploaded to Cloudinary
-                    </p>
-                    <p className="mt-1 max-w-md truncate text-xs text-gray-400" title={form.image}>
+                    <p className="max-w-md truncate text-xs text-gray-500" title={form.image}>
                       {form.image}
                     </p>
                     <div className="mt-2.5 flex flex-wrap gap-2">
@@ -383,7 +373,7 @@ export default function AdminTechxplorePage() {
                         type="button"
                         disabled={uploadingImage || loading}
                         onClick={handleRemoveImage}
-                        className="cursor-pointer rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100 disabled:opacity-50"
+                        className="cursor-pointer rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold !text-white text-white transition hover:bg-red-700 disabled:opacity-50"
                       >
                         Remove
                       </button>
@@ -432,9 +422,6 @@ export default function AdminTechxplorePage() {
                 className="hidden"
               />
 
-              {uploadSuccess && (
-                <p className="text-xs font-medium text-emerald-600">{uploadSuccess}</p>
-              )}
               {uploadError && (
                 <p className="text-xs font-medium text-red-600">{uploadError}</p>
               )}
